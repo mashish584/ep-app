@@ -15,6 +15,7 @@
 		"analyze-code": "npm run pretty && npm run lint:fix && npm run lint"
 	},
 	"dependencies": {
+		"@shopify/restyle": "^1.6.1",
 		"react": "17.0.2",
 		"react-native": "0.66.4"
 	},
