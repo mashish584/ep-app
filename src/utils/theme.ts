@@ -1,33 +1,39 @@
 import { createTheme, createBox, createText } from "@shopify/restyle";
 
-const fontFamily = "Helvetic";
+const fontFamily = "Helvetica";
 
-const pallette = {
+export const pallette = {
 	hex: {
 		primary: "#FC6868",
-		seondary: "#FFFFFF",
+		secondary: "#FFFFFF",
 		gray: "#C4C4C4",
 		black: "#262728",
 	},
 	rgb: {
-		primary: (alpha: string) => `rgba(252, 104, 104, ${alpha})`,
-		secondary: (alpha: string) => `rgba(255, 255, 255, ${alpha})`,
-		gray: (alpha: string) => `rgba(196, 196, 196, ${alpha})`,
-		black: (alpha: string) => `rgba(38,39,40,${alpha})`,
+		primary: (alpha: number) => `rgba(252, 104, 104, ${alpha})`,
+		secondary: (alpha: number) => `rgba(255, 255, 255, ${alpha})`,
+		gray: (alpha: number) => `rgba(196, 196, 196, ${alpha})`,
+		black: (alpha: number) => `rgba(0,0,0,${alpha})`,
+		light_black: (alpha: number) => `rgba(32,39,40,${alpha})`,
 	},
 };
 
 const fonts = {
-	primary_regular: `${fontFamily}-regular`,
-	primary_bold: `${fontFamily}-bold`,
+	primary_regular: `${fontFamily}`,
+	primary_bold: `${fontFamily}-Bold`,
 	primary_light: `${fontFamily}-light`,
 };
 
 const theme = createTheme({
 	colors: {
-		...pallette.hex,
+		primary: "#FC6868",
+		seondary: "#FFFFFF",
+		gray: "#C4C4C4",
+		black: "#262728",
 	},
-	spacing: {},
+	spacing: {
+		sh: 20,
+	},
 	breakpoints: {},
 	borderRadii: {},
 	textVariants: {
@@ -38,6 +44,10 @@ const theme = createTheme({
 		description: {
 			fontFamily: fonts.primary_regular,
 			fontSize: 18,
+		},
+		metaText12: {
+			fontFamily: fonts.primary_regular,
+			fontSize: 14,
 		},
 		metaText14: {
 			fontFamily: fonts.primary_regular,
@@ -59,4 +69,4 @@ if (Text.defaultProps?.allowFontScaling) {
 
 export type Theme = typeof theme;
 export { Text, Box };
-export default Theme;
+export default theme;

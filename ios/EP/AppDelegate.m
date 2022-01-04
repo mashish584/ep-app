@@ -36,11 +36,23 @@ static void InitializeFlipper(UIApplication *application) {
                                                    moduleName:@"EP"
                                             initialProperties:nil];
 
+
+  // NSArray *fontFamilies = [UIFont familyNames];
+
+  // for (int i = 0; i < [fontFamilies count]; i++)
+  // {
+  //     NSString *fontFamily = [fontFamilies objectAtIndex:i];
+  //     NSArray *fontNames = [UIFont fontNamesForFamilyName:[fontFamilies objectAtIndex:i]];
+  //     NSLog (@"%@: %@", fontFamily, fontNames);
+  // }
+
   if (@available(iOS 13.0, *)) {
       rootView.backgroundColor = [UIColor systemBackgroundColor];
   } else {
       rootView.backgroundColor = [UIColor whiteColor];
   }
+
+  
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];
