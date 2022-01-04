@@ -13,19 +13,17 @@ import { ApolloProvider } from "@apollo/client";
 import { ThemeProvider } from "@shopify/restyle";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
+import Onboarding from "./screens/Onboarding";
+
 import theme from "./utils/theme";
 import { client } from "./config/apollo";
-import Onboarding from "./screens/Onboarding";
-import Theme from "./components/Theme";
 
 const App = () => {
 	return (
 		<SafeAreaProvider>
 			<ThemeProvider {...{ theme }}>
 				<ApolloProvider client={client}>
-					<Theme>
-						<Onboarding />
-					</Theme>
+					<Onboarding />
 				</ApolloProvider>
 			</ThemeProvider>
 		</SafeAreaProvider>
