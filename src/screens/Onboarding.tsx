@@ -6,6 +6,7 @@ import Layer from "../components/Layer";
 import Theme from "../components/Theme";
 import { Text, Box, pallette, Theme as ThemeType } from "../utils/theme";
 import DownArrow from "../components/SVG/DownArrow";
+import Button from "../components/Button";
 
 const onboardingImage = require("../assets/images/onboarding.jpg");
 
@@ -24,7 +25,11 @@ const Onboarding = () => {
 				</Text>
 			</Box>
 			<Box alignItems="center" padding="sp10">
-				<DownArrow style={{ width: 10, height: 10 }} />
+				<Button variant="transparent" onPress={() => {}} label="" containerStyle={styles.button}>
+					<Box>
+						<DownArrow style={{ width: 10, height: 10 }} />
+					</Box>
+				</Button>
 			</Box>
 		</Theme>
 	);
@@ -37,6 +42,11 @@ const styles = StyleSheet.create({
 	title: {
 		color: pallette.hex.secondary,
 		textAlign: "center",
+	},
+	button: {
+		width: 50,
+		height: 50,
+		borderRadius: 0,
 	},
 });
 

@@ -58,6 +58,10 @@ const theme = createTheme({
 		light: {
 			fontFamily: fonts.primary_light,
 		},
+		button: {
+			fontFamily: fonts.primary_bold,
+			fontSize: 20,
+		},
 	},
 	fontSize: {
 		sm: 12,
