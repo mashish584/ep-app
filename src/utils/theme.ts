@@ -26,13 +26,11 @@ const fonts = {
 
 const theme = createTheme({
 	colors: {
-		primary: "#FC6868",
-		seondary: "#FFFFFF",
-		gray: "#C4C4C4",
-		black: "#262728",
+		...pallette.hex,
 	},
 	spacing: {
-		sh: 20,
+		sp20: 20,
+		sp10: 10,
 	},
 	breakpoints: {},
 	borderRadii: {},
@@ -57,9 +55,20 @@ const theme = createTheme({
 			fontFamily: fonts.primary_regular,
 			fontSize: 16,
 		},
+		light: {
+			fontFamily: fonts.primary_light,
+		},
+	},
+	fontSize: {
+		sm: 12,
+		md: 14,
+		lg: 24,
+		normal: 18,
+		regular: 16,
 	},
 });
 
+export type Theme = typeof theme;
 const Text = createText<Theme>();
 const Box = createBox<Theme>();
 
@@ -67,6 +76,5 @@ if (Text.defaultProps?.allowFontScaling) {
 	Text.defaultProps.allowFontScaling = false;
 }
 
-export type Theme = typeof theme;
 export { Text, Box };
 export default theme;
