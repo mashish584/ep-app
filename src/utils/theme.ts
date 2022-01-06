@@ -1,4 +1,5 @@
-import { createTheme, createBox, createText } from "@shopify/restyle";
+import { createTheme, createBox, createText, createVariant, createRestyleComponent, VariantProps } from "@shopify/restyle";
+import React from "react";
 
 const fontFamily = "Helvetica";
 
@@ -8,6 +9,7 @@ export const pallette = {
 		secondary: "#FFFFFF",
 		gray: "#C4C4C4",
 		black: "#262728",
+		darkGray: "#A7A4A4",
 	},
 	rgb: {
 		primary: (alpha: number) => `rgba(252, 104, 104, ${alpha})`,
@@ -31,9 +33,16 @@ const theme = createTheme({
 	spacing: {
 		sp20: 20,
 		sp10: 10,
+		sp5: 5,
+		sp3: 3,
 	},
 	breakpoints: {},
-	borderRadii: {},
+	borderRadii: {
+		s: 4,
+		m: 10,
+		l: 25,
+		xl: 75,
+	},
 	textVariants: {
 		title: {
 			fontFamily: fonts.primary_bold,
@@ -58,6 +67,9 @@ const theme = createTheme({
 		light: {
 			fontFamily: fonts.primary_light,
 		},
+		bold: {
+			fontFamily: fonts.primary_bold,
+		},
 		button: {
 			fontFamily: fonts.primary_bold,
 			fontSize: 20,
@@ -76,9 +88,13 @@ export type Theme = typeof theme;
 const Text = createText<Theme>();
 const Box = createBox<Theme>();
 
+// Card
+// type CardType = VariantProps<Theme, "cardVariants"> & React.ComponentProps<typeof Box>;
+// const CardBox = createRestyleComponent<CardType, Theme>([createVariant({ themeKey: "cardVariants" })], Box);
+
 if (Text.defaultProps?.allowFontScaling) {
 	Text.defaultProps.allowFontScaling = false;
 }
 
-export { Text, Box };
+export { Text, Box, theme };
 export default theme;
