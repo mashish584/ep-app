@@ -24,7 +24,7 @@ const App = () => {
 			<ThemeProvider {...{ theme }}>
 				<ApolloProvider client={client}>
 					<View style={{ flex: 1, justifyContent: "center", alignItems: "center", flexDirection: "row" }}>
-						<EventCard width={220} height={167} />
+						<EventCard width={220} height={180} onPress={() => alert("Event Card press")} />
 					</View>
 				</ApolloProvider>
 			</ThemeProvider>

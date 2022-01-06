@@ -12,8 +12,8 @@ interface HostInfo extends dimensions {
 
 const HostInfo = ({ width, height, ...props }: HostInfo) => {
 	return (
-		<TouchableOpacity>
-			<Box flexDirection="row" width={125} alignItems={"center"}>
+		<TouchableOpacity onPress={props.onPress}>
+			<Box flexDirection="row" width={100} alignItems={"center"}>
 				<Image
 					source={{ uri: "https://unsplash.it/50/50" }}
 					style={{ width, height, marginRight: theme.spacing.sp5 }}
@@ -21,7 +21,7 @@ const HostInfo = ({ width, height, ...props }: HostInfo) => {
 				/>
 				<Texter
 					variant="bold"
-					style={{ fontSize: theme.fontSize.sm }}
+					style={{ fontSize: theme.fontSize.xs }}
 					config={{
 						Host: {
 							variant: "metaText11",

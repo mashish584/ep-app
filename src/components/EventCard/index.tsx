@@ -1,6 +1,7 @@
 import React from "react";
 import { TouchableOpacity, Image } from "react-native";
 
+import Button from "../Button";
 import HostInfo from "../HostInfo";
 import Texter, { Config } from "../Texter";
 
@@ -25,7 +26,7 @@ const EventDateConfig: Record<string, Config> = {
 
 const EventCard: React.FC<EventCard> = ({ width, height, ...props }) => {
 	return (
-		<TouchableOpacity onPress={props.onPress}>
+		<TouchableOpacity onPress={props.onPress} activeOpacity={1}>
 			<Box
 				width={width}
 				height={height}
@@ -39,17 +40,21 @@ const EventCard: React.FC<EventCard> = ({ width, height, ...props }) => {
 					style={{ width: "100%", flex: 0.6, borderTopLeftRadius: theme.borderRadii.m, borderTopRightRadius: theme.borderRadii.m }}
 					resizeMode="cover"
 				/>
-				<Box flex={0.5} style={{ marginTop: 7 }} paddingHorizontal="sp10">
-					<Texter color="darkGray" variant="bold" config={EventDateConfig}>
+				<Box flex={0.5} margin="sp10">
+					<Texter color="darkGray" variant="bold" config={EventDateConfig} style={{ fontSize: theme.fontSize.xs }}>
 						Wednesday 10 Dec
 					</Texter>
 					<Text variant="bold" fontSize={theme.fontSize.md} marginTop="sp3">
 						Reunion Party
 					</Text>
-					<Box marginTop="sp10">
+					<Box marginTop="sp10" flexDirection="row" justifyContent="space-between" alignItems="center">
 						<HostInfo width={20} height={20} username="John" />
+						<Button variant="primary" onPress={() => alert("Join")} containerStyle={{ width: 90, height: 25, borderRadius: theme.borderRadii.s }}>
+							<Text fontSize={theme.fontSize.xs} color="secondary" variant="bold">
+								Join - $99
+							</Text>
+						</Button>
 					</Box>
-					{/* <Button containerStyle={{ width: 60, minHeight: 19, borderRadius: 0 }} variant="primary" label="Join-now $99" /> */}
 				</Box>
 			</Box>
 		</TouchableOpacity>

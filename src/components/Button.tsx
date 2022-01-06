@@ -1,13 +1,12 @@
 import React from "react";
-import { StyleSheet, ViewStyle } from "react-native";
-import { RectButton } from "react-native-gesture-handler";
+import { StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
 import { useTheme } from "@shopify/restyle";
 
 import { Theme, Text } from "../utils/theme";
 
 interface ButtonProps {
 	variant: "default" | "primary" | "transparent";
-	label: string;
+	label?: string;
 	containerStyle?: ViewStyle;
 	onPress: () => void;
 }
@@ -18,16 +17,13 @@ const Button: React.FC<ButtonProps> = ({ variant, label, onPress, ...props }) =>
 	const color = theme.colors.secondary;
 
 	return (
-		<RectButton
-			onPress={onPress}
-			style={[styles.container, props.containerStyle, { backgroundColor }]}
-			activeOpacity={variant === "transparent" ? 0 : 0.1}>
+		<TouchableOpacity onPress={onPress} style={[styles.container, props.containerStyle, { backgroundColor }]} activeOpacity={0.8}>
 			{props.children || (
 				<Text variant="button" style={[{ color }]}>
 					{label}
 				</Text>
 			)}
-		</RectButton>
+		</TouchableOpacity>
 	);
 };
 
