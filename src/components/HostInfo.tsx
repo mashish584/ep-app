@@ -2,7 +2,7 @@ import React from "react";
 import { Image, TouchableOpacity } from "react-native";
 import { dimensions } from "../types";
 
-import { Box, Text } from "../utils/theme";
+import { Box } from "../utils/theme";
 import Texter from "./Texter";
 
 interface HostInfo extends dimensions {

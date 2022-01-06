@@ -1,5 +1,4 @@
-import { createTheme, createBox, createText, createVariant, createRestyleComponent, VariantProps } from "@shopify/restyle";
-import React from "react";
+import { createTheme, createBox, createText } from "@shopify/restyle";
 
 const fontFamily = "Helvetica";
 

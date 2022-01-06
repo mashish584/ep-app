@@ -1,6 +1,6 @@
-import { color, ColorProps, ResponsiveValue, VariantProps } from "@shopify/restyle";
 import React from "react";
-import { TextProps, TextStyle } from "react-native";
+import { TextStyle } from "react-native";
+import { ResponsiveValue } from "@shopify/restyle";
 
 import { Text, Theme, Box } from "../utils/theme";
 

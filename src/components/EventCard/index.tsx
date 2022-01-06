@@ -1,11 +1,12 @@
 import React from "react";
-import { ImageBackground, TouchableOpacity, Image, Dimensions } from "react-native";
+import { TouchableOpacity, Image } from "react-native";
+
+import HostInfo from "../HostInfo";
+import Texter, { Config } from "../Texter";
+
 import { dimensions } from "../../types";
 import { generateBoxShadowStyle } from "../../utils";
 import { Box, Text, theme } from "../../utils/theme";
-import Button from "../Button";
-import HostInfo from "../HostInfo";
-import Texter, { Config } from "../Texter";
 
 interface EventCard extends dimensions {
 	variant?: "full" | "small";
