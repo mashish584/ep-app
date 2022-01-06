@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity, Image } from "react-native";
+import { TouchableOpacity, Image, ViewStyle } from "react-native";
 
 import Button from "../Button";
 import HostInfo from "../HostInfo";
@@ -7,11 +7,12 @@ import Texter, { Config } from "../Texter";
 
 import { dimensions } from "../../types";
 import { generateBoxShadowStyle } from "../../utils";
-import { Box, Text, theme } from "../../utils/theme";
+import { Box, pallette, Text, theme } from "../../utils/theme";
 
 interface EventCard extends dimensions {
 	variant?: "full" | "small";
 	onPress: () => void;
+	containerStyle?: ViewStyle;
 }
 
 const sample = require("../../assets/images/sample-1.jpg");
@@ -32,9 +33,13 @@ const EventCard: React.FC<EventCard> = ({ width, height, ...props }) => {
 				height={height}
 				backgroundColor="secondary"
 				borderRadius="m"
-				style={{
-					...generateBoxShadowStyle(-2, 4, "#171717", 0.2, 3, 4, "#171717"),
-				}}>
+				marginRight="sp10"
+				style={[
+					{
+						...generateBoxShadowStyle(0, 3, pallette.rgb.black(0.1), 1, 10, 4, pallette.rgb.black(0.1)),
+					},
+					props.containerStyle,
+				]}>
 				<Image
 					source={sample}
 					style={{ width: "100%", flex: 0.6, borderTopLeftRadius: theme.borderRadii.m, borderTopRightRadius: theme.borderRadii.m }}
