@@ -9,19 +9,27 @@
 		"test": "jest",
 		"prepare": "husky install",
 		"lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-		"pretty": "prettier --write --config .prettierrc.json *.{js,tsx} **/*.{js,ts,tsx}",
+		"pretty": "prettier --write --config .prettierrc.json *.js **/*.{js,ts,tsx}",
 		"lint:fix": "eslint **/**.{ts,tsx} --fix",
 		"analyze": "cross-env BUNDLE_ANALYZE=true npm run build",
 		"analyze-code": "npm run pretty && npm run lint:fix && npm run lint"
 	},
 	"dependencies": {
+		"@apollo/client": "^3.5.6",
+		"@shopify/restyle": "^1.6.1",
+		"apollo-upload-client": "^17.0.0",
+		"graphql": "^16.2.0",
 		"react": "17.0.2",
-		"react-native": "0.66.4"
+		"react-native": "0.66.4",
+		"react-native-gesture-handler": "^2.1.0",
+		"react-native-safe-area-context": "^3.3.2",
+		"react-native-svg": "^12.1.1"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.12.9",
 		"@babel/runtime": "^7.12.5",
 		"@react-native-community/eslint-config": "^2.0.0",
+		"@types/apollo-upload-client": "^14.1.0",
 		"@types/jest": "^26.0.23",
 		"@types/react-native": "^0.66.4",
 		"@types/react-test-renderer": "^17.0.1",

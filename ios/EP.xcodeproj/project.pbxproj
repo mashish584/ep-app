@@ -39,6 +39,9 @@
 		1D0AE47A65C8663E3B452821 /* Pods-EP-EPTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EP-EPTests.release.xcconfig"; path = "Target Support Files/Pods-EP-EPTests/Pods-EP-EPTests.release.xcconfig"; sourceTree = "<group>"; };
 		6423831EA8574132BED9D8CC /* libPods-EP.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-EP.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C97AB639B58BBB4B15BBE30 /* Pods-EP-EPTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EP-EPTests.debug.xcconfig"; path = "Target Support Files/Pods-EP-EPTests/Pods-EP-EPTests.debug.xcconfig"; sourceTree = "<group>"; };
+		739B8AED2783CAAE001AADAA /* helvetica-light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "helvetica-light.ttf"; path = "../src/assets/fonts/helvetica-light.ttf"; sourceTree = "<group>"; };
+		739B8AEE2783CAAE001AADAA /* Helvetica-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Helvetica-Bold.ttf"; path = "../src/assets/fonts/Helvetica-Bold.ttf"; sourceTree = "<group>"; };
+		739B8AEF2783CAAE001AADAA /* Helvetica.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Helvetica.ttf; path = ../src/assets/fonts/Helvetica.ttf; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = EP/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ABFE59519B596E51CEFDCCC0 /* libPods-EP-EPTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-EP-EPTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0A881CF5CF3F2B244570E2A /* Pods-EP.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EP.debug.xcconfig"; path = "Target Support Files/Pods-EP/Pods-EP.debug.xcconfig"; sourceTree = "<group>"; };
@@ -116,6 +119,9 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				739B8AEE2783CAAE001AADAA /* Helvetica-Bold.ttf */,
+				739B8AED2783CAAE001AADAA /* helvetica-light.ttf */,
+				739B8AEF2783CAAE001AADAA /* Helvetica.ttf */,
 				13B07FAE1A68108700A75B9A /* EP */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* EPTests */,
@@ -145,7 +151,6 @@
 				6C97AB639B58BBB4B15BBE30 /* Pods-EP-EPTests.debug.xcconfig */,
 				1D0AE47A65C8663E3B452821 /* Pods-EP-EPTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
