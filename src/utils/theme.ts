@@ -51,6 +51,10 @@ const theme = createTheme({
 			fontFamily: fonts.primary_regular,
 			fontSize: 18,
 		},
+		metaText11: {
+			fontFamily: fonts.primary_regular,
+			fontSize: 11,
+		},
 		metaText12: {
 			fontFamily: fonts.primary_regular,
 			fontSize: 14,
@@ -75,7 +79,7 @@ const theme = createTheme({
 		},
 	},
 	fontSize: {
-		sm: 12,
+		sm: 11,
 		md: 14,
 		lg: 24,
 		normal: 18,

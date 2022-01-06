@@ -45,7 +45,11 @@ const Texter = ({ children, config, ...props }: Texter) => {
 		return jsx;
 	};
 
-	return children ? <Box flexDirection="row">{renderText(children)}</Box> : null;
+	return children ? (
+		<Box flexDirection="row" alignItems="center">
+			{renderText(children)}
+		</Box>
+	) : null;
 };
 
 export default Texter;
