@@ -1,20 +1,19 @@
 import React from "react";
-import { ScrollView } from "react-native";
 
-import EventCard from "../components/EventCard";
+import Avatar from "../components/Avatar";
+
 import Theme from "../components/Theme";
+import EventsList from "../containers/EventsList";
 
-import { Text } from "../utils/theme";
+import { Box } from "../utils/theme";
 
 const Home = () => {
 	return (
 		<Theme>
-			<Text variant="title">Upcoming Events</Text>
-			<ScrollView horizontal={true} style={{ flex: 1, marginTop: 50 }}>
-				{new Array(10).fill(1).map((val, idx) => {
-					return <EventCard width={220} height={164} onPress={() => {}} key={idx} />;
-				})}
-			</ScrollView>
+			<Box justifyContent="flex-end" paddingHorizontal="sp20" alignItems="flex-end">
+				<Avatar name="JD" profile="https://unsplash.it/100/100" onPress={() => {}} />
+			</Box>
+			<EventsList />
 		</Theme>
 	);
 };
