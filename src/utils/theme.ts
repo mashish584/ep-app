@@ -1,4 +1,4 @@
-import { createTheme, createBox, createText } from "@shopify/restyle";
+import { createTheme, createBox, createText, ResponsiveValue } from "@shopify/restyle";
 
 const fontFamily = "Helvetica";
 
@@ -34,10 +34,11 @@ const theme = createTheme({
 		sp10: 10,
 		sp5: 5,
 		sp3: 3,
+		sp0: 0,
 	},
 	breakpoints: {},
 	borderRadii: {
-		s: 4,
+		s: 3,
 		m: 10,
 		l: 25,
 		xl: 75,
@@ -90,6 +91,7 @@ const theme = createTheme({
 });
 
 export type Theme = typeof theme;
+export type Spacing = ResponsiveValue<keyof Theme["spacing"], Theme>;
 const Text = createText<Theme>();
 const Box = createBox<Theme>();
 

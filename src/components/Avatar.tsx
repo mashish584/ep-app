@@ -1,6 +1,6 @@
 import React from "react";
-import { Image } from "react-native";
-import { RectButton } from "react-native-gesture-handler";
+import { Image, TouchableOpacity } from "react-native";
+
 import { generateBoxShadowStyle } from "../utils";
 import theme, { Box, pallette, Text } from "../utils/theme";
 
@@ -12,7 +12,7 @@ interface Avatar {
 
 const Avatar = ({ name, profile, onPress }: Avatar) => {
 	return (
-		<RectButton activeOpacity={0}>
+		<TouchableOpacity onPress={onPress} activeOpacity={0}>
 			<Box
 				width={45}
 				height={57}
@@ -37,7 +37,7 @@ const Avatar = ({ name, profile, onPress }: Avatar) => {
 					</Text>
 				</Box>
 			</Box>
-		</RectButton>
+		</TouchableOpacity>
 	);
 };
 
