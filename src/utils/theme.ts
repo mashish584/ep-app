@@ -79,7 +79,9 @@ const theme = createTheme({
 		},
 	},
 	fontSize: {
-		sm: 11,
+		xxs: 9,
+		xs: 11,
+		sm: 12,
 		md: 14,
 		lg: 24,
 		normal: 18,
