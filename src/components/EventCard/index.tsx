@@ -26,6 +26,8 @@ const EventDateConfig: Record<string, Config> = {
 };
 
 const EventCard: React.FC<EventCard> = ({ width, height, ...props }) => {
+	const hostImageSize = props.variant === "full" ? 25 : 20;
+
 	return (
 		<TouchableOpacity onPress={props.onPress} activeOpacity={1}>
 			<Box
@@ -52,8 +54,19 @@ const EventCard: React.FC<EventCard> = ({ width, height, ...props }) => {
 					<Text variant="bold" fontSize={theme.fontSize.md} marginTop="sp3">
 						Reunion Party
 					</Text>
+					{props.variant === "full" && (
+						<Text
+							numberOfLines={2}
+							variant="description"
+							fontSize={theme.fontSize.sm}
+							marginVertical="sp3"
+							style={{ color: pallette.rgb.black(0.83), width: "95%" }}>
+							Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad illo eius iusto. Dolorum eius in nisi voluptatibus doloremque corporis
+							fugiat, reprehenderit quod aperiam soluta alias facilis? Rem explicabo eaque adipisci?
+						</Text>
+					)}
 					<Box marginTop="sp10" flexDirection="row" justifyContent="space-between" alignItems="center">
-						<HostInfo width={20} height={20} username="John" />
+						<HostInfo width={hostImageSize} height={hostImageSize} username="John" />
 						<Button variant="primary" onPress={() => alert("Join")} containerStyle={{ width: 90, height: 25, borderRadius: theme.borderRadii.s }}>
 							<Text fontSize={theme.fontSize.xs} color="secondary" variant="bold">
 								Join - $99
