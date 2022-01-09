@@ -7,7 +7,7 @@ import Theme from "../components/Theme";
 import TextIcon from "../components/TextIcon";
 import UserChips from "../components/UserChips";
 
-import { Box, Text } from "../utils/theme";
+import theme, { Box, fonts, Text } from "../utils/theme";
 
 const SCREEN_HEIGHT = Dimensions.get("screen").height;
 
@@ -18,7 +18,7 @@ const EventDetail = () => {
 				source={require("../assets/images/sample-1.jpg")}
 				style={{ width: "100%", height: SCREEN_HEIGHT * 0.7, position: "absolute", top: 0, borderWidth: 1 }}
 			/>
-			<ScrollView contentContainerStyle={{ flex: 1, position: "relative", paddingTop: SCREEN_HEIGHT * 0.5 }}>
+			<ScrollView contentContainerStyle={{ flexGrow: 1, position: "relative", paddingTop: SCREEN_HEIGHT * 0.5 }} showsVerticalScrollIndicator={false}>
 				<Box
 					flex={1}
 					borderTopLeftRadius="l"
@@ -43,7 +43,17 @@ const EventDetail = () => {
 							}))}
 							totalUsers={100}
 							imageSize={30}
+							onPress={() => {}}
 						/>
+					</Box>
+					<Box>
+						<Text variant="bold" fontSize={theme.fontSize.regular} marginTop="l">
+							Description
+						</Text>
+						<Text marginTop="s" fontSize={theme.fontSize.md} color="black" style={{ fontFamily: fonts.primary_regular, lineHeight: 18 }}>
+							Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus venenatis, lectus magna fringilla urna,
+							porttitor rhoncus dolor purus non enim praesent elementum facilisis leo, vel fringilla est ullamcorper eget nulla.
+						</Text>
 					</Box>
 				</Box>
 			</ScrollView>

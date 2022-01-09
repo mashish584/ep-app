@@ -19,7 +19,7 @@ export const pallette = {
 	},
 };
 
-const fonts = {
+export const fonts = {
 	primary_regular: `${fontFamily}`,
 	primary_bold: `${fontFamily}-Bold`,
 	primary_light: `${fontFamily}-light`,

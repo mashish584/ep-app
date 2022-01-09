@@ -10,7 +10,7 @@ interface UserChips {
 	users: User[];
 	imageSize: number;
 	totalUsers: number;
-	onPress: () => void;
+	onPress?: () => void;
 }
 
 const UserChips = ({ users, totalUsers, ...props }: UserChips) => {
