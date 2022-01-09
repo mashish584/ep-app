@@ -30,11 +30,12 @@ const theme = createTheme({
 		...pallette.hex,
 	},
 	spacing: {
-		sp20: 20,
-		sp10: 10,
-		sp5: 5,
-		sp3: 3,
-		sp0: 0,
+		xl: 30,
+		l: 20,
+		m: 10,
+		xs: 5,
+		xxs: 3,
+		none: 0,
 	},
 	breakpoints: {},
 	borderRadii: {

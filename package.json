@@ -8,9 +8,9 @@
 		"start": "react-native start",
 		"test": "jest",
 		"prepare": "husky install",
-		"lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+		"lint": "eslint --quiet . --ext .js,.jsx,.ts,.tsx",
 		"pretty": "prettier --write --config .prettierrc.json *.js **/*.{js,ts,tsx}",
-		"lint:fix": "eslint **/**.{ts,tsx} --fix",
+		"lint:fix": "eslint --quiet **/**.{ts,tsx} --fix",
 		"analyze": "cross-env BUNDLE_ANALYZE=true npm run build",
 		"analyze-code": "npm run pretty && npm run lint:fix && npm run lint"
 	},

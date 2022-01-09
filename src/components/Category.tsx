@@ -20,10 +20,10 @@ const Category = ({ onPress, mr, ml }: Category) => {
 				borderRadius="s"
 				marginRight={mr}
 				marginLeft={ml}
-				padding="sp5"
+				padding="xs"
 				alignItems="center">
 				<Image source={{ uri: "https://unsplash.it/100/100" }} style={{ width: 20, height: 20, borderRadius: 50 }} />
-				<Text variant="bold" fontSize={theme.fontSize.xxs} marginLeft="sp5">
+				<Text variant="bold" fontSize={theme.fontSize.xxs} marginLeft="xs">
 					Tailgating Parties
 				</Text>
 			</Box>

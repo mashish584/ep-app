@@ -16,7 +16,7 @@ const HostInfo = ({ width, height, ...props }: HostInfo) => {
 			<Box flexDirection="row" width={100} alignItems={"center"}>
 				<Image
 					source={{ uri: "https://unsplash.it/50/50" }}
-					style={{ width, height, marginRight: theme.spacing.sp5 }}
+					style={{ width, height, marginRight: theme.spacing.xs }}
 					borderRadius={(width as number) / 2}
 				/>
 				<Texter

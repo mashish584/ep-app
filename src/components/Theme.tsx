@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface ThemeProps {
 	children: ReactNode;
+	avoidTopNotch?: boolean;
 }
 
 type NoImageSourceProps = ThemeProps & { isImageContainer?: false; viewContainerStyle?: ViewStyle | ViewStyle[] };
@@ -24,7 +25,7 @@ function Theme(
 
 	const source = props.source as ImageSourcePropType;
 
-	const safeAreaStyle = { paddingTop: Math.max(top, 16), paddingBottom: Math.max(bottom, 16) };
+	const safeAreaStyle = { paddingTop: props.avoidTopNotch ? 0 : Math.max(top, 16), paddingBottom: Math.max(bottom, 16) };
 
 	return props.isImageContainer ? (
 		<ImageBackground source={source} style={[styles.container, props.imageContainerStyle, safeAreaStyle]}>
