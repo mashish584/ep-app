@@ -20,7 +20,7 @@ const UserChips = ({ users, totalUsers, ...props }: UserChips) => {
 	return (
 		<Box flexDirection="row">
 			{users.map(({ image }, index) => (
-				<Box key={index} width={props.imageSize} height={props.imageSize} borderWidth={1} style={{ marginLeft: -10, borderColor, borderRadius }}>
+				<Box key={index} width={props.imageSize} height={props.imageSize} borderWidth={1} style={{ marginLeft: -15, borderColor, borderRadius }}>
 					<Image source={image} style={{ width: "100%", height: "100%" }} borderRadius={borderRadius} />
 				</Box>
 			))}

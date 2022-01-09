@@ -1,5 +1,5 @@
 import React from "react";
-import { ImageBackground, Dimensions, ScrollView } from "react-native";
+import { ImageBackground, Dimensions, ScrollView, StyleSheet } from "react-native";
 import { faCalendar, faClock } from "@fortawesome/free-regular-svg-icons";
 import { faMapMarker } from "@fortawesome/free-solid-svg-icons";
 
@@ -9,17 +9,17 @@ import UserChips from "../components/UserChips";
 
 import theme, { Box, fonts, Text } from "../utils/theme";
 import HostInfo from "../components/HostInfo";
+import Button from "../components/Button";
+import Header from "../components/Header";
 
 const SCREEN_HEIGHT = Dimensions.get("screen").height;
 
 const EventDetail = () => {
 	return (
 		<Theme avoidTopNotch={true}>
-			<ImageBackground
-				source={require("../assets/images/sample-1.jpg")}
-				style={{ width: "100%", height: SCREEN_HEIGHT * 0.7, position: "absolute", top: 0, borderWidth: 1 }}
-			/>
-			<ScrollView contentContainerStyle={{ flexGrow: 1, position: "relative", paddingTop: SCREEN_HEIGHT * 0.5 }} showsVerticalScrollIndicator={false}>
+			<ImageBackground source={require("../assets/images/sample-1.jpg")} style={styles.background} />
+			<Header />
+			<ScrollView contentContainerStyle={styles.containerStyle} showsVerticalScrollIndicator={false}>
 				<Box
 					flex={1}
 					borderTopLeftRadius="l"
@@ -28,13 +28,15 @@ const EventDetail = () => {
 					paddingTop="xl"
 					paddingHorizontal="l"
 					style={{ marginTop: -50 }}>
-					<Text variant="title">Reunion Party</Text>
+					<Text variant="title" marginBottom="s">
+						Reunion Party
+					</Text>
 					<Box marginVertical="s" flexDirection="row">
 						<TextIcon icon={faCalendar} text="10 January 2022" />
 						<TextIcon icon={faClock} text="07:30 PM" />
 					</Box>
 					<TextIcon icon={faMapMarker} text="2972 Westheimer Rd. Santa Ana, Illinois 85486" />
-					<Box flexDirection="row" justifyContent="space-between" minHeight={30} marginTop="m" alignItems="center">
+					<Box flexDirection="row" justifyContent="space-between" minHeight={30} marginTop="xl" alignItems="center">
 						<Text variant="bold" color="primary">
 							5 Joined
 						</Text>
@@ -42,7 +44,7 @@ const EventDetail = () => {
 							users={new Array(3).fill(1).map((i, _) => ({
 								image: { uri: "https://unsplash.it/100/100" },
 							}))}
-							totalUsers={100}
+							totalUsers={5}
 							imageSize={30}
 							onPress={() => {}}
 						/>
@@ -66,10 +68,26 @@ const EventDetail = () => {
 							</Text>
 						</HostInfo>
 					</Box>
+					<Button variant="primary" label="Join now - $99" containerStyle={{ width: "100%", marginVertical: theme.spacing.xl }} onPress={() => {}} />
 				</Box>
 			</ScrollView>
 		</Theme>
 	);
 };
+
+const styles = StyleSheet.create({
+	background: {
+		width: "100%",
+		height: SCREEN_HEIGHT * 0.7,
+		position: "absolute",
+		top: 0,
+		borderWidth: 1,
+	},
+	containerStyle: {
+		flexGrow: 1,
+		position: "relative",
+		paddingTop: SCREEN_HEIGHT * 0.5,
+	},
+});
 
 export default EventDetail;
