@@ -32,7 +32,8 @@ const theme = createTheme({
 	spacing: {
 		xl: 30,
 		l: 20,
-		m: 10,
+		m: 15,
+		s: 10,
 		xs: 5,
 		xxs: 3,
 		none: 0,

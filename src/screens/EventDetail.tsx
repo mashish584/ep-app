@@ -1,12 +1,16 @@
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faCalendar } from "@fortawesome/free-regular-svg-icons";
 import React from "react";
 import { ImageBackground, Dimensions, ScrollView } from "react-native";
+import { faCalendar, faClock } from "@fortawesome/free-regular-svg-icons";
+import { faMapMarker } from "@fortawesome/free-solid-svg-icons";
 
 import Theme from "../components/Theme";
+import TextIcon from "../components/TextIcon";
+import UserChips from "../components/UserChips";
+
 import { Box, Text } from "../utils/theme";
 
 const SCREEN_HEIGHT = Dimensions.get("screen").height;
+
 const EventDetail = () => {
 	return (
 		<Theme avoidTopNotch={true}>
@@ -24,13 +28,22 @@ const EventDetail = () => {
 					paddingHorizontal="l"
 					style={{ marginTop: -50 }}>
 					<Text variant="title">Reunion Party</Text>
-					<Box marginTop="xs" flexDirection="row">
-						<Box flexDirection="row">
-							<FontAwesomeIcon icon={faCalendar} />
-							<Text marginLeft="xs" variant="metaText12">
-								10 January 2022
-							</Text>
-						</Box>
+					<Box marginVertical="s" flexDirection="row">
+						<TextIcon icon={faCalendar} text="10 January 2022" />
+						<TextIcon icon={faClock} text="07:30 PM" />
+					</Box>
+					<TextIcon icon={faMapMarker} text="2972 Westheimer Rd. Santa Ana, Illinois 85486" />
+					<Box flexDirection="row" justifyContent="space-between" minHeight={30} marginTop="s" alignItems="center">
+						<Text variant="bold" color="primary">
+							5 Joined
+						</Text>
+						<UserChips
+							users={new Array(3).fill(1).map((i, _) => ({
+								image: { uri: "https://unsplash.it/100/100" },
+							}))}
+							totalUsers={100}
+							imageSize={30}
+						/>
 					</Box>
 				</Box>
 			</ScrollView>
