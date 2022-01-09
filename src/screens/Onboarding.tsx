@@ -16,15 +16,15 @@ const Onboarding = () => {
 	return (
 		<Theme isImageContainer={true} source={onboardingImage} imageContainerStyle={styles.container}>
 			<Layer alpha={0.8} />
-			<Box flex={0.2} padding="sp20" alignItems="center" justifyContent="flex-end">
+			<Box flex={0.2} padding="l" alignItems="center" justifyContent="flex-end">
 				<Text variant="title" style={styles.title} fontSize={theme.fontSize.md}>
 					Lorem ipsum doler sit amet
 				</Text>
-				<Text variant="light" style={styles.title} paddingHorizontal="sp20" marginTop="sp10">
+				<Text variant="light" style={styles.title} paddingHorizontal="l" marginTop="m">
 					Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus venenatis.
 				</Text>
 			</Box>
-			<Box alignItems="center" padding="sp10">
+			<Box alignItems="center" padding="m">
 				<Button variant="transparent" onPress={() => {}} label="" containerStyle={styles.button}>
 					<Box>
 						<DownArrow style={{ width: 10, height: 10 }} />

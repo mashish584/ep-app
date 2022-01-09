@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
+import { StyleSheet, TextStyle, TouchableOpacity, ViewStyle } from "react-native";
 import { useTheme } from "@shopify/restyle";
 
 import { Theme, Text } from "../utils/theme";
@@ -8,6 +8,7 @@ interface ButtonProps {
 	variant: "default" | "primary" | "transparent";
 	label?: string;
 	containerStyle?: ViewStyle;
+	textStyle?: TextStyle;
 	onPress: () => void;
 }
 
@@ -19,7 +20,7 @@ const Button: React.FC<ButtonProps> = ({ variant, label, onPress, ...props }) =>
 	return (
 		<TouchableOpacity onPress={onPress} style={[styles.container, props.containerStyle, { backgroundColor }]} activeOpacity={0.8}>
 			{props.children || (
-				<Text variant="button" style={[{ color }]}>
+				<Text variant="button" style={[{ color }, props.textStyle]}>
 					{label}
 				</Text>
 			)}
@@ -29,8 +30,8 @@ const Button: React.FC<ButtonProps> = ({ variant, label, onPress, ...props }) =>
 
 const styles = StyleSheet.create({
 	container: {
-		borderRadius: 25,
-		height: 50,
+		borderRadius: 5,
+		minHeight: 60,
 		width: 245,
 		justifyContent: "center",
 		alignItems: "center",
