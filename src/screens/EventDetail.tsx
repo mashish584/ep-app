@@ -8,6 +8,7 @@ import TextIcon from "../components/TextIcon";
 import UserChips from "../components/UserChips";
 
 import theme, { Box, fonts, Text } from "../utils/theme";
+import HostInfo from "../components/HostInfo";
 
 const SCREEN_HEIGHT = Dimensions.get("screen").height;
 
@@ -33,7 +34,7 @@ const EventDetail = () => {
 						<TextIcon icon={faClock} text="07:30 PM" />
 					</Box>
 					<TextIcon icon={faMapMarker} text="2972 Westheimer Rd. Santa Ana, Illinois 85486" />
-					<Box flexDirection="row" justifyContent="space-between" minHeight={30} marginTop="s" alignItems="center">
+					<Box flexDirection="row" justifyContent="space-between" minHeight={30} marginTop="m" alignItems="center">
 						<Text variant="bold" color="primary">
 							5 Joined
 						</Text>
@@ -46,14 +47,24 @@ const EventDetail = () => {
 							onPress={() => {}}
 						/>
 					</Box>
-					<Box>
-						<Text variant="bold" fontSize={theme.fontSize.regular} marginTop="l">
+					<Box marginTop="l">
+						<Text variant="bold" fontSize={theme.fontSize.regular}>
 							Description
 						</Text>
 						<Text marginTop="s" fontSize={theme.fontSize.md} color="black" style={{ fontFamily: fonts.primary_regular, lineHeight: 18 }}>
 							Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus venenatis, lectus magna fringilla urna,
 							porttitor rhoncus dolor purus non enim praesent elementum facilisis leo, vel fringilla est ullamcorper eget nulla.
 						</Text>
+					</Box>
+					<Box marginTop="l">
+						<Text variant="bold" fontSize={theme.fontSize.regular} marginBottom="s">
+							Host
+						</Text>
+						<HostInfo username="John Doe" width={30} height={30}>
+							<Text variant="metaText14" color="black">
+								John Doe
+							</Text>
+						</HostInfo>
 					</Box>
 				</Box>
 			</ScrollView>

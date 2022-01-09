@@ -60,7 +60,7 @@ const theme = createTheme({
 		},
 		metaText12: {
 			fontFamily: fonts.primary_regular,
-			fontSize: 14,
+			fontSize: 12,
 		},
 		metaText14: {
 			fontFamily: fonts.primary_regular,
@@ -94,6 +94,9 @@ const theme = createTheme({
 
 export type Theme = typeof theme;
 export type Spacing = ResponsiveValue<keyof Theme["spacing"], Theme>;
+export type FontSize = ResponsiveValue<keyof Theme["fontSize"], Theme>;
+export type TextVariants = ResponsiveValue<keyof Theme["textVariants"], Theme>;
+
 const Text = createText<Theme>();
 const Box = createBox<Theme>();
 
