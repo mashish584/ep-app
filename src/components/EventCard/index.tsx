@@ -67,7 +67,7 @@ const EventCard: React.FC<EventCard> = ({ width, height, ...props }) => {
 					)}
 					<Box marginTop="m" flexDirection="row" justifyContent="space-between" alignItems="center">
 						<HostInfo width={hostImageSize} height={hostImageSize} username="John" showRole={true} />
-						<Button variant="primary" onPress={() => alert("Join")} containerStyle={{ width: 90, height: 25, borderRadius: theme.borderRadii.s }}>
+						<Button variant="primary" onPress={() => alert("Join")} containerStyle={{ width: 90, minHeight: 25, borderRadius: theme.borderRadii.s }}>
 							<Text fontSize={theme.fontSize.xs} color="secondary" variant="bold">
 								Join - $99
 							</Text>
