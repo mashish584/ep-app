@@ -61,7 +61,7 @@ const EventsList = () => {
 					<EventCard
 						variant="full"
 						width={Dimensions.get("screen").width - theme.spacing.l * 2}
-						containerStyle={{ alignSelf: "center", marginBottom: theme.spacing.l }}
+						containerStyle={{ marginBottom: theme.spacing.l, marginLeft: theme.spacing.l }}
 						height={250}
 						onPress={() => {}}
 						key={index}
