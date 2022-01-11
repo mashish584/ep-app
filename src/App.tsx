@@ -8,7 +8,7 @@
  * @format
  */
 
-import React from "react";
+import React, { useState } from "react";
 
 import { ApolloProvider } from "@apollo/client";
 import { ThemeProvider } from "@shopify/restyle";
@@ -16,17 +16,20 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import theme from "./utils/theme";
 import { client } from "./config/apollo";
-import Navigation from "./navigation";
-// import Auth from "./screens/Auth";
+
+import Test from "./containers/Test";
+import Button from "./components/Button";
 
 const App = () => {
+	const [index, setIndex] = useState(10);
+
 	return (
 		<SafeAreaProvider>
 			<ThemeProvider {...{ theme }}>
 				<ApolloProvider client={client}>
-					<Navigation />
-					{/* <Test /> */}
-					{/* <Auth /> */}
+					<Test scrollIndex={index} />
+
+					<Button variant="primary" label="update" onPress={() => setIndex(140)} />
 				</ApolloProvider>
 			</ThemeProvider>
 		</SafeAreaProvider>
