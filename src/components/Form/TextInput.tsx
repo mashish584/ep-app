@@ -8,22 +8,24 @@ import theme, { Box, Text } from "../../utils/theme";
 interface TextInput extends TextInputProps {
 	type: "input" | "password";
 	errorNessage?: string;
+	label?: string;
 }
 
 const TextInput = ({ errorNessage, type, ...props }: TextInput) => {
 	const [showPassword, setShowPassword] = useState(false);
 
 	return (
-		<Box>
-			<Text variant="metaText16">Email</Text>
+		<Box marginTop="s">
+			{props.label ? <Text variant="metaText16">{props.label}</Text> : null}
 			<Box
 				marginVertical="xs"
 				height={50}
 				borderWidth={1}
+				borderRadius="s"
 				borderColor="darkGray"
 				flexDirection="row"
 				width={"100%"}
-				paddingHorizontal="xs"
+				paddingHorizontal="s"
 				justifyContent="space-between"
 				alignItems="center"
 				position="relative">
@@ -33,7 +35,7 @@ const TextInput = ({ errorNessage, type, ...props }: TextInput) => {
 					{...props}
 				/>
 				{type === "password" && (
-					<TouchableOpacity activeOpacity={1} onPress={() => setShowPassword(!showPassword)} style={{ borderWidth: 1 }}>
+					<TouchableOpacity activeOpacity={1} onPress={() => setShowPassword(!showPassword)}>
 						<FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
 					</TouchableOpacity>
 				)}
