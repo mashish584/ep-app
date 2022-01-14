@@ -3,7 +3,7 @@ import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
 import React, { useState } from "react";
 import { TextInput as RNTextInput, TextInputProps } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import theme, { Box, Text } from "../../utils/theme";
+import theme, { Box, fonts, Text } from "../../utils/theme";
 
 interface TextInput extends TextInputProps {
 	type: "input" | "password";
@@ -31,7 +31,7 @@ const TextInput = ({ errorMessage, type, ...props }: TextInput) => {
 				position="relative">
 				<RNTextInput
 					secureTextEntry={type === "password" && !showPassword ? true : false}
-					style={{ fontSize: theme.fontSize.normal, width: type === "password" ? "92%" : "100%", height: "100%" }}
+					style={{ fontFamily: fonts.primary_regular, fontSize: theme.fontSize.regular, width: type === "password" ? "92%" : "100%", height: "100%" }}
 					{...props}
 				/>
 				{type === "password" && (

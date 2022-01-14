@@ -12,6 +12,7 @@ import { Box, Text, theme } from "../utils/theme";
 import { AuthInlineError } from "../types";
 import { SignInForm } from "../form.interface";
 import { RootStackScreens, StackNavigationProps } from "../navigation/types";
+import Curve from "../components/SVG/Curve";
 
 const initalValues = {
 	email: "",
@@ -56,7 +57,7 @@ const Auth: React.FC<StackNavigationProps<RootStackScreens, "AuthScreen">> = () 
 									<TextInput type="input" label="Email" onChangeText={handleChange("email")} errorMessage={errors?.email} />
 									<TextInput type="password" label="Password" onChangeText={handleChange("password")} errorMessage={errors?.password} />
 									<TouchableOpacity>
-										<Text variant="bold" marginTop="s" style={{ alignSelf: "flex-end" }}>
+										<Text variant="metaText14" marginTop="s" style={{ alignSelf: "flex-end" }}>
 											Forgot password?
 										</Text>
 									</TouchableOpacity>
@@ -66,6 +67,9 @@ const Auth: React.FC<StackNavigationProps<RootStackScreens, "AuthScreen">> = () 
 						);
 					}}
 				</Formik>
+			</Box>
+			<Box position="absolute" bottom={0}>
+				<Curve />
 			</Box>
 		</Theme>
 	);
