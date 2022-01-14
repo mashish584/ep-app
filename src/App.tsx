@@ -17,14 +17,14 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import theme from "./utils/theme";
 import { client } from "./config/apollo";
 
-import Auth from "./screens/Auth";
+import Navigation from "./navigation";
 
 const App = () => {
 	return (
 		<SafeAreaProvider>
 			<ThemeProvider {...{ theme }}>
 				<ApolloProvider client={client}>
-					<Auth />
+					<Navigation />
 				</ApolloProvider>
 			</ThemeProvider>
 		</SafeAreaProvider>
