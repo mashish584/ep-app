@@ -1,9 +1,9 @@
+import React, { useState } from "react";
+import { TextInput as RNTextInput, TextInputProps, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
-import React, { useState } from "react";
-import { TextInput as RNTextInput, TextInputProps } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import theme, { Box, fonts, Text } from "../../utils/theme";
+
+import theme, { Box, fonts, pallette, Text } from "../../utils/theme";
 
 interface TextInput extends TextInputProps {
 	type: "input" | "password";
@@ -16,27 +16,31 @@ const TextInput = ({ errorMessage, type, ...props }: TextInput) => {
 
 	return (
 		<Box marginTop="s">
-			{props.label ? <Text variant="metaText16">{props.label}</Text> : null}
+			{props.label ? (
+				<Text variant="light" fontSize={theme.fontSize.sm}>
+					{props.label}
+				</Text>
+			) : null}
 			<Box
 				marginVertical="xs"
-				height={50}
+				minHeight={45}
 				borderWidth={1}
 				borderRadius="s"
-				borderColor="darkGray"
 				flexDirection="row"
 				width={"100%"}
 				paddingHorizontal="s"
 				justifyContent="space-between"
 				alignItems="center"
-				position="relative">
+				position="relative"
+				style={styles.textInputContainer}>
 				<RNTextInput
 					secureTextEntry={type === "password" && !showPassword ? true : false}
-					style={{ fontFamily: fonts.primary_regular, fontSize: theme.fontSize.regular, width: type === "password" ? "92%" : "100%", height: "100%" }}
+					style={[styles.textInput, { width: type === "password" ? "92%" : "100%" }]}
 					{...props}
 				/>
 				{type === "password" && (
 					<TouchableOpacity activeOpacity={1} onPress={() => setShowPassword(!showPassword)}>
-						<FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+						<FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} color={theme.colors.darkGray} />
 					</TouchableOpacity>
 				)}
 			</Box>
@@ -48,5 +52,18 @@ const TextInput = ({ errorMessage, type, ...props }: TextInput) => {
 		</Box>
 	);
 };
+
+const styles = StyleSheet.create({
+	textInputContainer: {
+		backgroundColor: pallette.rgb.gray(0.1),
+		borderColor: pallette.rgb.gray(0.7),
+	},
+	textInput: {
+		fontFamily: fonts.primary_bold,
+		fontSize: theme.fontSize.sm,
+		color: theme.colors.darkGray,
+		height: "100%",
+	},
+});
 
 export default TextInput;

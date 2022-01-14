@@ -9,6 +9,7 @@ interface ButtonProps {
 	label?: string;
 	containerStyle?: ViewStyle;
 	textStyle?: TextStyle;
+	disabled?: boolean;
 	onPress: () => void;
 }
 
@@ -18,7 +19,11 @@ const Button: React.FC<ButtonProps> = ({ variant, label, onPress, ...props }) =>
 	const color = theme.colors.secondary;
 
 	return (
-		<TouchableOpacity onPress={onPress} style={[styles.container, props.containerStyle, { backgroundColor }]} activeOpacity={0.8}>
+		<TouchableOpacity
+			onPress={onPress}
+			disabled={props.disabled}
+			style={[styles.container, props.containerStyle, { backgroundColor }]}
+			activeOpacity={0.3}>
 			{props.children || (
 				<Text variant="button" style={[{ color }, props.textStyle]}>
 					{label}
