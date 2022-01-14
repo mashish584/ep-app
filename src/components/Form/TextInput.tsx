@@ -34,6 +34,7 @@ const TextInput = ({ errorMessage, type, ...props }: TextInput) => {
 				position="relative"
 				style={styles.textInputContainer}>
 				<RNTextInput
+					autoCapitalize="none"
 					secureTextEntry={type === "password" && !showPassword ? true : false}
 					style={[styles.textInput, { width: type === "password" ? "92%" : "100%" }]}
 					{...props}

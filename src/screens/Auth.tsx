@@ -16,20 +16,26 @@ import { SignInForm } from "../form.interface";
 import { RootStackScreens, StackNavigationProps } from "../navigation/types";
 
 import { SIGNIN_MUTATION } from "../config/mutations";
-import { UserLoginVariables } from "../config/types";
+import { UserLoginResponse, UserLoginVariables } from "../config/types";
+import { useAuth } from "../utils/store";
 
 const initalValues = {
 	email: "",
 	password: "",
 };
 
-const Auth: React.FC<StackNavigationProps<RootStackScreens, "AuthScreen">> = () => {
+const Auth: React.FC<StackNavigationProps<RootStackScreens, "AuthScreen">> = ({ navigation }) => {
 	const intialFormValues: SignInForm = useRef({ ...initalValues }).current;
 	const [errors, setErrors] = useState<AuthInlineError | null>(null);
+	const { setToken } = useAuth((store) => store);
 
-	const [onSignIn, { loading }] = useMutation<any, UserLoginVariables>(SIGNIN_MUTATION, {
+	const [onSignIn, { loading }] = useMutation<UserLoginResponse, UserLoginVariables>(SIGNIN_MUTATION, {
 		onCompleted: (data) => {
-			console.log({ data });
+			const token = data?.userLogin?.token;
+			if (token) {
+				setToken(token);
+				navigation.navigate("BottomStack");
+			}
 		},
 		onError: (error) => {
 			console.log({ error });
