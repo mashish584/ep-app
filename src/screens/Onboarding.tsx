@@ -4,13 +4,15 @@ import { useTheme } from "@shopify/restyle";
 
 import Layer from "../components/Layer";
 import Theme from "../components/Theme";
-import { Text, Box, pallette, Theme as ThemeType } from "../utils/theme";
 import DownArrow from "../components/SVG/DownArrow";
 import Button from "../components/Button";
 
+import { Text, Box, pallette, Theme as ThemeType } from "../utils/theme";
+import { RootStackScreens, StackNavigationProps } from "../navigation/types";
+
 const onboardingImage = require("../assets/images/onboarding.jpg");
 
-const Onboarding = () => {
+const Onboarding: React.FC<StackNavigationProps<RootStackScreens, "Onboarding">> = ({ navigation }) => {
 	const theme = useTheme<ThemeType>();
 
 	return (
@@ -25,7 +27,13 @@ const Onboarding = () => {
 				</Text>
 			</Box>
 			<Box alignItems="center" padding="m">
-				<Button variant="transparent" onPress={() => {}} label="" containerStyle={styles.button}>
+				<Button
+					variant="transparent"
+					onPress={() => {
+						navigation.navigate("AuthScreen");
+					}}
+					label=""
+					containerStyle={styles.button}>
 					<Box>
 						<DownArrow style={{ width: 10, height: 10 }} />
 					</Box>

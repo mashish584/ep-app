@@ -5,11 +5,11 @@ import Button from "../Button";
 import HostInfo from "../HostInfo";
 import Texter, { Config } from "../Texter";
 
-import { dimensions } from "../../types";
+import { Dimensions } from "../../types";
 import { generateBoxShadowStyle } from "../../utils";
 import { Box, pallette, Text, theme } from "../../utils/theme";
 
-interface EventCard extends dimensions {
+interface EventCard extends Dimensions {
 	variant?: "full" | "small";
 	onPress: () => void;
 	containerStyle?: ViewStyle;
@@ -65,9 +65,9 @@ const EventCard: React.FC<EventCard> = ({ width, height, ...props }) => {
 							fugiat, reprehenderit quod aperiam soluta alias facilis? Rem explicabo eaque adipisci?
 						</Text>
 					)}
-					<Box marginTop="m" flexDirection="row" justifyContent="space-between" alignItems="center">
+					<Box marginTop="s" flexDirection="row" justifyContent="space-between" alignItems="center">
 						<HostInfo width={hostImageSize} height={hostImageSize} username="John" showRole={true} />
-						<Button variant="primary" onPress={() => alert("Join")} containerStyle={{ width: 90, height: 25, borderRadius: theme.borderRadii.s }}>
+						<Button variant="primary" onPress={() => alert("Join")} containerStyle={{ width: 90, minHeight: 25, borderRadius: theme.borderRadii.s }}>
 							<Text fontSize={theme.fontSize.xs} color="secondary" variant="bold">
 								Join - $99
 							</Text>
