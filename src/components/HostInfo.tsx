@@ -1,11 +1,11 @@
 import React from "react";
 import { Image, TouchableOpacity } from "react-native";
-import { dimensions } from "../types";
+import { Dimensions } from "../types";
 
 import theme, { Box, FontSize, TextVariants } from "../utils/theme";
 import Texter from "./Texter";
 
-interface HostInfo extends dimensions {
+interface HostInfo extends Dimensions {
 	onPress?: () => void;
 	username: string;
 	showRole?: boolean;

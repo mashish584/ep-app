@@ -5,11 +5,11 @@ import Button from "../Button";
 import HostInfo from "../HostInfo";
 import Texter, { Config } from "../Texter";
 
-import { dimensions } from "../../types";
+import { Dimensions } from "../../types";
 import { generateBoxShadowStyle } from "../../utils";
 import { Box, pallette, Text, theme } from "../../utils/theme";
 
-interface EventCard extends dimensions {
+interface EventCard extends Dimensions {
 	variant?: "full" | "small";
 	onPress: () => void;
 	containerStyle?: ViewStyle;

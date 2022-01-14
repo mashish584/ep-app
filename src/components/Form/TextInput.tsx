@@ -7,11 +7,11 @@ import theme, { Box, Text } from "../../utils/theme";
 
 interface TextInput extends TextInputProps {
 	type: "input" | "password";
-	errorNessage?: string;
+	errorMessage?: string;
 	label?: string;
 }
 
-const TextInput = ({ errorNessage, type, ...props }: TextInput) => {
+const TextInput = ({ errorMessage, type, ...props }: TextInput) => {
 	const [showPassword, setShowPassword] = useState(false);
 
 	return (
@@ -40,9 +40,9 @@ const TextInput = ({ errorNessage, type, ...props }: TextInput) => {
 					</TouchableOpacity>
 				)}
 			</Box>
-			{errorNessage ? (
+			{errorMessage ? (
 				<Text variant="metaText12" color="primary">
-					{errorNessage}
+					{errorMessage}
 				</Text>
 			) : null}
 		</Box>

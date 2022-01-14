@@ -34,7 +34,7 @@ const RootStack = createStackNavigator<RootStackScreens>();
 const RootStackSCreen = () => {
 	return (
 		<RootStack.Navigator initialRouteName="Onboarding">
-			<RootStack.Screen name="AuthScreen" component={Auth} />
+			<RootStack.Screen name="AuthScreen" component={Auth} options={{ headerShown: false }} />
 			<RootStack.Screen name="Onboarding" component={Onboarding} options={{ headerShown: false }} />
 			<RootStack.Screen name="BottomStack" component={BottamTabScreen} options={{ headerShown: false }} />
 		</RootStack.Navigator>
