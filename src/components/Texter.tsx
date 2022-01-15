@@ -9,7 +9,6 @@ type colorType = ResponsiveValue<keyof Theme["colors"], Theme>;
 
 export type Config = {
 	color: colorType;
-	onPress: () => void;
 	variant: variantType;
 };
 

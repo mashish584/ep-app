@@ -1,5 +1,6 @@
 import React from "react";
 import { TouchableOpacity, Image, ViewStyle } from "react-native";
+import dayjs from "dayjs";
 
 import Button from "../Button";
 import HostInfo from "../HostInfo";
@@ -8,8 +9,14 @@ import Texter, { Config } from "../Texter";
 import { Dimensions } from "../../types";
 import { generateBoxShadowStyle } from "../../utils";
 import { Box, pallette, Text, theme } from "../../utils/theme";
+import { EventInfo } from "../../config/schema.types";
+
+type Event = {
+	thumbnail: string;
+} & Pick<EventInfo, "id" | "title" | "price" | "eventTimestamp" | "description" | "owner">;
 
 interface EventCard extends Dimensions {
+	eventInfo: Event;
 	variant?: "full" | "small";
 	onPress: () => void;
 	containerStyle?: ViewStyle;
@@ -17,15 +24,16 @@ interface EventCard extends Dimensions {
 
 const sample = require("../../assets/images/sample-1.jpg");
 
-const EventDateConfig: Record<string, Config> = {
-	Wednesday: {
-		color: "primary",
-		onPress: () => null,
-		variant: "bold",
-	},
+const EventDateConfig = (key: string, onPress?: () => void): Record<string, Config> => {
+	return {
+		[key]: {
+			color: "primary",
+			variant: "bold",
+		},
+	};
 };
 
-const EventCard: React.FC<EventCard> = ({ width, height, ...props }) => {
+const EventCard: React.FC<EventCard> = ({ width, height, eventInfo, ...props }) => {
 	const hostImageSize = props.variant === "full" ? 25 : 20;
 
 	return (
@@ -48,11 +56,15 @@ const EventCard: React.FC<EventCard> = ({ width, height, ...props }) => {
 					resizeMode="cover"
 				/>
 				<Box flex={0.5} margin="m">
-					<Texter color="darkGray" variant="bold" config={EventDateConfig} style={{ fontSize: theme.fontSize.xs }}>
-						Wednesday 10 Dec
+					<Texter
+						color="darkGray"
+						variant="bold"
+						config={EventDateConfig(dayjs(eventInfo?.eventTimestamp).format("dddd"))}
+						style={{ fontSize: theme.fontSize.xs }}>
+						{dayjs(eventInfo?.eventTimestamp).format("dddd DD MMM")}
 					</Texter>
-					<Text variant="bold" fontSize={theme.fontSize.md} marginTop="xxs">
-						Reunion Party
+					<Text variant="bold" numberOfLines={1} fontSize={theme.fontSize.md} marginTop="xxs">
+						{eventInfo?.title}
 					</Text>
 					{props.variant === "full" && (
 						<Text
@@ -61,15 +73,14 @@ const EventCard: React.FC<EventCard> = ({ width, height, ...props }) => {
 							fontSize={theme.fontSize.sm}
 							marginVertical="xxs"
 							style={{ color: pallette.rgb.black(0.83), width: "95%" }}>
-							Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad illo eius iusto. Dolorum eius in nisi voluptatibus doloremque corporis
-							fugiat, reprehenderit quod aperiam soluta alias facilis? Rem explicabo eaque adipisci?
+							{eventInfo?.description}
 						</Text>
 					)}
 					<Box marginTop="s" flexDirection="row" justifyContent="space-between" alignItems="center">
-						<HostInfo width={hostImageSize} height={hostImageSize} username="John" showRole={true} />
+						<HostInfo width={hostImageSize} height={hostImageSize} username={eventInfo.owner.username} showRole={true} />
 						<Button variant="primary" onPress={() => alert("Join")} containerStyle={{ width: 90, minHeight: 25, borderRadius: theme.borderRadii.s }}>
 							<Text fontSize={theme.fontSize.xs} color="secondary" variant="bold">
-								Join - $99
+								Join - ${eventInfo?.price}
 							</Text>
 						</Button>
 					</Box>

@@ -3,12 +3,9 @@ import { gql } from "@apollo/client";
 export const FETCH_UPCOMING_EVENTS = gql`
 	query upcomingEvents($query: String!) {
 		events(query: $query) {
-			count
 			events {
 				id
 				title
-				description
-				category
 				eventTimestamp
 				price
 				owner {
@@ -18,11 +15,6 @@ export const FETCH_UPCOMING_EVENTS = gql`
 				medias {
 					link
 					thumbnail
-				}
-				location {
-					lat
-					lng
-					address
 				}
 			}
 		}
@@ -37,7 +29,6 @@ export const FETCH_EVENTS = gql`
 				id
 				title
 				description
-				category
 				eventTimestamp
 				price
 				owner {
@@ -47,11 +38,6 @@ export const FETCH_EVENTS = gql`
 				medias {
 					link
 					thumbnail
-				}
-				location {
-					lat
-					lng
-					address
 				}
 			}
 		}

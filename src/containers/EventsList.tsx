@@ -14,6 +14,7 @@ import { EventCategories } from "../utils/preconfig";
 import theme, { Box, Text } from "../utils/theme";
 
 interface UpcomingEventsList {
+	category: EventCategory;
 	categoryEventCount: number | null;
 	events: EventInfo[];
 	isLoading: boolean;
@@ -25,8 +26,6 @@ const UpcomingEventsList = ({ categoryEventCount, ...props }: UpcomingEventsList
 		variables: { query: JSON.stringify({ upcoming: true }) },
 		fetchPolicy: "no-cache",
 	});
-
-	console.log({ data });
 
 	return (
 		<Box paddingVertical="l">
@@ -41,7 +40,14 @@ const UpcomingEventsList = ({ categoryEventCount, ...props }: UpcomingEventsList
 				contentContainerStyle={styles.FlatList}
 				renderItem={({ item, index }) => {
 					return (
-						<EventCard width={220} height={170} containerStyle={{ marginLeft: index === 0 ? theme.spacing.l : 0 }} onPress={() => {}} key={index} />
+						<EventCard
+							key={index}
+							eventInfo={{ ...item, thumbnail: item.medias[0].link }}
+							width={220}
+							height={170}
+							containerStyle={{ marginLeft: index === 0 ? theme.spacing.l : 0 }}
+							onPress={() => {}}
+						/>
 					);
 				}}
 			/>
@@ -51,7 +57,14 @@ const UpcomingEventsList = ({ categoryEventCount, ...props }: UpcomingEventsList
 			{EventCategories.length > 0 && (
 				<ScrollView horizontal={true} style={{ marginTop: theme.spacing.l, marginBottom: theme.spacing.m }} showsHorizontalScrollIndicator={false}>
 					{EventCategories.map((category, index) => (
-						<Category key={index} name={category} mr={"m"} ml={index === 0 ? "l" : "none"} onPress={props.onCategoryChange} />
+						<Category
+							key={index}
+							name={category}
+							selected={props.category === category}
+							mr={"m"}
+							ml={index === 0 ? "l" : "none"}
+							onPress={props.onCategoryChange}
+						/>
 					))}
 				</ScrollView>
 			)}
@@ -109,6 +122,7 @@ const EventsList = () => {
 			onEndReachedThreshold={0.5}
 			ListHeaderComponent={
 				<UpcomingEventsList
+					category={category}
 					categoryEventCount={data?.events.count || 0}
 					isLoading={false}
 					events={[]}
@@ -119,6 +133,7 @@ const EventsList = () => {
 				return (
 					<EventCard
 						variant="full"
+						eventInfo={{ ...item, thumbnail: item.medias[0].link }}
 						width={Dimensions.get("screen").width - theme.spacing.l * 2}
 						containerStyle={{ marginBottom: theme.spacing.l, marginLeft: theme.spacing.l }}
 						height={250}
