@@ -1,23 +1,29 @@
-import React, { useState } from "react";
+import { useQuery } from "@apollo/client";
+import React, { useRef, useState } from "react";
 import { Dimensions, FlatList, ScrollView, StyleSheet } from "react-native";
 import Category from "../components/Category";
 
 import EventCard from "../components/EventCard";
+import { FETCH_EVENTS } from "../config/query";
+import { EventQuery, FetchEventRequestVariables, FetchEventResponse } from "../config/request.types";
+import { EventInfo } from "../config/schema.types";
 import theme, { Box, Text } from "../utils/theme";
 
 interface UpcomingEventsList {
 	categoryEventCount: number;
 	categories: any[];
+	events: EventInfo[];
+	isLoading: boolean;
 }
 
-const UpcomingEventsList = ({ categoryEventCount, categories }: UpcomingEventsList) => {
+const UpcomingEventsList = ({ categoryEventCount, categories, ...props }: UpcomingEventsList) => {
 	return (
 		<Box paddingVertical="l">
 			<Text variant="title" marginLeft="l" fontSize={theme.fontSize.normal}>
 				Upcoming Events
 			</Text>
 			<FlatList
-				data={new Array(100).fill(1)}
+				data={props.events}
 				horizontal={true}
 				showsHorizontalScrollIndicator={false}
 				contentContainerStyle={styles.FlatList}
@@ -50,12 +56,29 @@ const EventsList = () => {
 	const [events] = useState(new Array(10).fill(1));
 	const [categories] = useState(new Array(50).fill(1));
 
+	const upcomingEventFilter: EventQuery = useRef({
+		upcoming: true,
+	}).current;
+
+	const { data: upcomingEvents, loading: isUpcomingEventsLoading } = useQuery<FetchEventResponse, FetchEventRequestVariables>(FETCH_EVENTS, {
+		variables: { query: JSON.stringify(upcomingEventFilter), skip: 0, take: 10 },
+	});
+
+	console.log({ upcomingEvents });
+
 	return (
 		<FlatList
 			data={events}
 			contentContainerStyle={styles.FlatList}
 			showsVerticalScrollIndicator={false}
-			ListHeaderComponent={<UpcomingEventsList categoryEventCount={events.length} categories={categories} />}
+			ListHeaderComponent={
+				<UpcomingEventsList
+					categoryEventCount={events.length}
+					categories={categories}
+					isLoading={isUpcomingEventsLoading}
+					events={upcomingEvents?.events.events || []}
+				/>
+			}
 			renderItem={({ item, index }) => {
 				return (
 					<EventCard

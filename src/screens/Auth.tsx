@@ -16,7 +16,7 @@ import { SignInForm } from "../form.interface";
 import { RootStackScreens, StackNavigationProps } from "../navigation/types";
 
 import { SIGNIN_MUTATION } from "../config/mutations";
-import { UserLoginResponse, UserLoginVariables } from "../config/types";
+import { UserLoginResponse, UserLoginVariables } from "../config/request.types";
 import { useAuth } from "../utils/store";
 
 const initalValues = {

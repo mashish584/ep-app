@@ -30,7 +30,7 @@ const Onboarding: React.FC<StackNavigationProps<RootStackScreens, "Onboarding">>
 				<Button
 					variant="transparent"
 					onPress={() => {
-						navigation.navigate("AuthScreen");
+						navigation.navigate("BottomStack");
 					}}
 					label=""
 					containerStyle={styles.button}>
