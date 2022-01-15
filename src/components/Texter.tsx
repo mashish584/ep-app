@@ -9,7 +9,6 @@ type colorType = ResponsiveValue<keyof Theme["colors"], Theme>;
 
 export type Config = {
 	color: colorType;
-	onPress: () => void;
 	variant: variantType;
 };
 
@@ -30,15 +29,23 @@ const Texter = ({ children, config, ...props }: Texter) => {
 		const textCollection = text.split(" ");
 		const jsx: JSX.Element[] = [];
 
-		textCollection.map((text) => {
+		textCollection.map((text, index) => {
 			const isKeysInConfig = Object.keys(config).includes(text);
 
 			if (isKeysInConfig) {
 				const innerProps = config[text];
 
-				jsx.push(<Text {...{ ...props, ...innerProps }}>{text} </Text>);
+				jsx.push(
+					<Text key={index} {...{ ...props, ...innerProps }}>
+						{text}{" "}
+					</Text>,
+				);
 			} else {
-				jsx.push(<Text {...props}>{text} </Text>);
+				jsx.push(
+					<Text key={index} {...props}>
+						{text}{" "}
+					</Text>,
+				);
 			}
 		});
 

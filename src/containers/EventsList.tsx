@@ -1,39 +1,70 @@
-import React, { useState } from "react";
+import { useQuery } from "@apollo/client";
+import React, { useRef, useState } from "react";
 import { Dimensions, FlatList, ScrollView, StyleSheet } from "react-native";
-import Category from "../components/Category";
 
+import Category from "../components/Category";
 import EventCard from "../components/EventCard";
+
+import { FETCH_EVENTS, FETCH_UPCOMING_EVENTS } from "../config/query";
+import { EventInfo } from "../config/schema.types";
+import { EventQuery, FetchEventRequestVariables, FetchEventResponse } from "../config/request.types";
+import { EventCategory, Filter } from "../types";
+
+import { EventCategories } from "../utils/preconfig";
 import theme, { Box, Text } from "../utils/theme";
 
 interface UpcomingEventsList {
-	categoryEventCount: number;
-	categories: any[];
+	category: EventCategory;
+	categoryEventCount: number | null;
+	events: EventInfo[];
+	isLoading: boolean;
+	onCategoryChange: (category: EventCategory) => void;
 }
 
-const UpcomingEventsList = ({ categoryEventCount, categories }: UpcomingEventsList) => {
+const UpcomingEventsList = ({ categoryEventCount, ...props }: UpcomingEventsList) => {
+	const { data } = useQuery<FetchEventResponse, FetchEventRequestVariables>(FETCH_UPCOMING_EVENTS, {
+		variables: { query: JSON.stringify({ upcoming: true }) },
+		fetchPolicy: "no-cache",
+	});
+
 	return (
 		<Box paddingVertical="l">
 			<Text variant="title" marginLeft="l" fontSize={theme.fontSize.normal}>
 				Upcoming Events
 			</Text>
 			<FlatList
-				data={new Array(100).fill(1)}
+				data={data?.events.events || []}
+				keyExtractor={(item) => item.id}
 				horizontal={true}
 				showsHorizontalScrollIndicator={false}
 				contentContainerStyle={styles.FlatList}
 				renderItem={({ item, index }) => {
 					return (
-						<EventCard width={220} height={170} containerStyle={{ marginLeft: index === 0 ? theme.spacing.l : 0 }} onPress={() => {}} key={index} />
+						<EventCard
+							key={index}
+							eventInfo={{ ...item, thumbnail: item.medias[0].link }}
+							width={220}
+							height={170}
+							containerStyle={{ marginLeft: index === 0 ? theme.spacing.l : 0 }}
+							onPress={() => {}}
+						/>
 					);
 				}}
 			/>
 			<Text variant="title" marginLeft="l" marginTop="l" fontSize={theme.fontSize.normal}>
 				Explore By Categories
 			</Text>
-			{categories.length > 0 && (
+			{EventCategories.length > 0 && (
 				<ScrollView horizontal={true} style={{ marginTop: theme.spacing.l, marginBottom: theme.spacing.m }} showsHorizontalScrollIndicator={false}>
-					{categories.map((category, index) => (
-						<Category key={index} mr={"m"} ml={index === 0 ? "l" : "none"} onPress={() => {}} />
+					{EventCategories.map((category, index) => (
+						<Category
+							key={index}
+							name={category}
+							selected={props.category === category}
+							mr={"m"}
+							ml={index === 0 ? "l" : "none"}
+							onPress={props.onCategoryChange}
+						/>
 					))}
 				</ScrollView>
 			)}
@@ -47,19 +78,62 @@ const UpcomingEventsList = ({ categoryEventCount, categories }: UpcomingEventsLi
 };
 
 const EventsList = () => {
-	const [events] = useState(new Array(10).fill(1));
-	const [categories] = useState(new Array(50).fill(1));
+	const [category, setCategory] = useState<EventCategory>("House");
+
+	const categoriedEventFilter = useRef<Filter<EventQuery>>({
+		query: {
+			category,
+		},
+		pagination: {
+			skip: 0,
+			take: 5,
+		},
+	});
+
+	const { data, fetchMore } = useQuery<FetchEventResponse, FetchEventRequestVariables>(FETCH_EVENTS, {
+		variables: { query: JSON.stringify(categoriedEventFilter.current.query), ...categoriedEventFilter.current.pagination },
+	});
+
+	const fetchMoreEvents = () => {
+		//return if fetched all events
+		if (data?.events.count === data?.events.events.length) return;
+
+		let { pagination } = categoriedEventFilter.current;
+		let skip = pagination.skip || 0;
+		skip += 5;
+		pagination.skip = skip;
+
+		fetchMore<FetchEventResponse, FetchEventRequestVariables>({
+			variables: {
+				query: JSON.stringify(categoriedEventFilter.current.query),
+				...categoriedEventFilter.current.pagination,
+				skip,
+			},
+		});
+	};
 
 	return (
 		<FlatList
-			data={events}
+			data={data?.events.events}
+			keyExtractor={(item, index) => item.id}
 			contentContainerStyle={styles.FlatList}
 			showsVerticalScrollIndicator={false}
-			ListHeaderComponent={<UpcomingEventsList categoryEventCount={events.length} categories={categories} />}
+			onEndReached={fetchMoreEvents}
+			onEndReachedThreshold={0.5}
+			ListHeaderComponent={
+				<UpcomingEventsList
+					category={category}
+					categoryEventCount={data?.events.count || 0}
+					isLoading={false}
+					events={[]}
+					onCategoryChange={(category) => setCategory(category)}
+				/>
+			}
 			renderItem={({ item, index }) => {
 				return (
 					<EventCard
 						variant="full"
+						eventInfo={{ ...item, thumbnail: item.medias[0].link }}
 						width={Dimensions.get("screen").width - theme.spacing.l * 2}
 						containerStyle={{ marginBottom: theme.spacing.l, marginLeft: theme.spacing.l }}
 						height={250}
