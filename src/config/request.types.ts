@@ -18,12 +18,12 @@ export type UserLoginResponse = {
  * ------ Events Query ------ *
 =================================*/
 
-export interface EventQuery {
+export type EventQuery = {
 	search?: string;
 	category?: string;
 	upcoming?: boolean;
 	featured?: boolean;
-}
+};
 
 export type FetchEventRequestVariables = {
 	query?: string;

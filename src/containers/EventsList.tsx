@@ -1,29 +1,41 @@
 import { useQuery } from "@apollo/client";
 import React, { useRef, useState } from "react";
 import { Dimensions, FlatList, ScrollView, StyleSheet } from "react-native";
-import Category from "../components/Category";
 
+import Category from "../components/Category";
 import EventCard from "../components/EventCard";
-import { FETCH_EVENTS } from "../config/query";
-import { EventQuery, FetchEventRequestVariables, FetchEventResponse } from "../config/request.types";
+
+import { FETCH_EVENTS, FETCH_UPCOMING_EVENTS } from "../config/query";
 import { EventInfo } from "../config/schema.types";
+import { EventQuery, FetchEventRequestVariables, FetchEventResponse } from "../config/request.types";
+import { EventCategory, Filter } from "../types";
+
+import { EventCategories } from "../utils/preconfig";
 import theme, { Box, Text } from "../utils/theme";
 
 interface UpcomingEventsList {
-	categoryEventCount: number;
-	categories: any[];
+	categoryEventCount: number | null;
 	events: EventInfo[];
 	isLoading: boolean;
+	onCategoryChange: (category: EventCategory) => void;
 }
 
-const UpcomingEventsList = ({ categoryEventCount, categories, ...props }: UpcomingEventsList) => {
+const UpcomingEventsList = ({ categoryEventCount, ...props }: UpcomingEventsList) => {
+	const { data } = useQuery<FetchEventResponse, FetchEventRequestVariables>(FETCH_UPCOMING_EVENTS, {
+		variables: { query: JSON.stringify({ upcoming: true }) },
+		fetchPolicy: "no-cache",
+	});
+
+	console.log({ data });
+
 	return (
 		<Box paddingVertical="l">
 			<Text variant="title" marginLeft="l" fontSize={theme.fontSize.normal}>
 				Upcoming Events
 			</Text>
 			<FlatList
-				data={props.events}
+				data={data?.events.events || []}
+				keyExtractor={(item) => item.id}
 				horizontal={true}
 				showsHorizontalScrollIndicator={false}
 				contentContainerStyle={styles.FlatList}
@@ -36,10 +48,10 @@ const UpcomingEventsList = ({ categoryEventCount, categories, ...props }: Upcomi
 			<Text variant="title" marginLeft="l" marginTop="l" fontSize={theme.fontSize.normal}>
 				Explore By Categories
 			</Text>
-			{categories.length > 0 && (
+			{EventCategories.length > 0 && (
 				<ScrollView horizontal={true} style={{ marginTop: theme.spacing.l, marginBottom: theme.spacing.m }} showsHorizontalScrollIndicator={false}>
-					{categories.map((category, index) => (
-						<Category key={index} mr={"m"} ml={index === 0 ? "l" : "none"} onPress={() => {}} />
+					{EventCategories.map((category, index) => (
+						<Category key={index} name={category} mr={"m"} ml={index === 0 ? "l" : "none"} onPress={props.onCategoryChange} />
 					))}
 				</ScrollView>
 			)}
@@ -53,30 +65,54 @@ const UpcomingEventsList = ({ categoryEventCount, categories, ...props }: Upcomi
 };
 
 const EventsList = () => {
-	const [events] = useState(new Array(10).fill(1));
-	const [categories] = useState(new Array(50).fill(1));
+	const [category, setCategory] = useState<EventCategory>("House");
 
-	const upcomingEventFilter: EventQuery = useRef({
-		upcoming: true,
-	}).current;
-
-	const { data: upcomingEvents, loading: isUpcomingEventsLoading } = useQuery<FetchEventResponse, FetchEventRequestVariables>(FETCH_EVENTS, {
-		variables: { query: JSON.stringify(upcomingEventFilter), skip: 0, take: 10 },
+	const categoriedEventFilter = useRef<Filter<EventQuery>>({
+		query: {
+			category,
+		},
+		pagination: {
+			skip: 0,
+			take: 5,
+		},
 	});
 
-	console.log({ upcomingEvents });
+	const { data, fetchMore } = useQuery<FetchEventResponse, FetchEventRequestVariables>(FETCH_EVENTS, {
+		variables: { query: JSON.stringify(categoriedEventFilter.current.query), ...categoriedEventFilter.current.pagination },
+	});
+
+	const fetchMoreEvents = () => {
+		//return if fetched all events
+		if (data?.events.count === data?.events.events.length) return;
+
+		let { pagination } = categoriedEventFilter.current;
+		let skip = pagination.skip || 0;
+		skip += 5;
+		pagination.skip = skip;
+
+		fetchMore<FetchEventResponse, FetchEventRequestVariables>({
+			variables: {
+				query: JSON.stringify(categoriedEventFilter.current.query),
+				...categoriedEventFilter.current.pagination,
+				skip,
+			},
+		});
+	};
 
 	return (
 		<FlatList
-			data={events}
+			data={data?.events.events}
+			keyExtractor={(item, index) => item.id}
 			contentContainerStyle={styles.FlatList}
 			showsVerticalScrollIndicator={false}
+			onEndReached={fetchMoreEvents}
+			onEndReachedThreshold={0.5}
 			ListHeaderComponent={
 				<UpcomingEventsList
-					categoryEventCount={events.length}
-					categories={categories}
-					isLoading={isUpcomingEventsLoading}
-					events={upcomingEvents?.events.events || []}
+					categoryEventCount={data?.events.count || 0}
+					isLoading={false}
+					events={[]}
+					onCategoryChange={(category) => setCategory(category)}
 				/>
 			}
 			renderItem={({ item, index }) => {
