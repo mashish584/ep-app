@@ -108,7 +108,7 @@ const EventsList = () => {
 		},
 	});
 
-	const { data, fetchMore } = useQuery<FetchEventResponse, FetchEventRequestVariables>(FETCH_EVENTS, {
+	const { data, fetchMore, refetch } = useQuery<FetchEventResponse, FetchEventRequestVariables>(FETCH_EVENTS, {
 		variables: { query: JSON.stringify(categoriedEventFilter.current.query), ...categoriedEventFilter.current.pagination },
 	});
 
@@ -130,6 +130,14 @@ const EventsList = () => {
 		});
 	};
 
+	const onCategoryUpdate = (category) => {
+		categoriedEventFilter.current.query.category = category;
+		categoriedEventFilter.current.pagination.skip = 0;
+		categoriedEventFilter.current.pagination.take = 5;
+		refetch({ query: JSON.stringify(categoriedEventFilter.current.query), ...categoriedEventFilter.current.pagination });
+		setCategory(category);
+	};
+
 	return (
 		<FlatList
 			data={data?.events.events}
@@ -144,7 +152,7 @@ const EventsList = () => {
 					categoryEventCount={data?.events.count || 0}
 					isLoading={false}
 					events={[]}
-					onCategoryChange={(category) => setCategory(category)}
+					onCategoryChange={onCategoryUpdate}
 				/>
 			}
 			renderItem={({ item, index }) => {
