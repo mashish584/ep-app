@@ -20,7 +20,7 @@ const SCREEN_HEIGHT = Dimensions.get("screen").height;
 
 const EventDetail: React.FC<StackNavigationProps<RootStackScreens, "EventDetail">> = ({ route, navigation }) => {
 	const slug = route.params?.slug;
-	console.log({ slug });
+
 	const { data, loading } = useQuery<FetchEventDetailResponse, FetchEventDetailRequestVariables>(FETCH_EVENT_DETAIL, {
 		variables: { slug },
 		onError: (err) => {
@@ -28,7 +28,7 @@ const EventDetail: React.FC<StackNavigationProps<RootStackScreens, "EventDetail"
 		},
 	});
 
-	console.log({ data });
+	const eventDetail = data?.eventDetail;
 
 	if (loading) return null;
 
@@ -46,7 +46,7 @@ const EventDetail: React.FC<StackNavigationProps<RootStackScreens, "EventDetail"
 					paddingHorizontal="l"
 					style={{ marginTop: -50 }}>
 					<Text variant="title" marginBottom="s">
-						Reunion Party
+						{eventDetail?.title}
 					</Text>
 					<Box marginVertical="s" flexDirection="row">
 						<TextIcon icon={faCalendar} text="10 January 2022" />

@@ -1,13 +1,12 @@
 import React from "react";
 import { TouchableOpacity, Image, ViewStyle } from "react-native";
-import dayjs from "dayjs";
 
 import Button from "../Button";
 import HostInfo from "../HostInfo";
 import Texter, { Config } from "../Texter";
 
 import { Dimensions } from "../../types";
-import { generateBoxShadowStyle } from "../../utils";
+import { formatTimeStamp, generateBoxShadowStyle } from "../../utils";
 import { Box, pallette, Text, theme } from "../../utils/theme";
 import { EventInfo } from "../../config/schema.types";
 
@@ -60,9 +59,9 @@ const EventCard: React.FC<EventCard> = ({ width, height, eventInfo, ...props }) 
 					<Texter
 						color="darkGray"
 						variant="bold"
-						config={EventDateConfig(dayjs(eventInfo?.eventTimestamp).format("dddd"))}
+						config={EventDateConfig(formatTimeStamp(eventInfo?.eventTimestamp, "dddd"))}
 						style={{ fontSize: theme.fontSize.xs }}>
-						{dayjs(eventInfo?.eventTimestamp).format("dddd DD MMM")}
+						{formatTimeStamp(eventInfo?.eventTimestamp, "dddd DD MMM")}
 					</Texter>
 					<Text variant="bold" numberOfLines={1} fontSize={theme.fontSize.md} marginTop="xxs">
 						{eventInfo?.title}
