@@ -1,4 +1,6 @@
+import dayjs from "dayjs";
 import { Platform } from "react-native";
+import { DateFormats } from "../types";
 
 export const isIOS = Platform.OS === "ios";
 export const isAndroid = Platform.OS === "android";
@@ -25,4 +27,8 @@ export const generateBoxShadowStyle = (
 			shadowColor: shadowColorAndroid,
 		};
 	}
+};
+
+export const formatTimeStamp = (timestamp, format: DateFormats) => {
+	return dayjs(timestamp).format(format);
 };

@@ -1,6 +1,7 @@
-import { useQuery } from "@apollo/client";
 import React, { useRef, useState } from "react";
 import { Dimensions, FlatList, ScrollView, StyleSheet } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { useQuery } from "@apollo/client";
 
 import Category from "../components/Category";
 import EventCard from "../components/EventCard";
@@ -12,6 +13,8 @@ import { EventCategory, Filter } from "../types";
 
 import { EventCategories } from "../utils/preconfig";
 import theme, { Box, Text } from "../utils/theme";
+import { ScreenNavigationProp } from "../navigation/types";
+import { useAuth } from "../utils/store";
 
 interface UpcomingEventsList {
 	category: EventCategory;
@@ -21,7 +24,10 @@ interface UpcomingEventsList {
 	onCategoryChange: (category: EventCategory) => void;
 }
 
-const UpcomingEventsList = ({ categoryEventCount, ...props }: UpcomingEventsList) => {
+const UpcomingEventsList: React.FC<UpcomingEventsList> = ({ categoryEventCount, ...props }) => {
+	const navigation = useNavigation<ScreenNavigationProp>();
+
+	const token = useAuth((state) => state.token);
 	const { data } = useQuery<FetchEventResponse, FetchEventRequestVariables>(FETCH_UPCOMING_EVENTS, {
 		variables: { query: JSON.stringify({ upcoming: true }) },
 		fetchPolicy: "no-cache",
@@ -46,7 +52,17 @@ const UpcomingEventsList = ({ categoryEventCount, ...props }: UpcomingEventsList
 							width={220}
 							height={170}
 							containerStyle={{ marginLeft: index === 0 ? theme.spacing.l : 0 }}
-							onPress={() => {}}
+							onJoin={() => {
+								if (!token) {
+									navigation.push("AuthScreen");
+									return;
+								}
+							}}
+							onPress={() => {
+								navigation.push("EventDetail", {
+									slug: item.title,
+								});
+							}}
 						/>
 					);
 				}}
@@ -78,8 +94,10 @@ const UpcomingEventsList = ({ categoryEventCount, ...props }: UpcomingEventsList
 };
 
 const EventsList = () => {
-	const [category, setCategory] = useState<EventCategory>("House");
+	const navigation = useNavigation<ScreenNavigationProp>();
+	const token = useAuth((state) => state.token);
 
+	const [category, setCategory] = useState<EventCategory>("House");
 	const categoriedEventFilter = useRef<Filter<EventQuery>>({
 		query: {
 			category,
@@ -90,7 +108,7 @@ const EventsList = () => {
 		},
 	});
 
-	const { data, fetchMore } = useQuery<FetchEventResponse, FetchEventRequestVariables>(FETCH_EVENTS, {
+	const { data, fetchMore, refetch } = useQuery<FetchEventResponse, FetchEventRequestVariables>(FETCH_EVENTS, {
 		variables: { query: JSON.stringify(categoriedEventFilter.current.query), ...categoriedEventFilter.current.pagination },
 	});
 
@@ -112,6 +130,14 @@ const EventsList = () => {
 		});
 	};
 
+	const onCategoryUpdate = (category) => {
+		categoriedEventFilter.current.query.category = category;
+		categoriedEventFilter.current.pagination.skip = 0;
+		categoriedEventFilter.current.pagination.take = 5;
+		refetch({ query: JSON.stringify(categoriedEventFilter.current.query), ...categoriedEventFilter.current.pagination });
+		setCategory(category);
+	};
+
 	return (
 		<FlatList
 			data={data?.events.events}
@@ -126,7 +152,7 @@ const EventsList = () => {
 					categoryEventCount={data?.events.count || 0}
 					isLoading={false}
 					events={[]}
-					onCategoryChange={(category) => setCategory(category)}
+					onCategoryChange={onCategoryUpdate}
 				/>
 			}
 			renderItem={({ item, index }) => {
@@ -137,7 +163,17 @@ const EventsList = () => {
 						width={Dimensions.get("screen").width - theme.spacing.l * 2}
 						containerStyle={{ marginBottom: theme.spacing.l, marginLeft: theme.spacing.l }}
 						height={250}
-						onPress={() => {}}
+						onJoin={() => {
+							if (!token) {
+								navigation.push("AuthScreen");
+								return;
+							}
+						}}
+						onPress={() => {
+							navigation.push("EventDetail", {
+								slug: item.title,
+							});
+						}}
 						key={index}
 					/>
 				);

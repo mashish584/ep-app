@@ -1,13 +1,12 @@
 import React from "react";
 import { TouchableOpacity, Image, ViewStyle } from "react-native";
-import dayjs from "dayjs";
 
 import Button from "../Button";
 import HostInfo from "../HostInfo";
 import Texter, { Config } from "../Texter";
 
 import { Dimensions } from "../../types";
-import { generateBoxShadowStyle } from "../../utils";
+import { formatTimeStamp, generateBoxShadowStyle } from "../../utils";
 import { Box, pallette, Text, theme } from "../../utils/theme";
 import { EventInfo } from "../../config/schema.types";
 
@@ -19,6 +18,7 @@ interface EventCard extends Dimensions {
 	eventInfo: Event;
 	variant?: "full" | "small";
 	onPress: () => void;
+	onJoin: () => void;
 	containerStyle?: ViewStyle;
 }
 
@@ -59,9 +59,9 @@ const EventCard: React.FC<EventCard> = ({ width, height, eventInfo, ...props }) 
 					<Texter
 						color="darkGray"
 						variant="bold"
-						config={EventDateConfig(dayjs(eventInfo?.eventTimestamp).format("dddd"))}
+						config={EventDateConfig(formatTimeStamp(eventInfo?.eventTimestamp, "dddd"))}
 						style={{ fontSize: theme.fontSize.xs }}>
-						{dayjs(eventInfo?.eventTimestamp).format("dddd DD MMM")}
+						{formatTimeStamp(eventInfo?.eventTimestamp, "dddd DD MMM")}
 					</Texter>
 					<Text variant="bold" numberOfLines={1} fontSize={theme.fontSize.md} marginTop="xxs">
 						{eventInfo?.title}
@@ -78,7 +78,7 @@ const EventCard: React.FC<EventCard> = ({ width, height, eventInfo, ...props }) 
 					)}
 					<Box marginTop="s" flexDirection="row" justifyContent="space-between" alignItems="center">
 						<HostInfo width={hostImageSize} height={hostImageSize} username={eventInfo.owner.username} showRole={true} />
-						<Button variant="primary" onPress={() => alert("Join")} containerStyle={{ width: 90, minHeight: 25, borderRadius: theme.borderRadii.s }}>
+						<Button variant="primary" onPress={props.onJoin} containerStyle={{ width: 90, minHeight: 25, borderRadius: theme.borderRadii.s }}>
 							<Text fontSize={theme.fontSize.xs} color="secondary" variant="bold">
 								Join - ${eventInfo?.price}
 							</Text>

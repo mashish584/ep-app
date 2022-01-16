@@ -37,3 +37,11 @@ export type FetchEventResponse = {
 		events: EventInfo[];
 	};
 };
+
+export type FetchEventDetailRequestVariables = {
+	slug: string;
+};
+
+export type FetchEventDetailResponse = {
+	eventDetail: EventInfo;
+};

@@ -17,7 +17,7 @@ const cache = new InMemoryCache({
 						if (incoming.events?.length) {
 							newEvents = incoming.events;
 						}
-						console.log({ events: newEvents ? [...previousEvents, ...newEvents] : previousEvents });
+
 						return {
 							...data,
 							count: incoming.count,

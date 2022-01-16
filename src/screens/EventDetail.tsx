@@ -2,23 +2,50 @@ import React from "react";
 import { ImageBackground, Dimensions, ScrollView, StyleSheet } from "react-native";
 import { faCalendar, faClock } from "@fortawesome/free-regular-svg-icons";
 import { faMapMarker } from "@fortawesome/free-solid-svg-icons";
+import { useQuery } from "@apollo/client";
 
 import Theme from "../components/Theme";
 import TextIcon from "../components/TextIcon";
 import UserChips from "../components/UserChips";
-
-import theme, { Box, fonts, Text } from "../utils/theme";
 import HostInfo from "../components/HostInfo";
 import Button from "../components/Button";
 import Header from "../components/Header";
 
+import theme, { Box, fonts, Text } from "../utils/theme";
+import { RootStackScreens, StackNavigationProps } from "../navigation/types";
+import { FETCH_EVENT_DETAIL } from "../config/query";
+import { FetchEventDetailResponse, FetchEventDetailRequestVariables } from "../config/request.types";
+import { formatTimeStamp } from "../utils";
+import { useAuth } from "../utils/store";
+
 const SCREEN_HEIGHT = Dimensions.get("screen").height;
 
-const EventDetail = () => {
+const EventDetail: React.FC<StackNavigationProps<RootStackScreens, "EventDetail">> = ({ route, navigation }) => {
+	const token = useAuth((state) => state.token);
+	const slug = route.params?.slug;
+
+	const { data, loading } = useQuery<FetchEventDetailResponse, FetchEventDetailRequestVariables>(FETCH_EVENT_DETAIL, {
+		variables: { slug },
+		onError: (err) => {
+			console.log({ err });
+		},
+	});
+
+	const eventDetail = data?.eventDetail;
+	const thumbnail = eventDetail?.medias[0]?.link;
+
+	const onJoin = () => {
+		if (!token) {
+			navigation.push("AuthScreen");
+		}
+	};
+
+	if (loading) return null;
+
 	return (
 		<Theme avoidTopNotch={true}>
-			<ImageBackground source={require("../assets/images/sample-1.jpg")} style={styles.background} />
-			<Header />
+			<ImageBackground source={{ uri: thumbnail }} style={styles.background} />
+			<Header onBack={navigation.goBack} />
 			<ScrollView contentContainerStyle={styles.containerStyle} showsVerticalScrollIndicator={false}>
 				<Box
 					flex={1}
@@ -29,11 +56,11 @@ const EventDetail = () => {
 					paddingHorizontal="l"
 					style={{ marginTop: -50 }}>
 					<Text variant="title" marginBottom="s">
-						Reunion Party
+						{eventDetail?.title}
 					</Text>
 					<Box marginVertical="s" flexDirection="row">
-						<TextIcon icon={faCalendar} text="10 January 2022" />
-						<TextIcon icon={faClock} text="07:30 PM" />
+						<TextIcon icon={faCalendar} text={formatTimeStamp(eventDetail?.eventTimestamp, "dddd DD MMM")} />
+						<TextIcon icon={faClock} text={formatTimeStamp(eventDetail?.eventTimestamp, "HH:mm A")} />
 					</Box>
 					<TextIcon icon={faMapMarker} text="2972 Westheimer Rd. Santa Ana, Illinois 85486" />
 					<Box flexDirection="row" justifyContent="space-between" minHeight={30} marginTop="xl" alignItems="center">
@@ -54,8 +81,7 @@ const EventDetail = () => {
 							Description
 						</Text>
 						<Text marginTop="s" fontSize={theme.fontSize.md} color="black" style={{ fontFamily: fonts.primary_regular, lineHeight: 18 }}>
-							Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus venenatis, lectus magna fringilla urna,
-							porttitor rhoncus dolor purus non enim praesent elementum facilisis leo, vel fringilla est ullamcorper eget nulla.
+							{eventDetail?.description}
 						</Text>
 					</Box>
 					<Box marginTop="l">
@@ -63,12 +89,17 @@ const EventDetail = () => {
 							Host
 						</Text>
 						<HostInfo username="John Doe" width={30} height={30}>
-							<Text variant="metaText14" color="black">
-								John Doe
+							<Text variant="metaText14" color="black" textTransform="capitalize">
+								{eventDetail?.owner.username}
 							</Text>
 						</HostInfo>
 					</Box>
-					<Button variant="primary" label="Join now - $99" containerStyle={{ width: "100%", marginVertical: theme.spacing.xl }} onPress={() => {}} />
+					<Button
+						variant="primary"
+						label={`Join now - $${eventDetail?.price}`}
+						containerStyle={{ width: "100%", marginVertical: theme.spacing.xl }}
+						onPress={onJoin}
+					/>
 				</Box>
 			</ScrollView>
 		</Theme>
@@ -82,6 +113,7 @@ const styles = StyleSheet.create({
 		position: "absolute",
 		top: 0,
 		borderWidth: 1,
+		backgroundColor: theme.colors.gray,
 	},
 	containerStyle: {
 		flexGrow: 1,
