@@ -14,6 +14,7 @@ import { EventCategory, Filter } from "../types";
 import { EventCategories } from "../utils/preconfig";
 import theme, { Box, Text } from "../utils/theme";
 import { ScreenNavigationProp } from "../navigation/types";
+import { useAuth } from "../utils/store";
 
 interface UpcomingEventsList {
 	category: EventCategory;
@@ -26,6 +27,7 @@ interface UpcomingEventsList {
 const UpcomingEventsList: React.FC<UpcomingEventsList> = ({ categoryEventCount, ...props }) => {
 	const navigation = useNavigation<ScreenNavigationProp>();
 
+	const token = useAuth((state) => state.token);
 	const { data } = useQuery<FetchEventResponse, FetchEventRequestVariables>(FETCH_UPCOMING_EVENTS, {
 		variables: { query: JSON.stringify({ upcoming: true }) },
 		fetchPolicy: "no-cache",
@@ -50,6 +52,12 @@ const UpcomingEventsList: React.FC<UpcomingEventsList> = ({ categoryEventCount, 
 							width={220}
 							height={170}
 							containerStyle={{ marginLeft: index === 0 ? theme.spacing.l : 0 }}
+							onJoin={() => {
+								if (!token) {
+									navigation.push("AuthScreen");
+									return;
+								}
+							}}
 							onPress={() => {
 								navigation.push("EventDetail", {
 									slug: item.title,
@@ -86,8 +94,10 @@ const UpcomingEventsList: React.FC<UpcomingEventsList> = ({ categoryEventCount, 
 };
 
 const EventsList = () => {
-	const [category, setCategory] = useState<EventCategory>("House");
+	const navigation = useNavigation<ScreenNavigationProp>();
+	const token = useAuth((state) => state.token);
 
+	const [category, setCategory] = useState<EventCategory>("House");
 	const categoriedEventFilter = useRef<Filter<EventQuery>>({
 		query: {
 			category,
@@ -145,7 +155,17 @@ const EventsList = () => {
 						width={Dimensions.get("screen").width - theme.spacing.l * 2}
 						containerStyle={{ marginBottom: theme.spacing.l, marginLeft: theme.spacing.l }}
 						height={250}
-						onPress={() => {}}
+						onJoin={() => {
+							if (!token) {
+								navigation.push("AuthScreen");
+								return;
+							}
+						}}
+						onPress={() => {
+							navigation.push("EventDetail", {
+								slug: item.title,
+							});
+						}}
 						key={index}
 					/>
 				);

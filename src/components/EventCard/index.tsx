@@ -19,6 +19,7 @@ interface EventCard extends Dimensions {
 	eventInfo: Event;
 	variant?: "full" | "small";
 	onPress: () => void;
+	onJoin: () => void;
 	containerStyle?: ViewStyle;
 }
 
@@ -78,7 +79,7 @@ const EventCard: React.FC<EventCard> = ({ width, height, eventInfo, ...props }) 
 					)}
 					<Box marginTop="s" flexDirection="row" justifyContent="space-between" alignItems="center">
 						<HostInfo width={hostImageSize} height={hostImageSize} username={eventInfo.owner.username} showRole={true} />
-						<Button variant="primary" onPress={() => alert("Join")} containerStyle={{ width: 90, minHeight: 25, borderRadius: theme.borderRadii.s }}>
+						<Button variant="primary" onPress={props.onJoin} containerStyle={{ width: 90, minHeight: 25, borderRadius: theme.borderRadii.s }}>
 							<Text fontSize={theme.fontSize.xs} color="secondary" variant="bold">
 								Join - ${eventInfo?.price}
 							</Text>
