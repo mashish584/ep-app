@@ -21,4 +21,4 @@ export type Filter<T> = {
 	query: T;
 } & Pagination;
 
-export type DateFormats = "dddd" | "dddd DD MMM";
+export type DateFormats = "dddd" | "dddd DD MMM" | "HH:mm A";
