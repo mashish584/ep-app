@@ -10,6 +10,7 @@ export type RootStackScreens = {
 	Onboarding: undefined;
 	AuthScreen: undefined;
 	BottomStack: undefined;
+	EventDetail: any;
 };
 
 export type BottomStackScreens = {
@@ -18,3 +19,5 @@ export type BottomStackScreens = {
 	Notifications: undefined;
 	Settings: undefined;
 };
+
+export type ScreenNavigationProp = StackNavigationProp<RootStackScreens & BottomStackScreens>;

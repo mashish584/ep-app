@@ -3,10 +3,11 @@ import Avatar from "../components/Avatar";
 
 import Theme from "../components/Theme";
 import EventsList from "../containers/EventsList";
+import { BottomStackScreens, StackNavigationProps } from "../navigation/types";
 
 import { Box } from "../utils/theme";
 
-const Home = () => {
+const Home: React.FC<StackNavigationProps<BottomStackScreens, "Home">> = () => {
 	return (
 		<Theme avoidHomBar={true}>
 			<Box justifyContent="flex-end" paddingHorizontal="l" alignItems="flex-end">

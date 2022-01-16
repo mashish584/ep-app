@@ -20,7 +20,7 @@ const HostInfo: React.FC<HostInfo> = ({ width, height, ...props }) => {
 		<TouchableOpacity onPress={props.onPress}>
 			<Box flexDirection="row" width={100} alignItems={"center"}>
 				<Image
-					source={{ uri: "https://unsplash.it/50/50" }}
+					source={{ uri: `https://ui-avatars.com/api/?name=${props.username}&background=${theme.colors.primary}&color=${theme.colors.secondary}` }}
 					style={{ width, height, marginRight: theme.spacing.xs }}
 					borderRadius={(width as number) / 2}
 				/>
@@ -28,12 +28,11 @@ const HostInfo: React.FC<HostInfo> = ({ width, height, ...props }) => {
 				{props.children || (
 					<Texter
 						variant={props.textVariant || "bold"}
-						style={{ fontSize }}
+						style={{ fontSize, textTransform: "capitalize" }}
 						config={{
 							Host: {
 								variant: "metaText11",
 								color: "darkGray",
-								onPress: () => null,
 							},
 						}}>
 						{`${props.username} ${props.showRole ? "Host" : ""}`}

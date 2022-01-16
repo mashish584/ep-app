@@ -8,6 +8,7 @@ import TabBar from "../components/BottomTab";
 import Home from "../screens/Home";
 import Auth from "../screens/Auth";
 import Onboarding from "../screens/Onboarding";
+import EventDetail from "../screens/EventDetail";
 
 import { RootStackScreens } from "./types";
 
@@ -37,6 +38,7 @@ const RootStackSCreen = () => {
 			<RootStack.Screen name="AuthScreen" component={Auth} options={{ headerShown: false }} />
 			<RootStack.Screen name="Onboarding" component={Onboarding} options={{ headerShown: false }} />
 			<RootStack.Screen name="BottomStack" component={BottamTabScreen} options={{ headerShown: false }} />
+			<RootStack.Screen name="EventDetail" component={EventDetail} options={{ headerShown: false }} />
 		</RootStack.Navigator>
 	);
 };

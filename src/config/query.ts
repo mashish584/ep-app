@@ -1,5 +1,9 @@
 import { gql } from "@apollo/client";
 
+/*==========================
+ * -------- Event ---------*
+ ==========================*/
+
 export const FETCH_UPCOMING_EVENTS = gql`
 	query upcomingEvents($query: String!) {
 		events(query: $query) {
@@ -39,6 +43,33 @@ export const FETCH_EVENTS = gql`
 					link
 					thumbnail
 				}
+			}
+		}
+	}
+`;
+
+export const FETCH_EVENT_DETAIL = gql`
+	query eventDetail($slug: String!) {
+		eventDetail(slug: $slug) {
+			id
+			title
+			description
+			eventTimestamp
+			price
+			category
+			eventTimestamp
+			location {
+				lat
+				lng
+				address
+			}
+			owner {
+				id
+				username
+				email
+			}
+			medias {
+				link
 			}
 		}
 	}

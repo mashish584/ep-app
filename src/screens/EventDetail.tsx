@@ -2,23 +2,40 @@ import React from "react";
 import { ImageBackground, Dimensions, ScrollView, StyleSheet } from "react-native";
 import { faCalendar, faClock } from "@fortawesome/free-regular-svg-icons";
 import { faMapMarker } from "@fortawesome/free-solid-svg-icons";
+import { useQuery } from "@apollo/client";
 
 import Theme from "../components/Theme";
 import TextIcon from "../components/TextIcon";
 import UserChips from "../components/UserChips";
-
-import theme, { Box, fonts, Text } from "../utils/theme";
 import HostInfo from "../components/HostInfo";
 import Button from "../components/Button";
 import Header from "../components/Header";
 
+import theme, { Box, fonts, Text } from "../utils/theme";
+import { RootStackScreens, StackNavigationProps } from "../navigation/types";
+import { FETCH_EVENT_DETAIL } from "../config/query";
+import { FetchEventDetailResponse, FetchEventDetailRequestVariables } from "../config/request.types";
+
 const SCREEN_HEIGHT = Dimensions.get("screen").height;
 
-const EventDetail = () => {
+const EventDetail: React.FC<StackNavigationProps<RootStackScreens, "EventDetail">> = ({ route, navigation }) => {
+	const slug = route.params?.slug;
+	console.log({ slug });
+	const { data, loading } = useQuery<FetchEventDetailResponse, FetchEventDetailRequestVariables>(FETCH_EVENT_DETAIL, {
+		variables: { slug },
+		onError: (err) => {
+			console.log({ err });
+		},
+	});
+
+	console.log({ data });
+
+	if (loading) return null;
+
 	return (
 		<Theme avoidTopNotch={true}>
 			<ImageBackground source={require("../assets/images/sample-1.jpg")} style={styles.background} />
-			<Header />
+			<Header onBack={navigation.goBack} />
 			<ScrollView contentContainerStyle={styles.containerStyle} showsVerticalScrollIndicator={false}>
 				<Box
 					flex={1}

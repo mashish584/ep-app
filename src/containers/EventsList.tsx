@@ -1,6 +1,7 @@
-import { useQuery } from "@apollo/client";
 import React, { useRef, useState } from "react";
 import { Dimensions, FlatList, ScrollView, StyleSheet } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { useQuery } from "@apollo/client";
 
 import Category from "../components/Category";
 import EventCard from "../components/EventCard";
@@ -12,6 +13,7 @@ import { EventCategory, Filter } from "../types";
 
 import { EventCategories } from "../utils/preconfig";
 import theme, { Box, Text } from "../utils/theme";
+import { ScreenNavigationProp } from "../navigation/types";
 
 interface UpcomingEventsList {
 	category: EventCategory;
@@ -21,7 +23,9 @@ interface UpcomingEventsList {
 	onCategoryChange: (category: EventCategory) => void;
 }
 
-const UpcomingEventsList = ({ categoryEventCount, ...props }: UpcomingEventsList) => {
+const UpcomingEventsList: React.FC<UpcomingEventsList> = ({ categoryEventCount, ...props }) => {
+	const navigation = useNavigation<ScreenNavigationProp>();
+
 	const { data } = useQuery<FetchEventResponse, FetchEventRequestVariables>(FETCH_UPCOMING_EVENTS, {
 		variables: { query: JSON.stringify({ upcoming: true }) },
 		fetchPolicy: "no-cache",
@@ -46,7 +50,11 @@ const UpcomingEventsList = ({ categoryEventCount, ...props }: UpcomingEventsList
 							width={220}
 							height={170}
 							containerStyle={{ marginLeft: index === 0 ? theme.spacing.l : 0 }}
-							onPress={() => {}}
+							onPress={() => {
+								navigation.push("EventDetail", {
+									slug: item.title,
+								});
+							}}
 						/>
 					);
 				}}
