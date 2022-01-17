@@ -10,3 +10,12 @@ export const SIGNIN_MUTATION = gql`
 		}
 	}
 `;
+
+export const BOOK_EVENT = gql`
+	mutation bookEvent($eventId: String!) {
+		bookEvent(event: $eventId) {
+			paymentIntent
+			ephemeralKey
+		}
+	}
+`;

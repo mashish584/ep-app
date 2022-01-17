@@ -74,12 +74,3 @@ export const FETCH_EVENT_DETAIL = gql`
 		}
 	}
 `;
-
-export const BOOK_EVENT = gql`
-	query bookEvent($eventId: String!) {
-		bookEvent(event: $eventId) {
-			paymentIntent
-			ephemeralKey
-		}
-	}
-`;

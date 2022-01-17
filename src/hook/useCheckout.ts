@@ -1,13 +1,14 @@
-import { useLazyQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { useStripe } from "@stripe/stripe-react-native";
-import { BOOK_EVENT } from "../config/query";
+import { BOOK_EVENT } from "../config/mutations";
 import { BookEventRequestVariables, BookEventResponse } from "../config/request.types";
 
 export const usePayment = () => {
 	const { initPaymentSheet, presentPaymentSheet } = useStripe();
 
-	const [fetchPaymentSheetParam] = useLazyQuery<BookEventResponse, BookEventRequestVariables>(BOOK_EVENT, {
+	const [fetchPaymentSheetParam] = useMutation<BookEventResponse, BookEventRequestVariables>(BOOK_EVENT, {
 		onCompleted: async ({ bookEvent }) => {
+			console.log({ bookEvent });
 			const { error } = await initPaymentSheet({
 				paymentIntentClientSecret: bookEvent.paymentIntent,
 				customerEphemeralKeySecret: bookEvent.ephemeralKey,
@@ -19,6 +20,9 @@ export const usePayment = () => {
 			}
 
 			return { error };
+		},
+		onError: (err) => {
+			console.log({ err });
 		},
 	});
 
