@@ -45,3 +45,14 @@ export type FetchEventDetailRequestVariables = {
 export type FetchEventDetailResponse = {
 	eventDetail: EventInfo;
 };
+
+export type BookEventRequestVariables = {
+	eventId: string;
+};
+
+export type BookEventResponse = {
+	bookEvent: {
+		paymentIntent: string;
+		ephemeralKey: string;
+	};
+};
