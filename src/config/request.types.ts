@@ -53,7 +53,20 @@ export type BookEventRequestVariables = {
 
 export type BookEventResponse = {
 	bookEvent: {
+		eventId: string;
+		paymentId: string;
 		paymentIntent: string;
 		ephemeralKey: string;
+	};
+};
+
+export type ConfirmBookingRequestVariable = {
+	event: string;
+	paymentId: string;
+};
+
+export type ConfirmBookingResponse = {
+	confirmBooking: {
+		message: string;
 	};
 };
