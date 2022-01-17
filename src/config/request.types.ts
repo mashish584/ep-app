@@ -1,4 +1,4 @@
-import { EventInfo } from "./schema.types";
+import { EventInfo, UserInfo } from "./schema.types";
 
 /*=================================
  * ------ Auth Mutatations ------ *
@@ -11,6 +11,7 @@ export type UserLoginVariables = {
 export type UserLoginResponse = {
 	userLogin: {
 		token: string;
+		user: UserInfo;
 	};
 };
 

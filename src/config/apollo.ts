@@ -1,5 +1,7 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 import { createUploadLink } from "apollo-upload-client";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "@env";
 
 const cache = new InMemoryCache({
@@ -30,10 +32,35 @@ const cache = new InMemoryCache({
 	},
 });
 
+const getToken = async () => {
+	let token = null;
+	const authState = await AsyncStorage.getItem("auth");
+
+	if (authState) {
+		const data = JSON.parse(authState);
+		token = data?.state?.token;
+	}
+	return token || "";
+};
+
+const authLink = setContext(async (_, { headers }) => {
+	// get the authentication token from local storage if it exists
+	const token = await getToken();
+	// return the headers to the context so httpLink can read them
+	return {
+		headers: {
+			...headers,
+			authorization: token ? `Bearer ${token}` : "",
+		},
+	};
+});
+
 export const client = new ApolloClient({
 	cache,
-	link: createUploadLink({
-		uri: API_URL,
-	}),
+	link: authLink.concat(
+		createUploadLink({
+			uri: API_URL,
+		}),
+	),
 	credentials: "same-origin",
 });
