@@ -20,7 +20,6 @@ import theme from "./utils/theme";
 import { client } from "./config/apollo";
 
 import Navigation from "./navigation";
-// import CurveSlide from "./components/Form/CurveSlide";
 
 const App = () => {
 	return (
@@ -29,7 +28,6 @@ const App = () => {
 				<StripeProvider publishableKey={STRIPE_PUBLIC_KEY}>
 					<ApolloProvider client={client}>
 						<Navigation />
-						{/* <CurveSlide /> */}
 					</ApolloProvider>
 				</StripeProvider>
 			</ThemeProvider>
