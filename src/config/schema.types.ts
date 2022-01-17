@@ -18,6 +18,7 @@ export interface UserInfo {
 	username: string;
 	email: string;
 	isActive: boolean;
+	stripe_customer_id: string;
 	createdAt: string;
 	updatedAt: string;
 }

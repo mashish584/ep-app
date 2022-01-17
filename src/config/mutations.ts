@@ -6,6 +6,13 @@ export const SIGNIN_MUTATION = gql`
 			token
 			user {
 				id
+				username
+				fullname
+				bio
+				profile
+				email
+				isActive
+				stripe_customer_id
 			}
 		}
 	}
