@@ -13,6 +13,8 @@ import React from "react";
 import { ApolloProvider } from "@apollo/client";
 import { ThemeProvider } from "@shopify/restyle";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { StripeProvider } from "@stripe/stripe-react-native";
+import { STRIPE_PUBLIC_KEY } from "@env";
 
 import theme from "./utils/theme";
 import { client } from "./config/apollo";
@@ -23,9 +25,11 @@ const App = () => {
 	return (
 		<SafeAreaProvider>
 			<ThemeProvider {...{ theme }}>
-				<ApolloProvider client={client}>
-					<Navigation />
-				</ApolloProvider>
+				<StripeProvider publishableKey={STRIPE_PUBLIC_KEY}>
+					<ApolloProvider client={client}>
+						<Navigation />
+					</ApolloProvider>
+				</StripeProvider>
 			</ThemeProvider>
 		</SafeAreaProvider>
 	);

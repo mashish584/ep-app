@@ -27,13 +27,15 @@ const initalValues = {
 const Auth: React.FC<StackNavigationProps<RootStackScreens, "AuthScreen">> = ({ navigation }) => {
 	const intialFormValues: SignInForm = useRef({ ...initalValues }).current;
 	const [errors, setErrors] = useState<AuthInlineError | null>(null);
-	const { setToken } = useAuth((store) => store);
+	const { setToken, setUser } = useAuth((store) => store);
 
 	const [onSignIn, { loading }] = useMutation<UserLoginResponse, UserLoginVariables>(SIGNIN_MUTATION, {
 		onCompleted: (data) => {
 			const token = data?.userLogin?.token;
+			const userInfo = data?.userLogin?.user;
 			if (token) {
 				setToken(token);
+				setUser(userInfo);
 				navigation.navigate("BottomStack");
 			}
 		},

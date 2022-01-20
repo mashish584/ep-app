@@ -1,4 +1,4 @@
-import { EventInfo } from "./schema.types";
+import { EventInfo, UserInfo } from "./schema.types";
 
 /*=================================
  * ------ Auth Mutatations ------ *
@@ -11,6 +11,7 @@ export type UserLoginVariables = {
 export type UserLoginResponse = {
 	userLogin: {
 		token: string;
+		user: UserInfo;
 	};
 };
 
@@ -44,4 +45,28 @@ export type FetchEventDetailRequestVariables = {
 
 export type FetchEventDetailResponse = {
 	eventDetail: EventInfo;
+};
+
+export type BookEventRequestVariables = {
+	eventId: string;
+};
+
+export type BookEventResponse = {
+	bookEvent: {
+		eventId: string;
+		paymentId: string;
+		paymentIntent: string;
+		ephemeralKey: string;
+	};
+};
+
+export type ConfirmBookingRequestVariable = {
+	event: string;
+	paymentId: string;
+};
+
+export type ConfirmBookingResponse = {
+	confirmBooking: {
+		message: string;
+	};
 };

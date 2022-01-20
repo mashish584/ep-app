@@ -15,6 +15,7 @@ import { EventCategories } from "../utils/preconfig";
 import theme, { Box, Text } from "../utils/theme";
 import { ScreenNavigationProp } from "../navigation/types";
 import { useAuth } from "../utils/store";
+import { usePayment } from "../hook/useCheckout";
 
 interface UpcomingEventsList {
 	category: EventCategory;
@@ -96,6 +97,7 @@ const UpcomingEventsList: React.FC<UpcomingEventsList> = ({ categoryEventCount, 
 const EventsList = () => {
 	const navigation = useNavigation<ScreenNavigationProp>();
 	const token = useAuth((state) => state.token);
+	const { fetchPaymentSheetParam } = usePayment();
 
 	const [category, setCategory] = useState<EventCategory>("House");
 	const categoriedEventFilter = useRef<Filter<EventQuery>>({
@@ -163,11 +165,13 @@ const EventsList = () => {
 						width={Dimensions.get("screen").width - theme.spacing.l * 2}
 						containerStyle={{ marginBottom: theme.spacing.l, marginLeft: theme.spacing.l }}
 						height={250}
-						onJoin={() => {
+						onJoin={async () => {
 							if (!token) {
 								navigation.push("AuthScreen");
 								return;
 							}
+
+							await fetchPaymentSheetParam({ variables: { eventId: item.id } });
 						}}
 						onPress={() => {
 							navigation.push("EventDetail", {
