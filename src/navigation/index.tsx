@@ -11,22 +11,22 @@ import Onboarding from "../screens/Onboarding";
 import EventDetail from "../screens/EventDetail";
 import Profile from "../screens/Profile";
 
-import { RootStackScreens } from "./types";
+import { BottomStackScreens, RootStackScreens } from "./types";
 
-const BottomTab = createBottomTabNavigator();
+const BottomTab = createBottomTabNavigator<BottomStackScreens>();
 
 const BottamTabScreen = () => {
 	return (
 		<BottomTab.Navigator
 			tabBar={(props) => <TabBar {...props} />}
-			initialRouteName="Home"
+			initialRouteName="Settings"
 			screenOptions={{
 				headerShown: false,
 			}}>
 			<BottomTab.Screen name="Home" component={Home} />
 			<BottomTab.Screen name="Search" component={Home} />
 			<BottomTab.Screen name="Notifications" component={Home} />
-			<BottomTab.Screen name="Settings" component={Home} />
+			<BottomTab.Screen name="Settings" component={Profile} />
 		</BottomTab.Navigator>
 	);
 };
@@ -40,7 +40,6 @@ const RootStackSCreen = () => {
 			<RootStack.Screen name="Onboarding" component={Onboarding} options={{ headerShown: false }} />
 			<RootStack.Screen name="BottomStack" component={BottamTabScreen} options={{ headerShown: false }} />
 			<RootStack.Screen name="EventDetail" component={EventDetail} options={{ headerShown: false }} />
-			<RootStack.Screen name="Profile" component={Profile} options={{ headerShown: false }} />
 		</RootStack.Navigator>
 	);
 };

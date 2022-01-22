@@ -11,7 +11,6 @@ export type RootStackScreens = {
 	AuthScreen: undefined;
 	BottomStack: undefined;
 	EventDetail: any;
-	Profile: undefined;
 };
 
 export type BottomStackScreens = {
