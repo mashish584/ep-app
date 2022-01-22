@@ -17,7 +17,7 @@ export const SetttingsMenu = [
 	},
 	{
 		icon: Power,
-		title: "Logut",
+		title: "Logout",
 		description: "",
 	},
 ];

@@ -10,16 +10,17 @@ import Theme from "../components/Theme";
 import { SetttingsMenu } from "../utils/preconfig";
 import theme, { Box, pallette, Text } from "../utils/theme";
 import { generateBoxShadowStyle } from "../utils";
+import { BottomStackScreens, RootStackScreens, StackNavigationProps } from "../navigation/types";
 
 const SCREEN_WIDTH = Dimensions.get("screen").width;
 
-const Profile = () => {
+const Profile: React.FC<StackNavigationProps<BottomStackScreens & RootStackScreens, "Settings">> = ({ navigation }) => {
 	return (
 		<Theme avoidTopNotch={true} avoidHomBar={true}>
 			<ScrollView showsVerticalScrollIndicator={false}>
 				<View style={styles.layer} />
 				<Box alignItems="center">
-					<Box width={150} height={150} mb="l" backgroundColor="gray" style={{ ...styles.imageShadow, borderRadius: 75 }}>
+					<Box width={150} height={150} mb="l" backgroundColor="placeholder" style={{ ...styles.imageShadow, borderRadius: 75 }}>
 						<Image source={{ uri: "https://unsplash.it/300/300" }} style={{ width: "100%", height: "100%", borderRadius: 75 }} resizeMode="cover" />
 						<TouchableOpacity style={styles.camera}>
 							<FontAwesomeIcon icon={faCamera} size={12} color={theme.colors.secondary} />
@@ -52,7 +53,7 @@ const Profile = () => {
 						label="Edit Profile"
 						containerStyle={{ width: 120, minHeight: 32, borderRadius: 50 }}
 						textStyle={{ fontSize: theme.fontSize.md }}
-						onPress={() => {}}
+						onPress={() => navigation.navigate("ProfileUpdate")}
 					/>
 				</Box>
 				<Box marginHorizontal="l" margin="xl">

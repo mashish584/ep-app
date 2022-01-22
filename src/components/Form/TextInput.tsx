@@ -6,7 +6,7 @@ import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
 import theme, { Box, fonts, pallette, Text } from "../../utils/theme";
 
 interface TextInput extends TextInputProps {
-	type: "input" | "password";
+	type: "input" | "password" | "textarea";
 	errorMessage?: string;
 	label?: string;
 }
@@ -35,6 +35,7 @@ const TextInput = ({ errorMessage, type, ...props }: TextInput) => {
 				style={styles.textInputContainer}>
 				<RNTextInput
 					autoCapitalize="none"
+					multiline={type === "textarea"}
 					secureTextEntry={type === "password" && !showPassword ? true : false}
 					style={[styles.textInput, { width: type === "password" ? "92%" : "100%" }]}
 					{...props}

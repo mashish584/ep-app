@@ -9,6 +9,7 @@ export const pallette = {
 		gray: "#C4C4C4",
 		black: "#262728",
 		darkGray: "#A7A4A4",
+		placeholder: "#F5f5F5",
 	},
 	rgb: {
 		primary: (alpha: number) => `rgba(252, 104, 104, ${alpha})`,
