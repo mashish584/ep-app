@@ -1,4 +1,4 @@
-import React, { ReactNode, useMemo, useState } from "react";
+import React, { ReactNode, useEffect, useMemo, useState } from "react";
 import { View, TextInput, StyleSheet, Text, ScrollView, TouchableOpacity } from "react-native";
 import debounce from "lodash.debounce";
 import uuid from "react-native-uuid";
@@ -21,6 +21,7 @@ interface SearchAddress {
 let token = uuid.v4();
 
 const AutoPlaces = React.forwardRef<Ref, SearchAddress>((props, ref) => {
+	const [address, setAddress] = useState(props.defaultAddress);
 	const [places, setPlaces] = useState<Place[]>([]);
 
 	const onChange = async (text) => {
@@ -63,11 +64,24 @@ const AutoPlaces = React.forwardRef<Ref, SearchAddress>((props, ref) => {
 
 	const debounceChangeHandler = useMemo(() => debounce(onChange, 500), []);
 
+	useEffect(() => {
+		if (props.defaultAddress) setAddress(props.defaultAddress);
+	}, [props.defaultAddress]);
+
 	return (
 		<View style={{ width: "100%", marginTop: theme.spacing.s, position: "relative", zIndex: 1 }}>
 			{props.label ? <Text style={labelStyle}>{props.label}</Text> : null}
 			<View style={inputContainerStyle}>
-				<TextInput ref={ref} onChangeText={debounceChangeHandler} allowFontScaling={false} style={inputStyle} />
+				<TextInput
+					ref={ref}
+					onChangeText={(text) => {
+						setAddress(text);
+						debounceChangeHandler(text);
+					}}
+					allowFontScaling={false}
+					style={inputStyle}
+					value={address}
+				/>
 			</View>
 			{props.error}
 			{places.length ? (

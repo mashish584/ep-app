@@ -18,6 +18,7 @@ import { ProfileInlineError } from "../types";
 import theme, { Box, Text } from "../utils/theme";
 import { validateProfileForm } from "../utils/validation";
 import { useAuth } from "../utils/store";
+import { AddressInfo } from "../components/Maps/AutoPlaces/interface";
 
 const initialValues = {
 	username: "",
@@ -29,22 +30,34 @@ const initialValues = {
 };
 
 const EditProfile: React.FC<StackNavigationProps<RootStackScreens, "ProfileUpdate">> = ({ navigation }) => {
-	const userInfo = useAuth((state) => state.user);
+	const addressInfo = useRef<AddressInfo | null>(null);
 	const initialFormValues: UpdateProfileForm = useRef({ ...initialValues }).current;
 	const updateFormValues = useRef<((values: SetStateAction<UpdateProfileForm>, shouldValidate?: boolean | undefined) => void) | null>(null);
 
+	const userInfo = useAuth((state) => state.user);
 	const [errors, setErrors] = useState<ProfileInlineError | null>(null);
 
 	const [onProfileUpdate, { loading }] = useMutation<ProfileUpdateResponse, ProfileUpdateVariables>(PROFILE_UPDATE_MUTATION, {
-		onCompleted: (data) => {},
-		onError: (error) => {},
+		onCompleted: (data) => {
+			console.log({ data });
+		},
+		onError: (error) => {
+			console.log({ error });
+		},
 	});
-
-	console.log({ onProfileUpdate });
 
 	const onSubmit = async (values: UpdateProfileForm) => {
 		try {
-			await validateProfileForm(values);
+			const data = { ...values };
+			await validateProfileForm(data);
+
+			if (addressInfo) {
+				data.location = JSON.stringify(addressInfo.current);
+			} else {
+				delete data.location;
+			}
+
+			await onProfileUpdate({ variables: { ...data } });
 		} catch (errors: any) {
 			if (errors?.inner) {
 				const err = {} as ProfileInlineError;
@@ -101,8 +114,11 @@ const EditProfile: React.FC<StackNavigationProps<RootStackScreens, "ProfileUpdat
 									/>
 									<AutoPlaces
 										label="Address"
-										defaultAddress={values.location}
-										onAddressChange={(address) => setFieldValue("location", address.address)}
+										defaultAddress={values.location as string}
+										onAddressChange={(address) => {
+											addressInfo.current = address;
+											setFieldValue("location", address.address);
+										}}
 										error={
 											errors?.location ? (
 												<Text variant="metaText12" color="primary">
@@ -111,7 +127,7 @@ const EditProfile: React.FC<StackNavigationProps<RootStackScreens, "ProfileUpdat
 											) : null
 										}
 									/>
-									<TextInput type="textarea" label="Bio" style={{ minHeight: 100 }} onChangeText={handleChange("bio")} errorMessage={errors?.bio} />
+									<TextInput type="textarea" label="Bio" onChangeText={handleChange("bio")} errorMessage={errors?.bio} />
 								</Box>
 							</ScrollView>
 							<Box marginHorizontal="l">

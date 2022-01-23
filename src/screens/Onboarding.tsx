@@ -9,10 +9,12 @@ import Button from "../components/Button";
 
 import { Text, Box, pallette, Theme as ThemeType } from "../utils/theme";
 import { RootStackScreens, StackNavigationProps } from "../navigation/types";
+import { useAuth } from "../utils/store";
 
 const onboardingImage = require("../assets/images/onboarding.jpg");
 
 const Onboarding: React.FC<StackNavigationProps<RootStackScreens, "Onboarding">> = ({ navigation }) => {
+	const userId = useAuth((store) => store.user?.id);
 	const animateValue = useRef(new Animated.Value(0)).current;
 	const buttonAnimation = useRef(new Animated.Value(0)).current;
 	const theme = useTheme<ThemeType>();
@@ -30,7 +32,7 @@ const Onboarding: React.FC<StackNavigationProps<RootStackScreens, "Onboarding">>
 				useNativeDriver: false,
 			}),
 		]).start(() => {
-			navigation.replace("AuthScreen");
+			navigation.replace(userId ? "BottomStack" : "AuthScreen");
 		});
 	};
 

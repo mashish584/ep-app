@@ -8,6 +8,6 @@ export interface UpdateProfileForm {
 	fullname: string;
 	email: string;
 	password?: string;
-	bio: string;
-	location: string;
+	bio?: string;
+	location?: string;
 }

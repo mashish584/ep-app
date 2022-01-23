@@ -11,7 +11,7 @@ interface TextInput extends TextInputProps {
 	label?: string;
 }
 
-const TextInput = ({ errorMessage, type, ...props }: TextInput) => {
+const TextInput = ({ errorMessage, type, style, ...props }: TextInput) => {
 	const [showPassword, setShowPassword] = useState(false);
 
 	return (
@@ -37,7 +37,7 @@ const TextInput = ({ errorMessage, type, ...props }: TextInput) => {
 					autoCapitalize="none"
 					multiline={type === "textarea"}
 					secureTextEntry={type === "password" && !showPassword ? true : false}
-					style={[styles.textInput, { width: type === "password" ? "92%" : "100%" }]}
+					style={[styles.textInput, style, { width: type === "password" ? "92%" : "100%" }, type === "textarea" && styles.textArea]}
 					{...props}
 				/>
 				{type === "password" && (
@@ -65,6 +65,11 @@ const styles = StyleSheet.create({
 		fontSize: theme.fontSize.sm,
 		color: theme.colors.darkGray,
 		height: "100%",
+	},
+	textArea: {
+		minHeight: 100,
+		maxHeight: 100,
+		marginVertical: 10,
 	},
 });
 

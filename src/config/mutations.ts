@@ -30,6 +30,7 @@ export const PROFILE_UPDATE_MUTATION = gql`
 			email
 			bio
 			profile
+			location
 			isActive
 			stripe_customer_id
 		}
