@@ -1,6 +1,7 @@
 export type LocationInfo = {
-	lat: string;
-	lng: string;
+	lat: number;
+	lng: number;
+	postal: string;
 	address: string;
 };
 

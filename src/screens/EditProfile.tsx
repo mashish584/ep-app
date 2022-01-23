@@ -4,6 +4,7 @@ import { ScrollView } from "react-native";
 import Button from "../components/Button";
 import TextInput from "../components/Form/TextInput";
 import Header from "../components/Header";
+import AutoPlaces from "../components/Maps/AutoPlaces/AutoPlaces";
 import Curve from "../components/SVG/Curve";
 import Theme from "../components/Theme";
 
@@ -22,6 +23,7 @@ const EditProfile: React.FC<StackNavigationProps<RootStackScreens, "ProfileUpdat
 					<TextInput type="input" label="Email" onChangeText={() => {}} errorMessage={""} />
 					<TextInput type="input" label="Full Name" onChangeText={() => {}} errorMessage={""} />
 					<TextInput type="input" label="Username" onChangeText={() => {}} errorMessage={""} />
+					<AutoPlaces label="Address" defaultAddress="" onAddressChange={(address) => {}} />
 					<TextInput type="textarea" label="Bio" style={{ minHeight: 100 }} onChangeText={() => {}} errorMessage={""} />
 				</Box>
 			</ScrollView>

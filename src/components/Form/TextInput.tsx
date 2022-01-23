@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TextInput as RNTextInput, TextInputProps, StyleSheet, TouchableOpacity } from "react-native";
+import { TextInput as RNTextInput, TextInputProps, StyleSheet, TouchableOpacity, ViewStyle, TextStyle } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
 
@@ -67,5 +67,28 @@ const styles = StyleSheet.create({
 		height: "100%",
 	},
 });
+
+export const inputContainerStyle: ViewStyle = {
+	marginVertical: theme.spacing.xs,
+	minHeight: 45,
+	borderWidth: 1,
+	borderRadius: theme.spacing.s,
+	flexDirection: "row",
+	width: "100%",
+	paddingHorizontal: theme.spacing.s,
+	alignItems: "center",
+	position: "relative",
+	...styles.textInputContainer,
+};
+
+export const inputStyle: ViewStyle = {
+	...styles.textInput,
+	width: "100%",
+};
+
+export const labelStyle: TextStyle = {
+	...theme.textVariants.light,
+	fontSize: theme.fontSize.sm,
+};
 
 export default TextInput;
