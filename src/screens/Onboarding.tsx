@@ -30,7 +30,7 @@ const Onboarding: React.FC<StackNavigationProps<RootStackScreens, "Onboarding">>
 				useNativeDriver: false,
 			}),
 		]).start(() => {
-			navigation.replace("BottomStack");
+			navigation.replace("AuthScreen");
 		});
 	};
 

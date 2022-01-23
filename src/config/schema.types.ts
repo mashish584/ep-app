@@ -17,6 +17,9 @@ export interface MediaInfo {
 export interface UserInfo {
 	id: number;
 	username: string;
+	fullname: string;
+	bio: string;
+	location: LocationInfo;
 	email: string;
 	isActive: boolean;
 	stripe_customer_id: string;

@@ -1,5 +1,4 @@
 import * as yup from "yup";
-import { IsJsonString } from "../components/Maps/util";
 
 import { SignInForm, UpdateProfileForm } from "../form.interface";
 
@@ -23,11 +22,7 @@ export const validateProfileForm = (values: UpdateProfileForm, validatePassword 
 		email: yup.string().trim().required("Email address is required.").email("Email address is not valid.").label("email"),
 		fullname: yup.string().trim().required("Full Name is required.").max(100, "Fullname should be less or equal to 100 chars."),
 		username: yup.string().trim().required("Username is required."),
-		location: yup
-			.string()
-			.trim()
-			.required()
-			.test("valid-location", "Please provide valid address.", (value) => IsJsonString(value)),
+		location: yup.string().trim().required("Address is required."),
 		...extraValidations,
 	});
 
