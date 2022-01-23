@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { ReactNode, useMemo, useState } from "react";
 import { View, TextInput, StyleSheet, Text, ScrollView, TouchableOpacity } from "react-native";
 import debounce from "lodash.debounce";
 import uuid from "react-native-uuid";
@@ -15,6 +15,7 @@ interface SearchAddress {
 	label: string;
 	defaultAddress: string;
 	onAddressChange: (addressInfo: AddressInfo) => void;
+	error?: ReactNode;
 }
 
 let token = uuid.v4();
@@ -68,6 +69,7 @@ const AutoPlaces = React.forwardRef<Ref, SearchAddress>((props, ref) => {
 			<View style={inputContainerStyle}>
 				<TextInput ref={ref} onChangeText={debounceChangeHandler} allowFontScaling={false} style={inputStyle} />
 			</View>
+			{props.error}
 			{places.length ? (
 				<View style={styles.autoPlaceContainer}>
 					<ScrollView showsVerticalScrollIndicator={false}>

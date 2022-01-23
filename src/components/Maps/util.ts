@@ -37,3 +37,12 @@ export const geoCode = async (query): Promise<GeoCodeAPIResponse> => {
 		throw new Error("Error while geocoding");
 	}
 };
+
+export const IsJsonString = (str) => {
+	try {
+		JSON.parse(str);
+	} catch (e) {
+		return false;
+	}
+	return true;
+};

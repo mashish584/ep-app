@@ -1,3 +1,4 @@
+import { UpdateProfileForm } from "../form.interface";
 import { EventInfo, UserInfo } from "./schema.types";
 
 /*=================================
@@ -13,6 +14,16 @@ export type UserLoginResponse = {
 		token: string;
 		user: UserInfo;
 	};
+};
+
+/*=================================
+ * ------ Profiel Mutations ------ *
+=================================*/
+
+export type ProfileUpdateVariables = UpdateProfileForm;
+
+export type ProfileUpdateResponse = {
+	updateProfile: UserInfo;
 };
 
 /*=================================

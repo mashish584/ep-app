@@ -22,6 +22,20 @@ export const SIGNIN_MUTATION = gql`
 	}
 `;
 
+export const PROFILE_UPDATE_MUTATION = gql`
+	mutation updateProfile($username: String, $fullname: String, $email: String, $password: String, $bio: String) {
+		updateProfile(data: { username: $username, fullname: $fullname, email: $email, password: $password, bio: $bio }) {
+			username
+			fullname
+			email
+			bio
+			profile
+			isActive
+			stripe_customer_id
+		}
+	}
+`;
+
 export const BOOK_EVENT = gql`
 	mutation bookEvent($eventId: String!) {
 		bookEvent(event: $eventId) {
