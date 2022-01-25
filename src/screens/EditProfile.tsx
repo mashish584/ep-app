@@ -1,5 +1,5 @@
 import React, { SetStateAction, useEffect, useRef, useState } from "react";
-import { ScrollView } from "react-native";
+import { Dimensions, ScrollView } from "react-native";
 import { useMutation } from "@apollo/client";
 import { Formik } from "formik";
 
@@ -7,8 +7,11 @@ import Button from "../components/Button";
 import TextInput from "../components/Form/TextInput";
 import Header from "../components/Header";
 import AutoPlaces from "../components/Maps/AutoPlaces/AutoPlaces";
+import { AddressInfo } from "../components/Maps/AutoPlaces/interface";
 import Curve from "../components/SVG/Curve";
 import Theme from "../components/Theme";
+import BottomSheet from "../components/BottomSheet";
+
 import { PROFILE_UPDATE_MUTATION } from "../config/mutations";
 import { ProfileUpdateResponse, ProfileUpdateVariables } from "../config/request.types";
 import { UpdateProfileForm } from "../form.interface";
@@ -18,7 +21,6 @@ import { ProfileInlineError } from "../types";
 import theme, { Box, Text } from "../utils/theme";
 import { validateProfileForm } from "../utils/validation";
 import { useAuth } from "../utils/store";
-import { AddressInfo } from "../components/Maps/AutoPlaces/interface";
 
 const initialValues = {
 	username: "",
@@ -31,15 +33,19 @@ const initialValues = {
 
 const EditProfile: React.FC<StackNavigationProps<RootStackScreens, "ProfileUpdate">> = ({ navigation }) => {
 	const addressInfo = useRef<AddressInfo | null>(null);
+	const formValues = useRef<UpdateProfileForm | null>(null); // used only if email or username is changed
 	const initialFormValues: UpdateProfileForm = useRef({ ...initialValues }).current;
 	const updateFormValues = useRef<((values: SetStateAction<UpdateProfileForm>, shouldValidate?: boolean | undefined) => void) | null>(null);
 
-	const userInfo = useAuth((state) => state.user);
+	const [userInfo, updateUserInfo] = useAuth((state) => [state.user, state.setUser]);
 	const [errors, setErrors] = useState<ProfileInlineError | null>(null);
+	const [showPasswordModal, setShowPasswordModal] = useState(false);
 
 	const [onProfileUpdate, { loading }] = useMutation<ProfileUpdateResponse, ProfileUpdateVariables>(PROFILE_UPDATE_MUTATION, {
 		onCompleted: (data) => {
-			console.log({ data });
+			if (data.updateProfile) {
+				updateUserInfo({ ...userInfo, ...data.updateProfile });
+			}
 		},
 		onError: (error) => {
 			console.log({ error });
@@ -51,10 +57,24 @@ const EditProfile: React.FC<StackNavigationProps<RootStackScreens, "ProfileUpdat
 			const data = { ...values };
 			await validateProfileForm(data);
 
+			//filter out the not-updated values
+			for (let key in data) {
+				if (key !== "location" && (data[key] === userInfo[key] || (!data[key]?.trim() && !userInfo[key]))) {
+					delete data[key];
+				}
+			}
+
 			if (addressInfo) {
 				data.location = JSON.stringify(addressInfo.current);
 			} else {
 				delete data.location;
+			}
+
+			//if data object contains email or username key show password modal for verification
+			if (Object.keys(data).includes("email") || Object.keys(data).includes("username")) {
+				formValues.current = data;
+				setShowPasswordModal(true);
+				return;
 			}
 
 			await onProfileUpdate({ variables: { ...data } });
@@ -78,11 +98,13 @@ const EditProfile: React.FC<StackNavigationProps<RootStackScreens, "ProfileUpdat
 				email: userInfo.email,
 				fullname: userInfo.fullname || "",
 				username: userInfo.username,
-				location: userInfo.location?.address || "",
+				location: userInfo?.location?.address || "",
 				bio: userInfo.bio || "",
 			});
 		}
 	}, []);
+
+	console.log({ formValues });
 
 	return (
 		<Theme avoidTopNotch={true}>
@@ -127,7 +149,7 @@ const EditProfile: React.FC<StackNavigationProps<RootStackScreens, "ProfileUpdat
 											) : null
 										}
 									/>
-									<TextInput type="textarea" label="Bio" onChangeText={handleChange("bio")} errorMessage={errors?.bio} />
+									<TextInput type="textarea" label="Bio" onChangeText={handleChange("bio")} errorMessage={errors?.bio} value={values.bio} />
 								</Box>
 							</ScrollView>
 							<Box marginHorizontal="l">
@@ -137,6 +159,25 @@ const EditProfile: React.FC<StackNavigationProps<RootStackScreens, "ProfileUpdat
 					);
 				}}
 			</Formik>
+			<BottomSheet
+				visible={showPasswordModal}
+				disableGesture={true}
+				containerStyle={{ backgroundColor: "transparent" }}
+				onDismiss={() => {
+					setShowPasswordModal(false);
+				}}>
+				{(onDismiss) => {
+					return (
+						<BottomSheetTheme height={Dimensions.get("window").height * 0.3}>
+							<Text>
+								Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis.
+								Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede. Donec nec justo eget felis facilisis fermentum. Aliquam
+								porttitor mauris sit amet orci. Aenean dignissim pellentesque felis.
+							</Text>
+						</BottomSheetTheme>
+					);
+				}}
+			</BottomSheet>
 		</Theme>
 	);
 };
