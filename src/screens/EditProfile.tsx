@@ -11,6 +11,7 @@ import { AddressInfo } from "../components/Maps/AutoPlaces/interface";
 import Curve from "../components/SVG/Curve";
 import Theme from "../components/Theme";
 import BottomSheet from "../components/BottomSheet";
+import BottomSheetTheme from "../components/BottomSheetTheme";
 
 import { PROFILE_UPDATE_MUTATION } from "../config/mutations";
 import { ProfileUpdateResponse, ProfileUpdateVariables } from "../config/request.types";
