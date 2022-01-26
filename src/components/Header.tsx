@@ -1,31 +1,42 @@
 import React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, ViewStyle } from "react-native";
 import { RectButton } from "react-native-gesture-handler";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import theme, { Box, pallette } from "../utils/theme";
+import theme, { Box, pallette, Text } from "../utils/theme";
 
 interface Header {
 	onBack?: () => void;
+	backButtonStyle?: ViewStyle;
+	headerTitle?: string;
+	position?: "relative" | "absolute";
 }
 
-const Header: React.FC<Header> = ({ onBack }) => {
+const Header: React.FC<Header> = ({ onBack, headerTitle, ...props }) => {
 	const { top } = useSafeAreaInsets();
 	return (
 		<Box
 			width={"100%"}
 			minHeight={60}
-			left={theme.spacing.l}
-			top={top}
+			flexDirection="row"
+			paddingHorizontal="l"
 			borderColor="secondary"
-			position="absolute"
-			justifyContent="center"
+			position={props.position || "absolute"}
+			justifyContent={headerTitle ? "space-between" : "flex-start"}
+			alignItems="center"
+			style={{ marginTop: top }}
 			zIndex={2}>
-			<RectButton onPress={onBack} style={styles.backButton}>
+			<RectButton onPress={onBack} style={[styles.backButton, props.backButtonStyle]}>
 				<FontAwesomeIcon icon={faAngleLeft} size={20} />
 			</RectButton>
+			{headerTitle ? (
+				<Text variant="bold" fontSize={theme.fontSize.normal}>
+					{headerTitle}
+				</Text>
+			) : null}
+			<Box width={30} />
 		</Box>
 	);
 };

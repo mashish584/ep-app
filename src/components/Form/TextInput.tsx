@@ -1,17 +1,17 @@
 import React, { useState } from "react";
-import { TextInput as RNTextInput, TextInputProps, StyleSheet, TouchableOpacity } from "react-native";
+import { TextInput as RNTextInput, TextInputProps, StyleSheet, TouchableOpacity, ViewStyle, TextStyle } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
 
 import theme, { Box, fonts, pallette, Text } from "../../utils/theme";
 
 interface TextInput extends TextInputProps {
-	type: "input" | "password";
+	type: "input" | "password" | "textarea";
 	errorMessage?: string;
 	label?: string;
 }
 
-const TextInput = ({ errorMessage, type, ...props }: TextInput) => {
+const TextInput = ({ errorMessage, type, style, ...props }: TextInput) => {
 	const [showPassword, setShowPassword] = useState(false);
 
 	return (
@@ -35,8 +35,9 @@ const TextInput = ({ errorMessage, type, ...props }: TextInput) => {
 				style={styles.textInputContainer}>
 				<RNTextInput
 					autoCapitalize="none"
+					multiline={type === "textarea"}
 					secureTextEntry={type === "password" && !showPassword ? true : false}
-					style={[styles.textInput, { width: type === "password" ? "92%" : "100%" }]}
+					style={[styles.textInput, style, { width: type === "password" ? "92%" : "100%" }, type === "textarea" && styles.textArea]}
 					{...props}
 				/>
 				{type === "password" && (
@@ -65,6 +66,34 @@ const styles = StyleSheet.create({
 		color: theme.colors.darkGray,
 		height: "100%",
 	},
+	textArea: {
+		minHeight: 100,
+		maxHeight: 100,
+		marginVertical: 10,
+	},
 });
+
+export const inputContainerStyle: ViewStyle = {
+	marginVertical: theme.spacing.xs,
+	minHeight: 45,
+	borderWidth: 1,
+	borderRadius: theme.spacing.s,
+	flexDirection: "row",
+	width: "100%",
+	paddingHorizontal: theme.spacing.s,
+	alignItems: "center",
+	position: "relative",
+	...styles.textInputContainer,
+};
+
+export const inputStyle: ViewStyle = {
+	...styles.textInput,
+	width: "100%",
+};
+
+export const labelStyle: TextStyle = {
+	...theme.textVariants.light,
+	fontSize: theme.fontSize.sm,
+};
 
 export default TextInput;

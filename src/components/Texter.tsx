@@ -8,8 +8,9 @@ type variantType = ResponsiveValue<keyof Theme["textVariants"], Theme>;
 type colorType = ResponsiveValue<keyof Theme["colors"], Theme>;
 
 export type Config = {
-	color: colorType;
-	variant: variantType;
+	color?: colorType;
+	variant?: variantType;
+	style?: TextStyle;
 };
 
 interface Texter {

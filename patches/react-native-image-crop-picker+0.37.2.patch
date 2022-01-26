@@ -1,0 +1,15 @@
+diff --git a/node_modules/react-native-image-crop-picker/ios/src/ImageCropPicker.m b/node_modules/react-native-image-crop-picker/ios/src/ImageCropPicker.m
+index e308329..1a2ebad 100644
+--- a/node_modules/react-native-image-crop-picker/ios/src/ImageCropPicker.m
++++ b/node_modules/react-native-image-crop-picker/ios/src/ImageCropPicker.m
+@@ -894,6 +894,10 @@ RCT_EXPORT_METHOD(openCropper:(NSDictionary *)options
+         
+         cropVC.modalPresentationStyle = UIModalPresentationFullScreen;
+         
++        if (@available(iOS 15.0, *)) {
++            cropVC.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
++        }
++        
+         [[self getRootVC] presentViewController:cropVC animated:FALSE completion:nil];
+     });
+ }

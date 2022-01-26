@@ -1,6 +1,7 @@
 export type LocationInfo = {
-	lat: string;
-	lng: string;
+	lat: number;
+	lng: number;
+	postal: string;
 	address: string;
 };
 
@@ -16,8 +17,12 @@ export interface MediaInfo {
 export interface UserInfo {
 	id: number;
 	username: string;
+	fullname: string;
+	bio: string;
+	location: LocationInfo;
 	email: string;
 	isActive: boolean;
+	profile: string;
 	stripe_customer_id: string;
 	createdAt: string;
 	updatedAt: string;

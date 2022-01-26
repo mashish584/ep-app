@@ -10,6 +10,7 @@ export type RootStackScreens = {
 	Onboarding: undefined;
 	AuthScreen: undefined;
 	BottomStack: undefined;
+	ProfileUpdate: undefined;
 	EventDetail: any;
 };
 

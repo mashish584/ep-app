@@ -1,4 +1,4 @@
-import { SignInForm } from "./form.interface";
+import { SignInForm, UpdateProfileForm } from "./form.interface";
 import { EventCategories } from "./utils/preconfig";
 
 export type Dimensions = {
@@ -7,6 +7,7 @@ export type Dimensions = {
 };
 
 export type AuthInlineError = Record<keyof SignInForm, string>;
+export type ProfileInlineError = Record<keyof UpdateProfileForm, string>;
 
 export type EventCategory = typeof EventCategories[number];
 
