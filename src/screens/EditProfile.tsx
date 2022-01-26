@@ -10,9 +10,8 @@ import AutoPlaces from "../components/Maps/AutoPlaces/AutoPlaces";
 import { AddressInfo } from "../components/Maps/AutoPlaces/interface";
 import Curve from "../components/SVG/Curve";
 import Theme from "../components/Theme";
-import BottomSheet from "../components/BottomSheet";
-import BottomSheetTheme from "../components/BottomSheetTheme";
-import { ModalHeader, ModalFooter } from "../components/Modals";
+
+import { PasswordConfirmation } from "../components/Modals";
 
 import { PROFILE_UPDATE_MUTATION } from "../config/mutations";
 import { ProfileUpdateResponse, ProfileUpdateVariables } from "../config/request.types";
@@ -44,10 +43,6 @@ const EditProfile: React.FC<StackNavigationProps<RootStackScreens, "ProfileUpdat
 	const [userInfo, updateUserInfo] = useAuth((state) => [state.user, state.setUser]);
 	const [errors, setErrors] = useState<ProfileInlineError | null>(null);
 	const [showPasswordModal, setShowPasswordModal] = useState(false);
-	const [password, setPassword] = useState({
-		value: "",
-		error: "",
-	});
 
 	const [onProfileUpdate, { loading }] = useMutation<ProfileUpdateResponse, ProfileUpdateVariables>(PROFILE_UPDATE_MUTATION, {
 		onCompleted: (data) => {
@@ -100,14 +95,13 @@ const EditProfile: React.FC<StackNavigationProps<RootStackScreens, "ProfileUpdat
 		}
 	};
 
-	const onConfirm = async () => {
-		if (!password.value) {
-			password.error = "Please enter password.";
+	const onConfirm = async (password) => {
+		if (!password) {
 			return;
 		}
 
 		const updateFormInfo = { ...formValues.current };
-		updateFormInfo.password = password.value;
+		updateFormInfo.password = password;
 
 		console.log({ updateFormInfo });
 	};
@@ -178,37 +172,13 @@ const EditProfile: React.FC<StackNavigationProps<RootStackScreens, "ProfileUpdat
 					);
 				}}
 			</Formik>
-			<BottomSheet
+			<PasswordConfirmation
 				visible={showPasswordModal}
-				disableGesture={true}
-				containerStyle={{ backgroundColor: "transparent" }}
+				onConfirm={onConfirm}
 				onDismiss={() => {
 					setShowPasswordModal(false);
-				}}>
-				{(onDismiss) => {
-					return (
-						<BottomSheetTheme height={300} style={{ justifyContent: "space-between" }}>
-							<Box>
-								<ModalHeader title="Password Confirmation" description="Please confirm your password to confirm the changes:" />
-								<TextInput
-									type="password"
-									label="Password"
-									onChangeText={(text) =>
-										setPassword({
-											value: text,
-											error: "",
-										})
-									}
-									errorMessage={password?.error}
-									value={password.value}
-								/>
-							</Box>
-
-							<ModalFooter acceptButtonLabel="Confirm" onAccept={onConfirm} />
-						</BottomSheetTheme>
-					);
 				}}
-			</BottomSheet>
+			/>
 		</Theme>
 	);
 };
