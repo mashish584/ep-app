@@ -1,5 +1,5 @@
 import React, { SetStateAction, useEffect, useRef, useState } from "react";
-import { Dimensions, ScrollView } from "react-native";
+import { ScrollView } from "react-native";
 import { useMutation } from "@apollo/client";
 import { Formik } from "formik";
 
@@ -12,6 +12,7 @@ import Curve from "../components/SVG/Curve";
 import Theme from "../components/Theme";
 import BottomSheet from "../components/BottomSheet";
 import BottomSheetTheme from "../components/BottomSheetTheme";
+import { ModalHeader, ModalFooter } from "../components/Modals";
 
 import { PROFILE_UPDATE_MUTATION } from "../config/mutations";
 import { ProfileUpdateResponse, ProfileUpdateVariables } from "../config/request.types";
@@ -36,11 +37,17 @@ const EditProfile: React.FC<StackNavigationProps<RootStackScreens, "ProfileUpdat
 	const addressInfo = useRef<AddressInfo | null>(null);
 	const formValues = useRef<UpdateProfileForm | null>(null); // used only if email or username is changed
 	const initialFormValues: UpdateProfileForm = useRef({ ...initialValues }).current;
+
+	//Formik methods for updating values
 	const updateFormValues = useRef<((values: SetStateAction<UpdateProfileForm>, shouldValidate?: boolean | undefined) => void) | null>(null);
 
 	const [userInfo, updateUserInfo] = useAuth((state) => [state.user, state.setUser]);
 	const [errors, setErrors] = useState<ProfileInlineError | null>(null);
 	const [showPasswordModal, setShowPasswordModal] = useState(false);
+	const [password, setPassword] = useState({
+		value: "",
+		error: "",
+	});
 
 	const [onProfileUpdate, { loading }] = useMutation<ProfileUpdateResponse, ProfileUpdateVariables>(PROFILE_UPDATE_MUTATION, {
 		onCompleted: (data) => {
@@ -93,6 +100,18 @@ const EditProfile: React.FC<StackNavigationProps<RootStackScreens, "ProfileUpdat
 		}
 	};
 
+	const onConfirm = async () => {
+		if (!password.value) {
+			password.error = "Please enter password.";
+			return;
+		}
+
+		const updateFormInfo = { ...formValues.current };
+		updateFormInfo.password = password.value;
+
+		console.log({ updateFormInfo });
+	};
+
 	useEffect(() => {
 		if (updateFormValues.current) {
 			updateFormValues.current({
@@ -105,8 +124,6 @@ const EditProfile: React.FC<StackNavigationProps<RootStackScreens, "ProfileUpdat
 		}
 	}, []);
 
-	console.log({ formValues });
-
 	return (
 		<Theme avoidTopNotch={true}>
 			<Box position="absolute" bottom={0}>
@@ -116,6 +133,7 @@ const EditProfile: React.FC<StackNavigationProps<RootStackScreens, "ProfileUpdat
 			<Formik initialValues={initialFormValues} onSubmit={onSubmit}>
 				{({ handleChange, handleSubmit, setFieldValue, setValues, values }) => {
 					updateFormValues.current = setValues;
+
 					return (
 						<>
 							<ScrollView style={{ paddingTop: theme.spacing.xl }}>
@@ -169,12 +187,24 @@ const EditProfile: React.FC<StackNavigationProps<RootStackScreens, "ProfileUpdat
 				}}>
 				{(onDismiss) => {
 					return (
-						<BottomSheetTheme height={Dimensions.get("window").height * 0.3}>
-							<Text>
-								Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis.
-								Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede. Donec nec justo eget felis facilisis fermentum. Aliquam
-								porttitor mauris sit amet orci. Aenean dignissim pellentesque felis.
-							</Text>
+						<BottomSheetTheme height={300} style={{ justifyContent: "space-between" }}>
+							<Box>
+								<ModalHeader title="Password Confirmation" description="Please confirm your password to confirm the changes:" />
+								<TextInput
+									type="password"
+									label="Password"
+									onChangeText={(text) =>
+										setPassword({
+											value: text,
+											error: "",
+										})
+									}
+									errorMessage={password?.error}
+									value={password.value}
+								/>
+							</Box>
+
+							<ModalFooter acceptButtonLabel="Confirm" onAccept={onConfirm} />
 						</BottomSheetTheme>
 					);
 				}}

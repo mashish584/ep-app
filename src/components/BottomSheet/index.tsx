@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
 		borderTopRightRadius: 12,
 		borderTopLeftRadius: 12,
 		paddingTop: 25,
-		paddingHorizontal: theme.spacing.l,
+		paddingHorizontal: theme.spacing.m,
 	},
 	overlay: {
 		flex: 1,
