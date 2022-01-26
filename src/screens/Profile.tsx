@@ -2,6 +2,7 @@ import React from "react";
 import { Dimensions, Image, ScrollView, TouchableOpacity, View, StyleSheet } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faAngleRight, faCamera } from "@fortawesome/free-solid-svg-icons";
+import { useMutation } from "@apollo/client";
 
 import Button from "../components/Button";
 import Texter from "../components/Texter";
@@ -9,12 +10,38 @@ import Theme from "../components/Theme";
 
 import { SetttingsMenu } from "../utils/preconfig";
 import theme, { Box, pallette, Text } from "../utils/theme";
+import { openGallery } from "../utils/media";
 import { generateBoxShadowStyle } from "../utils";
 import { BottomStackScreens, RootStackScreens, StackNavigationProps } from "../navigation/types";
+import { ProfileUpdateResponse, ProfileUploadVariables } from "../config/request.types";
+import { PROFILE_UPLOAD_MUTATION } from "../config/mutations";
+import { useAuth } from "../utils/store";
 
 const SCREEN_WIDTH = Dimensions.get("screen").width;
 
 const Profile: React.FC<StackNavigationProps<BottomStackScreens & RootStackScreens, "Settings">> = ({ navigation }) => {
+	const [userInfo, updateUserInfo] = useAuth((store) => [store.user, store.setUser]);
+
+	const [onProfileUpload] = useMutation<ProfileUpdateResponse, ProfileUploadVariables>(PROFILE_UPLOAD_MUTATION, {
+		onCompleted: (data) => {
+			if (data.updateProfile) {
+				updateUserInfo({ ...userInfo, ...data.updateProfile });
+			}
+		},
+		onError: (error) => {
+			console.log({ error });
+		},
+	});
+
+	console.log({ userInfo });
+
+	const onGalleryOpen = async () => {
+		const response = await openGallery({ cropping: true });
+		if (response?.length) {
+			onProfileUpload({ variables: { profile: response[0] } });
+		}
+	};
+
 	return (
 		<Theme avoidTopNotch={true} avoidHomBar={true}>
 			<ScrollView showsVerticalScrollIndicator={false}>
@@ -22,7 +49,7 @@ const Profile: React.FC<StackNavigationProps<BottomStackScreens & RootStackScree
 				<Box alignItems="center">
 					<Box width={150} height={150} mb="l" backgroundColor="placeholder" style={{ ...styles.imageShadow, borderRadius: 75 }}>
 						<Image source={{ uri: "https://unsplash.it/300/300" }} style={{ width: "100%", height: "100%", borderRadius: 75 }} resizeMode="cover" />
-						<TouchableOpacity style={styles.camera}>
+						<TouchableOpacity onPress={onGalleryOpen} style={styles.camera}>
 							<FontAwesomeIcon icon={faCamera} size={12} color={theme.colors.secondary} />
 						</TouchableOpacity>
 					</Box>

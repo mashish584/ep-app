@@ -39,6 +39,23 @@ export const PROFILE_UPDATE_MUTATION = gql`
 	}
 `;
 
+export const PROFILE_UPLOAD_MUTATION = gql`
+	mutation updateProfile($profile: Upload) {
+		updateProfile(data: { profile: $profile }) {
+			username
+			fullname
+			email
+			bio
+			profile
+			location {
+				address
+			}
+			isActive
+			stripe_customer_id
+		}
+	}
+`;
+
 export const BOOK_EVENT = gql`
 	mutation bookEvent($eventId: String!) {
 		bookEvent(event: $eventId) {

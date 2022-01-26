@@ -12,7 +12,8 @@
 		"pretty": "prettier --write --config .prettierrc.json *.js **/*.{js,ts,tsx}",
 		"lint:fix": "eslint --quiet **/**.{ts,tsx} --fix",
 		"analyze": "cross-env BUNDLE_ANALYZE=true npm run build",
-		"analyze-code": "npm run pretty && npm run lint:fix && npm run lint"
+		"analyze-code": "npm run pretty && npm run lint:fix && npm run lint",
+		"postinstall": "patch-package"
 	},
 	"dependencies": {
 		"@apollo/client": "^3.5.6",
@@ -32,10 +33,13 @@
 		"formik": "^2.2.9",
 		"graphql": "^16.2.0",
 		"lodash.debounce": "^4.0.8",
+		"patch-package": "^6.4.7",
 		"react": "17.0.2",
 		"react-native": "0.66.4",
 		"react-native-dotenv": "^3.3.1",
 		"react-native-gesture-handler": "^2.1.0",
+		"react-native-image-crop-picker": "^0.37.2",
+		"react-native-permissions": "^3.2.0",
 		"react-native-safe-area-context": "^3.3.2",
 		"react-native-screens": "^3.10.1",
 		"react-native-svg": "^12.1.1",

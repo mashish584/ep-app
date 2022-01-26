@@ -21,6 +21,7 @@ export type UserLoginResponse = {
 =================================*/
 
 export type ProfileUpdateVariables = UpdateProfileForm;
+export type ProfileUploadVariables = { profile: any };
 
 export type ProfileUpdateResponse = {
 	updateProfile: UserInfo;

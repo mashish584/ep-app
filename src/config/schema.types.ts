@@ -22,6 +22,7 @@ export interface UserInfo {
 	location: LocationInfo;
 	email: string;
 	isActive: boolean;
+	profile: string;
 	stripe_customer_id: string;
 	createdAt: string;
 	updatedAt: string;
