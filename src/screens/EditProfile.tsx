@@ -44,6 +44,8 @@ const EditProfile: React.FC<StackNavigationProps<RootStackScreens, "ProfileUpdat
 	const [errors, setErrors] = useState<ProfileInlineError | null>(null);
 	const [showPasswordModal, setShowPasswordModal] = useState(false);
 
+	console.log({ userInfo });
+
 	const [onProfileUpdate, { loading }] = useMutation<ProfileUpdateResponse, ProfileUpdateVariables>(PROFILE_UPDATE_MUTATION, {
 		onCompleted: (data) => {
 			if (data.updateProfile) {
@@ -67,7 +69,7 @@ const EditProfile: React.FC<StackNavigationProps<RootStackScreens, "ProfileUpdat
 				}
 			}
 
-			if (addressInfo) {
+			if (addressInfo.current) {
 				data.location = JSON.stringify(addressInfo.current);
 			} else {
 				delete data.location;
@@ -95,7 +97,7 @@ const EditProfile: React.FC<StackNavigationProps<RootStackScreens, "ProfileUpdat
 		}
 	};
 
-	const onConfirm = async (password) => {
+	const onConfirm = async (password, onSuccess) => {
 		if (!password) {
 			return;
 		}
@@ -103,7 +105,9 @@ const EditProfile: React.FC<StackNavigationProps<RootStackScreens, "ProfileUpdat
 		const updateFormInfo = { ...formValues.current };
 		updateFormInfo.password = password;
 
-		console.log({ updateFormInfo });
+		await onProfileUpdate({ variables: { ...(updateFormInfo as UpdateProfileForm) } });
+
+		onSuccess();
 	};
 
 	useEffect(() => {

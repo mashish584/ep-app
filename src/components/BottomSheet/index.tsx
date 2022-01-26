@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Modal, View, StyleSheet, Animated, Dimensions, PanResponder, Keyboard, TouchableOpacity } from "react-native";
+import { Modal, View, StyleSheet, Animated, Dimensions, PanResponder, Keyboard, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
 
 import theme, { pallette } from "../../utils/theme";
 import { BottomSheetProps, BottomSheetState } from "./types";
@@ -73,12 +73,14 @@ class BottomSheet extends Component<BottomSheetProps, BottomSheetState> {
 						}
 					}}
 					style={styles.overlay}>
-					<Animated.View
-						style={[styles.container, this.props.containerStyle, { transform: [{ translateY: this.state.panY }] }]}
-						{...this.panResponders.panHandlers}>
-						{!this.props.disableGesture && <View style={[styles.topStripStyle, this.props.stripStyle]} />}
-						{this.props.children(this._handleDismiss.bind(this))}
-					</Animated.View>
+					<TouchableWithoutFeedback>
+						<Animated.View
+							style={[styles.container, this.props.containerStyle, { transform: [{ translateY: this.state.panY }] }]}
+							{...this.panResponders.panHandlers}>
+							{!this.props.disableGesture && <View style={[styles.topStripStyle, this.props.stripStyle]} />}
+							{this.props.children(this._handleDismiss.bind(this))}
+						</Animated.View>
+					</TouchableWithoutFeedback>
 				</TouchableOpacity>
 			</Modal>
 		);

@@ -11,7 +11,7 @@ import { ModalFooter, ModalHeader } from ".";
 type ModalProps = Pick<BottomSheetProps, "visible" | "onDismiss">;
 
 interface PasswordConfirmation extends ModalProps {
-	onConfirm: (password: string) => void;
+	onConfirm: (password: string, onSuccess: () => void) => void;
 }
 
 const PasswordConfirmation: React.FC<PasswordConfirmation> = ({ visible, onDismiss, ...props }) => {
@@ -20,7 +20,7 @@ const PasswordConfirmation: React.FC<PasswordConfirmation> = ({ visible, onDismi
 		error: "",
 	});
 
-	const onConfirm = () => {
+	const onConfirm = (dismiss) => {
 		if (!password.value) {
 			setPassword((prev) => ({
 				...prev,
@@ -29,7 +29,14 @@ const PasswordConfirmation: React.FC<PasswordConfirmation> = ({ visible, onDismi
 			return;
 		}
 
-		props.onConfirm(password.value);
+		props.onConfirm(password.value, () => {
+			//reset form data
+			setPassword({
+				value: "",
+				error: "",
+			});
+			dismiss();
+		});
 	};
 
 	return (
@@ -53,7 +60,7 @@ const PasswordConfirmation: React.FC<PasswordConfirmation> = ({ visible, onDismi
 							/>
 						</Box>
 
-						<ModalFooter acceptButtonLabel="Confirm" onAccept={onConfirm} />
+						<ModalFooter acceptButtonLabel="Confirm" onAccept={() => onConfirm(onDismiss)} />
 					</BottomSheetTheme>
 				);
 			}}
