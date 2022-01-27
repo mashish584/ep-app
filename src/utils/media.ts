@@ -1,3 +1,4 @@
+import { ReactNativeFile } from "apollo-upload-client";
 import ImagePicker, { ImageOrVideo, Options } from "react-native-image-crop-picker";
 import { checkGalleryPermission } from "./permissions";
 
@@ -7,6 +8,14 @@ const ImageConfig: Options = {
 	compressImageQuality: 0.6,
 };
 
+export const generateRNFile = (uri, name) => {
+	const file = {
+		uri,
+		type: "image",
+		name,
+	};
+	return uri ? new ReactNativeFile(file) : null;
+};
 const generateFileName = (media: ImageOrVideo & { uri?: any; type?: any }) => {
 	const extension = media.sourceURL?.split(".").pop();
 
