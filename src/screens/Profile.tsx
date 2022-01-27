@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Dimensions, Image, ScrollView, TouchableOpacity, View, StyleSheet } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faAngleRight, faCamera } from "@fortawesome/free-solid-svg-icons";
@@ -16,11 +16,13 @@ import { BottomStackScreens, RootStackScreens, StackNavigationProps } from "../n
 import { ProfileUpdateResponse, ProfileUploadVariables } from "../config/request.types";
 import { PROFILE_UPLOAD_MUTATION } from "../config/mutations";
 import { useAuth } from "../utils/store";
+import Logout from "../components/Modals/Logout";
 
 const SCREEN_WIDTH = Dimensions.get("screen").width;
 
 const Profile: React.FC<StackNavigationProps<BottomStackScreens & RootStackScreens, "Settings">> = ({ navigation }) => {
-	const [userInfo, updateUserInfo] = useAuth((store) => [store.user, store.setUser]);
+	const [userInfo, updateUserInfo, removeToken] = useAuth((store) => [store.user, store.setUser, store.removeToken]);
+	const [showLogoutModal, setShowLogoutModal] = useState(false);
 
 	const [onProfileUpload] = useMutation<ProfileUpdateResponse, ProfileUploadVariables>(PROFILE_UPLOAD_MUTATION, {
 		onCompleted: (data) => {
@@ -32,8 +34,6 @@ const Profile: React.FC<StackNavigationProps<BottomStackScreens & RootStackScree
 			console.log({ error });
 		},
 	});
-
-	console.log({ userInfo });
 
 	const onGalleryOpen = async () => {
 		const response = await openGallery({ cropping: true });
@@ -87,7 +87,14 @@ const Profile: React.FC<StackNavigationProps<BottomStackScreens & RootStackScree
 					{SetttingsMenu.map((menu, index) => {
 						const Icon = menu.icon;
 						return (
-							<TouchableOpacity key={index} activeOpacity={0.8}>
+							<TouchableOpacity
+								onPress={() => {
+									if (menu.isLogout) {
+										setShowLogoutModal(true);
+									}
+								}}
+								key={index}
+								activeOpacity={0.8}>
 								<Box
 									flexDirection="row"
 									paddingHorizontal="m"
@@ -117,6 +124,16 @@ const Profile: React.FC<StackNavigationProps<BottomStackScreens & RootStackScree
 					})}
 				</Box>
 			</ScrollView>
+			<Logout
+				visible={showLogoutModal}
+				onDismiss={() => {
+					setShowLogoutModal(false);
+				}}
+				onLogout={() => {
+					removeToken();
+					navigation.navigate("AuthScreen");
+				}}
+			/>
 		</Theme>
 	);
 };

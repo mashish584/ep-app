@@ -19,5 +19,6 @@ export const SetttingsMenu = [
 		icon: Power,
 		title: "Logout",
 		description: "",
+		isLogout: true,
 	},
 ];

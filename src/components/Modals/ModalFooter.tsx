@@ -19,6 +19,7 @@ const ModalFooter: React.FC<ModalFooter> = ({ acceptButtonLabel, onAccept, ...pr
 					label={props.cancelButtonLabel}
 					variant="transparent"
 					containerStyle={{ width: "100%", marginTop: theme.spacing.s }}
+					textStyle={{ color: theme.colors.primary }}
 					onPress={props.onCancel}
 				/>
 			)}
