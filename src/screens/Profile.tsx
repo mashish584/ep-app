@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Dimensions, Image, ScrollView, TouchableOpacity, View, StyleSheet } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faAngleRight, faCamera } from "@fortawesome/free-solid-svg-icons";
 import { useMutation } from "@apollo/client";
 
 import Button from "../components/Button";
-import Texter from "../components/Texter";
+import Texter, { Config } from "../components/Texter";
 import Theme from "../components/Theme";
 
 import { SetttingsMenu } from "../utils/preconfig";
@@ -19,6 +19,21 @@ import { useAuth } from "../utils/store";
 import Logout from "../components/Modals/Logout";
 
 const SCREEN_WIDTH = Dimensions.get("screen").width;
+
+const getNameConfig = (fullName: string): Record<string, Config> => {
+	if (fullName) {
+		const words = fullName.split(" ");
+		const lastName = words.length > 1 ? words.pop() : "";
+
+		return {
+			[lastName as string]: {
+				variant: "light",
+			},
+		};
+	}
+
+	return {};
+};
 
 const Profile: React.FC<StackNavigationProps<BottomStackScreens & RootStackScreens, "Settings">> = ({ navigation }) => {
 	const [userInfo, updateUserInfo, removeToken] = useAuth((store) => [store.user, store.setUser, store.removeToken]);
@@ -42,43 +57,50 @@ const Profile: React.FC<StackNavigationProps<BottomStackScreens & RootStackScree
 		}
 	};
 
+	const getConfig = useMemo(() => getNameConfig(userInfo.fullname), [userInfo.fullname]);
+
 	return (
 		<Theme avoidTopNotch={true} avoidHomBar={true}>
 			<ScrollView showsVerticalScrollIndicator={false}>
 				<View style={styles.layer} />
 				<Box alignItems="center">
 					<Box width={150} height={150} mb="l" backgroundColor="placeholder" style={{ ...styles.imageShadow, borderRadius: 75 }}>
-						<Image source={{ uri: "https://unsplash.it/300/300" }} style={{ width: "100%", height: "100%", borderRadius: 75 }} resizeMode="cover" />
+						<Image
+							source={{ uri: userInfo?.profile || "https://avatars.dicebear.com/v2/identicon/8b2a644a959335af9df45bb9710df09e.png" }}
+							style={{ width: "100%", height: "100%", borderRadius: 75 }}
+							resizeMode="cover"
+						/>
 						<TouchableOpacity onPress={onGalleryOpen} style={styles.camera}>
 							<FontAwesomeIcon icon={faCamera} size={12} color={theme.colors.secondary} />
 						</TouchableOpacity>
 					</Box>
-					<Texter
-						variant="bold"
-						style={{ fontSize: 29, color: pallette.rgb.black(0.86) }}
-						config={{
-							DOE: {
-								variant: "light",
-							},
-						}}>
-						JOHN DOE
-					</Texter>
+					{userInfo?.fullname && (
+						<Texter variant="bold" style={{ fontSize: 29, color: pallette.rgb.black(0.86) }} config={getConfig}>
+							{userInfo?.fullname}
+						</Texter>
+					)}
 					<Text variant="bold" marginVertical="xs" fontSize={theme.fontSize.sm} style={{ color: pallette.rgb.black(0.76) }}>
-						john@example.com
+						{userInfo?.email}
 					</Text>
-					<Text
-						variant="light"
-						marginVertical="s"
-						paddingHorizontal="xl"
-						fontSize={theme.fontSize.xs}
-						style={{ color: pallette.rgb.black(0.6), textAlign: "center" }}>
-						Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae laudantium voluptatem commodi placeat. Repellendus, cum odio voluptas
-						voluptatem commodi unde?
-					</Text>
+					{userInfo?.bio && (
+						<Text
+							variant="light"
+							marginVertical="s"
+							paddingHorizontal="xl"
+							fontSize={theme.fontSize.xs}
+							style={{ color: pallette.rgb.black(0.6), textAlign: "center" }}>
+							{userInfo?.bio}
+						</Text>
+					)}
 					<Button
 						variant="primary"
 						label="Edit Profile"
-						containerStyle={{ width: 120, minHeight: 32, borderRadius: 50 }}
+						containerStyle={{
+							width: 120,
+							minHeight: 32,
+							borderRadius: 50,
+							marginTop: userInfo?.bio !== null ? theme.spacing.none : theme.spacing.s,
+						}}
 						textStyle={{ fontSize: theme.fontSize.md }}
 						onPress={() => navigation.navigate("ProfileUpdate")}
 					/>
