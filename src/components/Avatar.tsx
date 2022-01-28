@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Image, TouchableOpacity } from "react-native";
 
 import { generateBoxShadowStyle } from "../utils";
@@ -11,6 +11,22 @@ interface Avatar {
 }
 
 const Avatar = ({ name, profile, onPress }: Avatar) => {
+	const getInitial = useMemo(
+		() => () => {
+			if (name) {
+				const words = name.split(" ");
+
+				if (words.length) {
+					const firstname = words[0].substring(0, 1);
+					const lastname = words?.length === 1 ? words[0].substring(2, 1) : words.pop()?.substring(0, 1);
+					return `${firstname}${lastname}`;
+				}
+			}
+			return "?";
+		},
+		[name],
+	);
+
 	return (
 		<TouchableOpacity onPress={onPress} activeOpacity={0}>
 			<Box
@@ -32,8 +48,8 @@ const Avatar = ({ name, profile, onPress }: Avatar) => {
 					alignSelf="center"
 					style={{ marginTop: -10 }}
 					justifyContent="center">
-					<Text variant="bold" fontSize={theme.fontSize.xxs}>
-						{name}
+					<Text variant="bold" fontSize={theme.fontSize.xxs} textTransform="uppercase">
+						{getInitial()}
 					</Text>
 				</Box>
 			</Box>
