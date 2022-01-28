@@ -124,7 +124,7 @@ const UpcomingEventsList: React.FC<UpcomingEventsList> = ({ categoryEventCount, 
 const EventsList = () => {
 	const navigation = useNavigation<ScreenNavigationProp>();
 	const userInfo = useAuth((state) => state.user);
-	const {} = useUI((state) => state);
+	const { setProfileUpdatePrompt } = useUI((state) => state);
 	const { fetchPaymentSheetParam } = usePayment();
 
 	const [category, setCategory] = useState<EventCategory>("House");
@@ -200,6 +200,8 @@ const EventsList = () => {
 							}
 
 							if (!userInfo?.location?.address) {
+								setProfileUpdatePrompt(true);
+								return;
 							}
 
 							await fetchPaymentSheetParam({ variables: { eventId: item.id } });

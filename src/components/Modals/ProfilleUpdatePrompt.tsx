@@ -14,7 +14,7 @@ const ProfileUpdatePrompt = ({ visible, onDismiss, ...props }: ProfileUpdateProm
 		<BottomSheet visible={visible} disableGesture={true} containerStyle={{ backgroundColor: "transparent" }} onDismiss={onDismiss}>
 			{(onDismiss) => {
 				return (
-					<BottomSheetTheme height={300} style={{ justifyContent: "space-between" }}>
+					<BottomSheetTheme height={200} style={{ justifyContent: "space-between" }}>
 						<Box>
 							<ModalHeader title="Profile Update" description="Please complete your profile details to continue." />
 						</Box>
