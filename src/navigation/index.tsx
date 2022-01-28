@@ -20,7 +20,7 @@ const BottamTabScreen = () => {
 	return (
 		<BottomTab.Navigator
 			tabBar={(props) => <TabBar {...props} />}
-			initialRouteName="Settings"
+			initialRouteName="Home"
 			screenOptions={{
 				headerShown: false,
 			}}>
