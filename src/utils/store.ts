@@ -1,4 +1,4 @@
-import create, { GetState, SetState } from "zustand";
+import create, { GetState, SetState, StoreApi } from "zustand";
 import { persist, StoreApiWithPersist } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserInfo } from "../config/schema.types";
@@ -26,3 +26,13 @@ export const useAuth = create<AuthState, SetState<AuthState>, GetState<AuthState
 		},
 	),
 );
+
+interface UIState {
+	showProfileUpdatePrompt: boolean;
+	setProfileUpdatePrompt: (value: boolean) => void;
+}
+
+export const useUI = create<UIState, SetState<UIState>, GetState<UIState>, StoreApi<UIState>>((set) => ({
+	showProfileUpdatePrompt: false,
+	setProfileUpdatePrompt: (value) => set({ showProfileUpdatePrompt: value }),
+}));

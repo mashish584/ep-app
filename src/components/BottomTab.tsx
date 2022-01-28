@@ -7,8 +7,12 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import theme, { Box, pallette } from "../utils/theme";
 import { generateBoxShadowStyle } from "../utils";
+import { BottomStackScreens, StackNavigationProps } from "../navigation/types";
 
-const BottomTab = (props: BottomTabBarProps) => {
+type TabBarProps = BottomTabBarProps & StackNavigationProps<BottomStackScreens, "Home">;
+interface BottomTabs extends TabBarProps {}
+
+const BottomTab = (props: BottomTabs) => {
 	const { bottom } = useSafeAreaInsets();
 
 	return (
@@ -21,7 +25,7 @@ const BottomTab = (props: BottomTabBarProps) => {
 				justifyContent="space-around"
 				style={{ marginBottom: bottom }}>
 				<Box flexDirection="row" flex={0.5} justifyContent="space-around">
-					<TouchableOpacity style={styles.tab}>
+					<TouchableOpacity style={styles.tab} onPress={() => props.navigation.navigate("Home")}>
 						<FontAwesomeIcon icon={faHome} color={theme.colors.darkGray} size={20} />
 					</TouchableOpacity>
 					<TouchableOpacity style={styles.tab}>
@@ -35,7 +39,7 @@ const BottomTab = (props: BottomTabBarProps) => {
 					<TouchableOpacity style={styles.tab}>
 						<FontAwesomeIcon icon={faBell} color={theme.colors.darkGray} size={20} />
 					</TouchableOpacity>
-					<TouchableOpacity style={styles.tab}>
+					<TouchableOpacity style={styles.tab} onPress={() => props.navigation.navigate("Settings")}>
 						<FontAwesomeIcon icon={faUser} color={theme.colors.darkGray} size={20} />
 					</TouchableOpacity>
 				</Box>
