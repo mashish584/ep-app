@@ -7,7 +7,7 @@ interface EventCardSkelton {
 }
 
 const EventCardSkelton = ({ isFullWidth }: EventCardSkelton) => {
-	const width = isFullWidth ? Dimensions.get("screen").width - theme.spacing.l * 2 : 220;
+	const width = isFullWidth ? Dimensions.get("screen").width - theme.spacing.l * 2 : 240;
 	const height = isFullWidth ? 250 : 150;
 
 	return (

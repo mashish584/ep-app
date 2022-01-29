@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { Dimensions, FlatList, ScrollView, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useQuery } from "@apollo/client";
@@ -24,12 +24,12 @@ interface UpcomingEventsList {
 	events: EventInfo[];
 	isLoading: boolean;
 	onCategoryChange: (category: EventCategory) => void;
+	onEventJoin: (eventId: string) => void;
 }
 
 const UpcomingEventsList: React.FC<UpcomingEventsList> = ({ categoryEventCount, ...props }) => {
 	const navigation = useNavigation<ScreenNavigationProp>();
 
-	const token = useAuth((state) => state.token);
 	const { data, loading } = useQuery<FetchEventResponse, FetchEventRequestVariables>(FETCH_UPCOMING_EVENTS, {
 		variables: { query: JSON.stringify({ upcoming: true }) },
 		fetchPolicy: "no-cache",
@@ -58,15 +58,10 @@ const UpcomingEventsList: React.FC<UpcomingEventsList> = ({ categoryEventCount, 
 						<EventCard
 							key={index}
 							eventInfo={{ ...item, thumbnail: item.medias[0].link }}
-							width={220}
+							width={240}
 							height={170}
 							containerStyle={{ marginLeft: index === 0 ? theme.spacing.l : 0 }}
-							onJoin={() => {
-								if (!token) {
-									navigation.push("AuthScreen");
-									return;
-								}
-							}}
+							onJoin={() => props.onEventJoin(item.id)}
 							onPress={() => {
 								navigation.push("EventDetail", {
 									slug: item.title,
@@ -128,6 +123,7 @@ const EventsList = () => {
 	const { fetchPaymentSheetParam } = usePayment();
 
 	const [category, setCategory] = useState<EventCategory>("House");
+
 	const categoriedEventFilter = useRef<Filter<EventQuery>>({
 		query: {
 			category,
@@ -168,6 +164,23 @@ const EventsList = () => {
 		setCategory(category);
 	};
 
+	const onEventJoin = useCallback(
+		async (eventId) => {
+			if (!userInfo.id) {
+				navigation.push("AuthScreen");
+				return;
+			}
+
+			if (!userInfo?.location?.address) {
+				setProfileUpdatePrompt(true);
+				return;
+			}
+
+			await fetchPaymentSheetParam({ variables: { eventId } });
+		},
+		[userInfo?.id, userInfo?.location?.address],
+	);
+
 	return (
 		<FlatList
 			data={data?.events.events}
@@ -183,6 +196,7 @@ const EventsList = () => {
 					isLoading={loading}
 					events={[]}
 					onCategoryChange={onCategoryUpdate}
+					onEventJoin={onEventJoin}
 				/>
 			}
 			renderItem={({ item, index }) => {
@@ -193,19 +207,7 @@ const EventsList = () => {
 						width={Dimensions.get("screen").width - theme.spacing.l * 2}
 						containerStyle={{ marginBottom: theme.spacing.l, marginLeft: theme.spacing.l }}
 						height={250}
-						onJoin={async () => {
-							if (!userInfo.id) {
-								navigation.push("AuthScreen");
-								return;
-							}
-
-							if (!userInfo?.location?.address) {
-								setProfileUpdatePrompt(true);
-								return;
-							}
-
-							await fetchPaymentSheetParam({ variables: { eventId: item.id } });
-						}}
+						onJoin={() => onEventJoin(item.id)}
 						onPress={() => {
 							navigation.push("EventDetail", {
 								slug: item.title,
