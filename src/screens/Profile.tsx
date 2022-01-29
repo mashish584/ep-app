@@ -120,6 +120,11 @@ const Profile: React.FC<StackNavigationProps<BottomStackScreens & RootStackScree
 								onPress={() => {
 									if (menu.isLogout) {
 										setShowLogoutModal(true);
+										return;
+									}
+
+									if (menu.navigation) {
+										navigation.push(menu.navigation);
 									}
 								}}
 								key={index}

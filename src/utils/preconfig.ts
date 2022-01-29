@@ -1,14 +1,16 @@
 import Building from "../components/SVG/Building";
 import Power from "../components/SVG/Power";
 import Wallet from "../components/SVG/Wallet";
+import { SettingsItem } from "../types";
 
 export const EventCategories = ["Tailgating", "Outdoor", "House", "Inaugration", "Match"];
 
-export const SetttingsMenu = [
+export const SetttingsMenu: SettingsItem[] = [
 	{
 		icon: Wallet,
 		title: "Transactions",
 		description: "Check all in and out transactions.",
+		navigation: "TransactionsList",
 	},
 	{
 		icon: Building,
