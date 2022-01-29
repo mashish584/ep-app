@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { Dimensions, FlatList, ScrollView, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useQuery } from "@apollo/client";
@@ -15,8 +15,7 @@ import { EventCategory, Filter } from "../types";
 import { EventCategories } from "../utils/preconfig";
 import theme, { Box, Text } from "../utils/theme";
 import { ScreenNavigationProp } from "../navigation/types";
-import { useAuth, useUI } from "../utils/store";
-import { usePayment } from "../hook/useCheckout";
+import { UIContext, UIContextInterface } from "../context/UIContext";
 
 interface UpcomingEventsList {
 	category: EventCategory;
@@ -118,9 +117,7 @@ const UpcomingEventsList: React.FC<UpcomingEventsList> = ({ categoryEventCount, 
 
 const EventsList = () => {
 	const navigation = useNavigation<ScreenNavigationProp>();
-	const userInfo = useAuth((state) => state.user);
-	const { setProfileUpdatePrompt } = useUI((state) => state);
-	const { fetchPaymentSheetParam } = usePayment();
+	const { onEventJoin } = useContext<UIContextInterface>(UIContext);
 
 	const [category, setCategory] = useState<EventCategory>("House");
 
@@ -163,23 +160,6 @@ const EventsList = () => {
 		refetch({ query: JSON.stringify(categoriedEventFilter.current.query), ...categoriedEventFilter.current.pagination });
 		setCategory(category);
 	};
-
-	const onEventJoin = useCallback(
-		async (eventId) => {
-			if (!userInfo.id) {
-				navigation.push("AuthScreen");
-				return;
-			}
-
-			if (!userInfo?.location?.address) {
-				setProfileUpdatePrompt(true);
-				return;
-			}
-
-			await fetchPaymentSheetParam({ variables: { eventId } });
-		},
-		[userInfo?.id, userInfo?.location?.address],
-	);
 
 	return (
 		<FlatList

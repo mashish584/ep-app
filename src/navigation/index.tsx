@@ -12,6 +12,8 @@ import EventDetail from "../screens/EventDetail";
 import Profile from "../screens/Profile";
 import EditProfile from "../screens/EditProfile";
 
+import { navigationRef } from "../utils/navigationUtil";
+
 import { BottomStackScreens, RootStackScreens } from "./types";
 
 const BottomTab = createBottomTabNavigator<BottomStackScreens>();
@@ -48,7 +50,7 @@ const RootStackSCreen = () => {
 
 export default () => {
 	return (
-		<NavigationContainer>
+		<NavigationContainer ref={navigationRef}>
 			<RootStackSCreen />
 		</NavigationContainer>
 	);

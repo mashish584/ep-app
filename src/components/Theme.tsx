@@ -2,7 +2,6 @@ import React, { ReactNode } from "react";
 import { ImageBackground, ImageStyle, View, ViewStyle, ImageSourcePropType, StyleSheet } from "react-native";
 
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import UI from "../containers/UI";
 import { pallette } from "../utils/theme";
 
 interface ThemeProps {
@@ -33,13 +32,9 @@ function Theme(
 	return props.isImageContainer ? (
 		<ImageBackground source={source} style={[styles.container, props.imageContainerStyle, safeAreaStyle]}>
 			{props.children}
-			<UI />
 		</ImageBackground>
 	) : (
-		<View style={[styles.container, props.viewContainerStyle, safeAreaStyle]}>
-			{props.children}
-			<UI />
-		</View>
+		<View style={[styles.container, props.viewContainerStyle, safeAreaStyle]}>{props.children}</View>
 	);
 }
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { ImageBackground, Dimensions, ScrollView, StyleSheet } from "react-native";
 import { faCalendar, faClock } from "@fortawesome/free-regular-svg-icons";
 import { faMapMarker } from "@fortawesome/free-solid-svg-icons";
@@ -16,12 +16,12 @@ import { RootStackScreens, StackNavigationProps } from "../navigation/types";
 import { FETCH_EVENT_DETAIL } from "../config/query";
 import { FetchEventDetailResponse, FetchEventDetailRequestVariables } from "../config/request.types";
 import { formatTimeStamp } from "../utils";
-import { useAuth } from "../utils/store";
+import { UIContext } from "../context/UIContext";
 
 const SCREEN_HEIGHT = Dimensions.get("screen").height;
 
 const EventDetail: React.FC<StackNavigationProps<RootStackScreens, "EventDetail">> = ({ route, navigation }) => {
-	const token = useAuth((state) => state.token);
+	const { onEventJoin } = useContext(UIContext);
 	const slug = route.params?.slug;
 
 	const { data, loading } = useQuery<FetchEventDetailResponse, FetchEventDetailRequestVariables>(FETCH_EVENT_DETAIL, {
@@ -33,12 +33,6 @@ const EventDetail: React.FC<StackNavigationProps<RootStackScreens, "EventDetail"
 
 	const eventDetail = data?.eventDetail;
 	const thumbnail = eventDetail?.medias[0]?.link;
-
-	const onJoin = () => {
-		if (!token) {
-			navigation.push("AuthScreen");
-		}
-	};
 
 	if (loading) return null;
 
@@ -98,7 +92,7 @@ const EventDetail: React.FC<StackNavigationProps<RootStackScreens, "EventDetail"
 						variant="primary"
 						label={`Join now - $${eventDetail?.price}`}
 						containerStyle={{ width: "100%", marginVertical: theme.spacing.xl }}
-						onPress={onJoin}
+						onPress={onEventJoin}
 					/>
 				</Box>
 			</ScrollView>

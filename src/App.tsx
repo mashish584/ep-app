@@ -20,6 +20,7 @@ import theme from "./utils/theme";
 import { client } from "./config/apollo";
 
 import Navigation from "./navigation";
+import { UIProvider } from "./context/UIContext";
 
 const App = () => {
 	return (
@@ -27,7 +28,9 @@ const App = () => {
 			<ThemeProvider {...{ theme }}>
 				<StripeProvider publishableKey={STRIPE_PUBLIC_KEY}>
 					<ApolloProvider client={client}>
-						<Navigation />
+						<UIProvider>
+							<Navigation />
+						</UIProvider>
 					</ApolloProvider>
 				</StripeProvider>
 			</ThemeProvider>
