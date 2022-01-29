@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useQuery } from "@apollo/client";
 
 import Category from "../components/Category";
-import EventCard from "../components/EventCard";
+import { EventCard } from "../components/Cards/";
 import { EventCardSkelton, CategoriesSkelton } from "../components/Skelton";
 
 import { FETCH_EVENTS, FETCH_UPCOMING_EVENTS } from "../config/query";

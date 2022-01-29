@@ -11,6 +11,7 @@ import Onboarding from "../screens/Onboarding";
 import EventDetail from "../screens/EventDetail";
 import Profile from "../screens/Profile";
 import EditProfile from "../screens/EditProfile";
+import UsersList from "../screens/UsersList";
 
 import { navigationRef } from "../utils/navigationUtil";
 
@@ -44,6 +45,7 @@ const RootStackSCreen = () => {
 			<RootStack.Screen name="BottomStack" component={BottamTabScreen} options={{ headerShown: false }} />
 			<RootStack.Screen name="EventDetail" component={EventDetail} options={{ headerShown: false }} />
 			<RootStack.Screen name="ProfileUpdate" component={EditProfile} options={{ headerShown: false }} />
+			<RootStack.Screen name="UsersList" component={UsersList} options={{ headerShown: false }} />
 		</RootStack.Navigator>
 	);
 };
