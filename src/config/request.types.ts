@@ -59,8 +59,25 @@ export type FetchEventDetailResponse = {
 	eventDetail: EventInfo;
 };
 
+export type FetchAttendeesRequestVariables = {
+	query?: string;
+	skip?: number;
+	take?: number;
+};
+
+export type FetchAttendeesResponse = {
+	fetchAttendees: {
+		count: number;
+		users: UserInfo[];
+	};
+};
+
+/**
+ * Transactions Query
+ */
+
 export type BookEventRequestVariables = {
-	eventId: string;
+	event: string;
 };
 
 export type BookEventResponse = {

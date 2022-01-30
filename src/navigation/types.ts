@@ -12,7 +12,7 @@ export type RootStackScreens = {
 	BottomStack: undefined;
 	ProfileUpdate: undefined;
 	EventDetail: any;
-	UsersList: any;
+	AttendeesList: any;
 	TransactionsList: any;
 };
 

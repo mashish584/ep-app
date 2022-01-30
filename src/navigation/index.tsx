@@ -9,7 +9,7 @@ import Onboarding from "../screens/Onboarding";
 import EventDetail from "../screens/EventDetail";
 import Profile from "../screens/Profile";
 import EditProfile from "../screens/EditProfile";
-import UsersList from "../screens/UsersList";
+import AttendeesList from "../screens/AttendeesList";
 import TransactionsList from "../screens/TransactionsList";
 
 import TabBar from "../components/BottomTab";
@@ -45,7 +45,7 @@ const RootStackSCreen = () => {
 			<RootStack.Screen name="BottomStack" component={BottamTabScreen} options={{ headerShown: false }} />
 			<RootStack.Screen name="EventDetail" component={EventDetail} options={{ headerShown: false }} />
 			<RootStack.Screen name="ProfileUpdate" component={EditProfile} options={{ headerShown: false }} />
-			<RootStack.Screen name="UsersList" component={UsersList} options={{ headerShown: false }} />
+			<RootStack.Screen name="AttendeesList" component={AttendeesList} options={{ headerShown: false }} />
 			<RootStack.Screen name="TransactionsList" component={TransactionsList} options={{ headerShown: false }} />
 		</RootStack.Navigator>
 	);

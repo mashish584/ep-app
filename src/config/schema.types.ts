@@ -15,7 +15,7 @@ export interface MediaInfo {
 }
 
 export interface UserInfo {
-	id: number;
+	id: string;
 	username: string;
 	fullname: string;
 	bio: string;

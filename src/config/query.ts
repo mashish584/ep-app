@@ -74,3 +74,17 @@ export const FETCH_EVENT_DETAIL = gql`
 		}
 	}
 `;
+
+export const FETCH_ATTENDEES = gql`
+	query fetchAttendees($query: String!) {
+		fetchAttendees(query: $query) {
+			count
+			users {
+				id
+				fullname
+				email
+				profile
+			}
+		}
+	}
+`;
