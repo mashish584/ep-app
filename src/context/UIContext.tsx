@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 
 import ProfileUpdatePrompt from "../components/Modals/ProfilleUpdatePrompt";
+import { ProfileInfo } from "../components/Modals";
+
 import { usePayment } from "../hook/useCheckout";
 import { useAuth } from "../utils/store";
 import { navigate } from "../utils/navigationUtil";
+import { UserInfo } from "../config/schema.types";
 
 export interface UIContextInterface {
 	showProfileUpdatePrompt: boolean;
@@ -16,6 +19,11 @@ export const UIContext = React.createContext<UIContextInterface>({} as UIContext
 export const UIProvider: React.FC = ({ children }) => {
 	const userInfo = useAuth((state) => state.user);
 	const [showProfileUpdatePrompt, setProfileUpdatePrompt] = useState(false);
+	const [profileInfo, setprofileInfo] = useState<{ visible: boolean; data: UserInfo }>({
+		visible: false,
+		data: {} as UserInfo,
+	});
+
 	const { fetchPaymentSheetParam } = usePayment();
 
 	const onEventJoin = async (eventId) => {
@@ -34,16 +42,23 @@ export const UIProvider: React.FC = ({ children }) => {
 
 	return (
 		<UIContext.Provider value={{ showProfileUpdatePrompt, setProfileUpdatePrompt, onEventJoin }}>
+			{children}
 			<ProfileUpdatePrompt
 				visible={showProfileUpdatePrompt}
 				onConfirm={() => {
-					navigation.push("ProfileUpdate");
+					navigate("ProfileUpdate", {});
 				}}
 				onDismiss={() => {
 					setProfileUpdatePrompt(false);
 				}}
 			/>
-			{children}
+			<ProfileInfo
+				userInfo={profileInfo.data}
+				visible={profileInfo.visible}
+				onDismiss={() => {
+					setprofileInfo({ visible: false, data: {} as UserInfo });
+				}}
+			/>
 		</UIContext.Provider>
 	);
 };

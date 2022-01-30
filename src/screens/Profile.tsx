@@ -5,11 +5,12 @@ import { faAngleRight, faCamera } from "@fortawesome/free-solid-svg-icons";
 import { useMutation } from "@apollo/client";
 
 import Button from "../components/Button";
-import Texter, { Config } from "../components/Texter";
+import Texter from "../components/Texter";
 import Theme from "../components/Theme";
 import Logout from "../components/Modals/Logout";
+import { getNameConfig } from "../components/Maps/util";
 
-import { SetttingsMenu } from "../utils/preconfig";
+import { defaultAvatar, SetttingsMenu } from "../utils/preconfig";
 import theme, { Box, pallette, Text } from "../utils/theme";
 import { generateRNFile, openGallery } from "../utils/media";
 import { generateBoxShadowStyle } from "../utils";
@@ -19,21 +20,6 @@ import { PROFILE_UPLOAD_MUTATION } from "../config/mutations";
 import { useAuth } from "../utils/store";
 
 const SCREEN_WIDTH = Dimensions.get("screen").width;
-
-const getNameConfig = (fullName: string): Record<string, Config> => {
-	if (fullName) {
-		const words = fullName.split(" ");
-		const lastName = words.length > 1 ? words.pop() : "";
-
-		return {
-			[lastName as string]: {
-				variant: "light",
-			},
-		};
-	}
-
-	return {};
-};
 
 const Profile: React.FC<StackNavigationProps<BottomStackScreens & RootStackScreens, "Settings">> = ({ navigation }) => {
 	const [userInfo, updateUserInfo, removeToken] = useAuth((store) => [store.user, store.setUser, store.removeToken]);
@@ -69,11 +55,7 @@ const Profile: React.FC<StackNavigationProps<BottomStackScreens & RootStackScree
 				<Box alignItems="center">
 					<Box width={150} height={150} mb="l" backgroundColor="placeholder" style={{ ...styles.imageShadow, borderRadius: 75 }}>
 						<Image
-							source={
-								selectedProfileImage
-									? selectedProfileImage
-									: { uri: userInfo?.profile || "https://avatars.dicebear.com/v2/identicon/8b2a644a959335af9df45bb9710df09e.png" }
-							}
+							source={selectedProfileImage ? selectedProfileImage : { uri: userInfo?.profile || defaultAvatar }}
 							style={{ width: "100%", height: "100%", borderRadius: 75 }}
 							resizeMode="cover"
 						/>
