@@ -63,6 +63,13 @@ export const FETCH_EVENT_DETAIL = gql`
 				lng
 				address
 			}
+			transactions {
+				id
+				user {
+					id
+					profile
+				}
+			}
 			owner {
 				id
 				username
@@ -76,8 +83,8 @@ export const FETCH_EVENT_DETAIL = gql`
 `;
 
 export const FETCH_ATTENDEES = gql`
-	query fetchAttendees($query: String!) {
-		fetchAttendees(query: $query) {
+	query fetchAttendees($query: String!, $skip: Int!, $take: Int!) {
+		fetchAttendees(query: $query, skip: $skip, take: $take) {
 			count
 			users {
 				id

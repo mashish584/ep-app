@@ -27,6 +27,24 @@ const cache = new InMemoryCache({
 						};
 					},
 				},
+				fetchAttendees: {
+					keyArgs: false,
+					merge(existing, incoming) {
+						const data = existing || { count: 0, users: [] };
+						const previousUsers = [...data.users];
+						let newUsers;
+
+						if (incoming.users?.length) {
+							newUsers = incoming.users;
+						}
+
+						return {
+							...data,
+							count: incoming.count,
+							users: newUsers ? [...previousUsers, ...newUsers] : previousUsers,
+						};
+					},
+				},
 			},
 		},
 	},

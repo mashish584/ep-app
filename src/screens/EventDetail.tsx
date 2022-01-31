@@ -68,8 +68,8 @@ const EventDetail: React.FC<StackNavigationProps<RootStackScreens, "EventDetail"
 							totalUsers={5}
 							imageSize={30}
 							onPress={() => {
-								navigation.navigate("UsersList", {
-									event: 1,
+								navigation.navigate("AttendeesList", {
+									event: "28",
 								});
 							}}
 						/>

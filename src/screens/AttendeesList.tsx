@@ -16,7 +16,7 @@ const AttendeesList: React.FC<StackNavigationProps<RootStackScreens, "AttendeesL
 
 	const pagination = useRef({
 		skip: 0,
-		take: 0,
+		take: 5,
 	});
 
 	const { data, fetchMore } = useQuery<FetchAttendeesResponse, FetchAttendeesRequestVariables>(FETCH_ATTENDEES, {
@@ -43,7 +43,7 @@ const AttendeesList: React.FC<StackNavigationProps<RootStackScreens, "AttendeesL
 				data={data?.fetchAttendees.users}
 				keyExtractor={(item) => item.id}
 				contentContainerStyle={{ paddingHorizontal: theme.spacing.l, paddingVertical: theme.spacing.l }}
-				renderItem={({ item, index }) => <UserCard key={item.id} />}
+				renderItem={({ item, index }) => <UserCard key={item.id} name={item.fullname || item.username} email={item.email} profile={item.profile} />}
 				showsVerticalScrollIndicator={false}
 				onEndReached={fetchMoreAttendees}
 				onEndReachedThreshold={0.5}
