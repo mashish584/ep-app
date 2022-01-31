@@ -23,7 +23,7 @@ export type Filter<T> = {
 	query: T;
 } & Pagination;
 
-export type DateFormats = "dddd" | "dddd DD MMM" | "HH:mm A";
+export type DateFormats = "dddd" | "dddd DD MMM" | "HH:mm A" | "DD MMM, YYYY";
 
 export type SettingsItem = {
 	icon: any;

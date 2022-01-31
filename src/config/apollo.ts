@@ -45,6 +45,24 @@ const cache = new InMemoryCache({
 						};
 					},
 				},
+				fetchTransactions: {
+					keyArgs: false,
+					merge(existing, incoming) {
+						const data = existing || { count: 0, transactions: [] };
+						const previousTransactions = [...data.transactions];
+						let newTransactions;
+
+						if (incoming.transactions?.length) {
+							newTransactions = incoming.transactions;
+						}
+
+						return {
+							...data,
+							count: incoming.count,
+							transactions: newTransactions ? [...previousTransactions, ...newTransactions] : previousTransactions,
+						};
+					},
+				},
 			},
 		},
 	},

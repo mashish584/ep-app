@@ -1,5 +1,5 @@
 import { UpdateProfileForm } from "../form.interface";
-import { EventInfo, UserInfo } from "./schema.types";
+import { EventInfo, UserInfo, TransactionInfo } from "./schema.types";
 
 /*=================================
  * ------ Auth Mutatations ------ *
@@ -97,5 +97,18 @@ export type ConfirmBookingRequestVariable = {
 export type ConfirmBookingResponse = {
 	confirmBooking: {
 		message: string;
+	};
+};
+
+export type FetchTransactionsVariables = {
+	query?: string;
+	skip?: number;
+	take?: number;
+};
+
+export type FetchTransactionsResponse = {
+	fetchTransactions: {
+		count: number;
+		transactions: TransactionInfo[];
 	};
 };

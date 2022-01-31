@@ -95,3 +95,26 @@ export const FETCH_ATTENDEES = gql`
 		}
 	}
 `;
+
+export const FETCH_TRANSACTIONS = gql`
+	query fetchTransactions($query: String!, $skip: Int!, $take: Int!) {
+		fetchTransactions(query: $query, skip: $skip, take: $take) {
+			count
+			transactions {
+				id
+				amount
+				user {
+					id
+					profile
+				}
+				event {
+					title
+					owner {
+						id
+					}
+				}
+				createdAt
+			}
+		}
+	}
+`;

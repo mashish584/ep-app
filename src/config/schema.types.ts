@@ -41,3 +41,15 @@ export interface EventInfo {
 	createdAt: string;
 	updatedAt: string;
 }
+
+export interface TransactionInfo {
+	id: string;
+	event: EventInfo;
+	user: UserInfo;
+	amount: number;
+	receipt: string;
+	status: string;
+	paymentId: string;
+	createdAt: string;
+	updatedAt: string;
+}

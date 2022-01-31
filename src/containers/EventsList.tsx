@@ -127,7 +127,7 @@ const EventsList = () => {
 		},
 		pagination: {
 			skip: 0,
-			take: 5,
+			take: 10,
 		},
 	});
 
@@ -141,7 +141,7 @@ const EventsList = () => {
 
 		let { pagination } = categoriedEventFilter.current;
 		let skip = pagination.skip || 0;
-		skip += 5;
+		skip += 10;
 		pagination.skip = skip;
 
 		fetchMore<FetchEventResponse, FetchEventRequestVariables>({
@@ -156,7 +156,7 @@ const EventsList = () => {
 	const onCategoryUpdate = (category) => {
 		categoriedEventFilter.current.query.category = category;
 		categoriedEventFilter.current.pagination.skip = 0;
-		categoriedEventFilter.current.pagination.take = 5;
+		categoriedEventFilter.current.pagination.take = 10;
 		refetch({ query: JSON.stringify(categoriedEventFilter.current.query), ...categoriedEventFilter.current.pagination });
 		setCategory(category);
 	};
