@@ -17,7 +17,8 @@ export interface UIContextInterface {
 export const UIContext = React.createContext<UIContextInterface>({} as UIContextInterface);
 
 export const UIProvider: React.FC = ({ children }) => {
-	const userInfo = useAuth((state) => state.user);
+	const userId = useAuth((state) => state.user?.id);
+	const userAddress = useAuth((state) => state.user?.location?.address);
 	const [showProfileUpdatePrompt, setProfileUpdatePrompt] = useState(false);
 	const [profileInfo, setprofileInfo] = useState<{ visible: boolean; data: UserInfo }>({
 		visible: false,
@@ -27,20 +28,18 @@ export const UIProvider: React.FC = ({ children }) => {
 	const { fetchPaymentSheetParam } = usePayment();
 
 	const onEventJoin = async (eventId) => {
-		if (!userInfo.id) {
+		if (!userId) {
 			navigate("AuthScreen", {});
 			return;
 		}
 
-		if (!userInfo?.location?.address) {
+		if (!userAddress) {
 			setProfileUpdatePrompt(true);
 			return;
 		}
 
 		await fetchPaymentSheetParam({ variables: { event: eventId } });
 	};
-
-	console.log("UI Provider rerender");
 
 	return (
 		<UIContext.Provider value={{ showProfileUpdatePrompt, setProfileUpdatePrompt, onEventJoin }}>
