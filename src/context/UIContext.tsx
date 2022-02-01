@@ -37,8 +37,10 @@ export const UIProvider: React.FC = ({ children }) => {
 			return;
 		}
 
-		await fetchPaymentSheetParam({ variables: { eventId } });
+		await fetchPaymentSheetParam({ variables: { event: eventId } });
 	};
+
+	console.log("UI Provider rerender");
 
 	return (
 		<UIContext.Provider value={{ showProfileUpdatePrompt, setProfileUpdatePrompt, onEventJoin }}>
