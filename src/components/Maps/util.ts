@@ -4,6 +4,7 @@
 // 		`https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${text}&key=${key}&sessiontoken=${token}&components=country:au`,
 
 import { GOOGLE_MAP_KEY } from "@env";
+
 import { Config } from "../Texter";
 import { GeoLocation, Place } from "./AutoPlaces/interface";
 

@@ -14,6 +14,7 @@ import { ApolloProvider } from "@apollo/client";
 import { ThemeProvider } from "@shopify/restyle";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StripeProvider } from "@stripe/stripe-react-native";
+import Toast from "react-native-toast-message";
 import { STRIPE_PUBLIC_KEY } from "@env";
 
 import theme from "./utils/theme";
@@ -33,6 +34,7 @@ const App = () => {
 						</UIProvider>
 					</ApolloProvider>
 				</StripeProvider>
+				<Toast />
 			</ThemeProvider>
 		</SafeAreaProvider>
 	);
