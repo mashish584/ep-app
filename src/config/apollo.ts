@@ -1,8 +1,8 @@
-import { ApolloClient, InMemoryCache } from "@apollo/client";
-import { setContext } from "@apollo/client/link/context";
+import { ApolloClient, ApolloLink, InMemoryCache } from "@apollo/client";
 import { createUploadLink } from "apollo-upload-client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "@env";
+import { displayToast } from "../context/UIContext";
 
 const cache = new InMemoryCache({
 	typePolicies: {
@@ -79,21 +79,33 @@ const getToken = async () => {
 	return token || "";
 };
 
-const authLink = setContext(async (_, { headers }) => {
-	// get the authentication token from local storage if it exists
-	const token = await getToken();
-	// return the headers to the context so httpLink can read them
-	return {
-		headers: {
-			...headers,
-			authorization: token ? `Bearer ${token}` : "",
-		},
-	};
-});
+const interceptor = new ApolloLink((operation, forward) => {
+	operation.setContext(async ({ headers = {} }) => {
+		// get the authentication token from local storage if it exists
+		const token = await getToken();
+		// return the headers to the context so httpLink can read them
+		return {
+			headers: {
+				...headers,
+				authorization: token ? `Bearer ${token}` : "",
+			},
+		};
+	});
 
+	return forward(operation).map((response) => {
+		/**
+		 * Check for errros
+		 */
+		if (response.errors?.length) {
+			const error = response.errors[0];
+			if (displayToast) displayToast("error", error.message);
+		}
+		return response;
+	});
+});
 export const client = new ApolloClient({
 	cache,
-	link: authLink.concat(
+	link: interceptor.concat(
 		createUploadLink({
 			uri: API_URL,
 		}),

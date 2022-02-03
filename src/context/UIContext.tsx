@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Toast from "react-native-toast-message";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -18,6 +18,7 @@ export interface UIContextInterface {
 }
 
 export const UIContext = React.createContext<UIContextInterface>({} as UIContextInterface);
+export let displayToast: ((type: "error" | "success", message) => void) | null = null;
 
 export const UIProvider: React.FC = ({ children }) => {
 	const { top } = useSafeAreaInsets();
@@ -54,6 +55,10 @@ export const UIProvider: React.FC = ({ children }) => {
 			topOffset: top,
 		});
 	};
+
+	useEffect(() => {
+		displayToast = showToast;
+	}, []);
 
 	return (
 		<UIContext.Provider value={{ showProfileUpdatePrompt, setProfileUpdatePrompt, onEventJoin, showToast }}>
