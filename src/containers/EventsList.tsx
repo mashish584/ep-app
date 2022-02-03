@@ -1,10 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { Dimensions, FlatList, ScrollView, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useQuery } from "@apollo/client";
 
 import Category from "../components/Category";
-import EventCard from "../components/EventCard";
+import { EventCard } from "../components/Cards/";
+import { EventCardSkelton, CategoriesSkelton } from "../components/Skelton";
 
 import { FETCH_EVENTS, FETCH_UPCOMING_EVENTS } from "../config/query";
 import { EventInfo } from "../config/schema.types";
@@ -14,8 +15,7 @@ import { EventCategory, Filter } from "../types";
 import { EventCategories } from "../utils/preconfig";
 import theme, { Box, Text } from "../utils/theme";
 import { ScreenNavigationProp } from "../navigation/types";
-import { useAuth } from "../utils/store";
-import { usePayment } from "../hook/useCheckout";
+import { UIContext, UIContextInterface } from "../context/UIContext";
 
 interface UpcomingEventsList {
 	category: EventCategory;
@@ -23,13 +23,13 @@ interface UpcomingEventsList {
 	events: EventInfo[];
 	isLoading: boolean;
 	onCategoryChange: (category: EventCategory) => void;
+	onEventJoin: (eventId: string) => void;
 }
 
 const UpcomingEventsList: React.FC<UpcomingEventsList> = ({ categoryEventCount, ...props }) => {
 	const navigation = useNavigation<ScreenNavigationProp>();
 
-	const token = useAuth((state) => state.token);
-	const { data } = useQuery<FetchEventResponse, FetchEventRequestVariables>(FETCH_UPCOMING_EVENTS, {
+	const { data, loading } = useQuery<FetchEventResponse, FetchEventRequestVariables>(FETCH_UPCOMING_EVENTS, {
 		variables: { query: JSON.stringify({ upcoming: true }) },
 		fetchPolicy: "no-cache",
 	});
@@ -39,6 +39,13 @@ const UpcomingEventsList: React.FC<UpcomingEventsList> = ({ categoryEventCount, 
 			<Text variant="title" marginLeft="l" fontSize={theme.fontSize.normal}>
 				Upcoming Events
 			</Text>
+			{loading && !Boolean(data?.events.events.length) && (
+				<ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+					{new Array(5).fill(1).map((_, index) => {
+						return <EventCardSkelton isFullWidth={false} key={`half_card_${index}`} />;
+					})}
+				</ScrollView>
+			)}
 			<FlatList
 				data={data?.events.events || []}
 				keyExtractor={(item) => item.id}
@@ -50,15 +57,10 @@ const UpcomingEventsList: React.FC<UpcomingEventsList> = ({ categoryEventCount, 
 						<EventCard
 							key={index}
 							eventInfo={{ ...item, thumbnail: item.medias[0].link }}
-							width={220}
+							width={240}
 							height={170}
 							containerStyle={{ marginLeft: index === 0 ? theme.spacing.l : 0 }}
-							onJoin={() => {
-								if (!token) {
-									navigation.push("AuthScreen");
-									return;
-								}
-							}}
+							onJoin={() => props.onEventJoin(item.id)}
 							onPress={() => {
 								navigation.push("EventDetail", {
 									slug: item.title,
@@ -67,25 +69,44 @@ const UpcomingEventsList: React.FC<UpcomingEventsList> = ({ categoryEventCount, 
 						/>
 					);
 				}}
+				ListEmptyComponent={
+					!loading ? (
+						<Text variant="metaText16" textAlign="center" marginTop="l" style={{ width: "100%" }}>
+							No Upcoming Events
+						</Text>
+					) : null
+				}
 			/>
 			<Text variant="title" marginLeft="l" marginTop="l" fontSize={theme.fontSize.normal}>
 				Explore By Categories
 			</Text>
 			{EventCategories.length > 0 && (
 				<ScrollView horizontal={true} style={{ marginTop: theme.spacing.l, marginBottom: theme.spacing.m }} showsHorizontalScrollIndicator={false}>
-					{EventCategories.map((category, index) => (
-						<Category
-							key={index}
-							name={category}
-							selected={props.category === category}
-							mr={"m"}
-							ml={index === 0 ? "l" : "none"}
-							onPress={props.onCategoryChange}
-						/>
-					))}
+					{EventCategories.map((category, index) =>
+						!props.isLoading ? (
+							<Category
+								key={index}
+								name={category}
+								selected={props.category === category}
+								mr={"m"}
+								ml={index === 0 ? "l" : "none"}
+								onPress={props.onCategoryChange}
+							/>
+						) : (
+							<CategoriesSkelton key={`${category}_${index}`} ml={index === 0 ? "l" : "none"} />
+						),
+					)}
 				</ScrollView>
 			)}
-			{categoryEventCount === 0 && (
+
+			{props.isLoading && categoryEventCount === 0 && (
+				<ScrollView showsVerticalScrollIndicator={false}>
+					{new Array(5).fill(1).map((_, index) => {
+						return <EventCardSkelton isFullWidth={true} key={`full_card_${index}`} />;
+					})}
+				</ScrollView>
+			)}
+			{categoryEventCount === 0 && !props.isLoading && (
 				<Text variant="metaText16" textAlign="center" marginTop="l">
 					No Events
 				</Text>
@@ -96,21 +117,21 @@ const UpcomingEventsList: React.FC<UpcomingEventsList> = ({ categoryEventCount, 
 
 const EventsList = () => {
 	const navigation = useNavigation<ScreenNavigationProp>();
-	const token = useAuth((state) => state.token);
-	const { fetchPaymentSheetParam } = usePayment();
+	const { onEventJoin } = useContext<UIContextInterface>(UIContext);
 
 	const [category, setCategory] = useState<EventCategory>("House");
+
 	const categoriedEventFilter = useRef<Filter<EventQuery>>({
 		query: {
 			category,
 		},
 		pagination: {
 			skip: 0,
-			take: 5,
+			take: 10,
 		},
 	});
 
-	const { data, fetchMore, refetch } = useQuery<FetchEventResponse, FetchEventRequestVariables>(FETCH_EVENTS, {
+	const { data, fetchMore, refetch, loading } = useQuery<FetchEventResponse, FetchEventRequestVariables>(FETCH_EVENTS, {
 		variables: { query: JSON.stringify(categoriedEventFilter.current.query), ...categoriedEventFilter.current.pagination },
 	});
 
@@ -120,7 +141,7 @@ const EventsList = () => {
 
 		let { pagination } = categoriedEventFilter.current;
 		let skip = pagination.skip || 0;
-		skip += 5;
+		skip += 10;
 		pagination.skip = skip;
 
 		fetchMore<FetchEventResponse, FetchEventRequestVariables>({
@@ -135,7 +156,7 @@ const EventsList = () => {
 	const onCategoryUpdate = (category) => {
 		categoriedEventFilter.current.query.category = category;
 		categoriedEventFilter.current.pagination.skip = 0;
-		categoriedEventFilter.current.pagination.take = 5;
+		categoriedEventFilter.current.pagination.take = 10;
 		refetch({ query: JSON.stringify(categoriedEventFilter.current.query), ...categoriedEventFilter.current.pagination });
 		setCategory(category);
 	};
@@ -152,9 +173,10 @@ const EventsList = () => {
 				<UpcomingEventsList
 					category={category}
 					categoryEventCount={data?.events.count || 0}
-					isLoading={false}
+					isLoading={loading}
 					events={[]}
 					onCategoryChange={onCategoryUpdate}
+					onEventJoin={onEventJoin}
 				/>
 			}
 			renderItem={({ item, index }) => {
@@ -165,14 +187,7 @@ const EventsList = () => {
 						width={Dimensions.get("screen").width - theme.spacing.l * 2}
 						containerStyle={{ marginBottom: theme.spacing.l, marginLeft: theme.spacing.l }}
 						height={250}
-						onJoin={async () => {
-							if (!token) {
-								navigation.push("AuthScreen");
-								return;
-							}
-
-							await fetchPaymentSheetParam({ variables: { eventId: item.id } });
-						}}
+						onJoin={() => onEventJoin(item.id)}
 						onPress={() => {
 							navigation.push("EventDetail", {
 								slug: item.title,

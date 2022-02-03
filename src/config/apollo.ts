@@ -1,8 +1,9 @@
-import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { ApolloClient, ApolloLink, concat, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { createUploadLink } from "apollo-upload-client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "@env";
+import { displayToast } from "../context/UIContext";
 
 const cache = new InMemoryCache({
 	typePolicies: {
@@ -24,6 +25,42 @@ const cache = new InMemoryCache({
 							...data,
 							count: incoming.count,
 							events: newEvents ? [...previousEvents, ...newEvents] : previousEvents,
+						};
+					},
+				},
+				fetchAttendees: {
+					keyArgs: false,
+					merge(existing, incoming) {
+						const data = existing || { count: 0, users: [] };
+						const previousUsers = [...data.users];
+						let newUsers;
+
+						if (incoming.users?.length) {
+							newUsers = incoming.users;
+						}
+
+						return {
+							...data,
+							count: incoming.count,
+							users: newUsers ? [...previousUsers, ...newUsers] : previousUsers,
+						};
+					},
+				},
+				fetchTransactions: {
+					keyArgs: false,
+					merge(existing, incoming) {
+						const data = existing || { count: 0, transactions: [] };
+						const previousTransactions = [...data.transactions];
+						let newTransactions;
+
+						if (incoming.transactions?.length) {
+							newTransactions = incoming.transactions;
+						}
+
+						return {
+							...data,
+							count: incoming.count,
+							transactions: newTransactions ? [...previousTransactions, ...newTransactions] : previousTransactions,
 						};
 					},
 				},
@@ -55,12 +92,26 @@ const authLink = setContext(async (_, { headers }) => {
 	};
 });
 
+const responseInterceptor = new ApolloLink((operation, forward) => {
+	return forward(operation).map((response) => {
+		console.log({ operation, response });
+		if (response.errors?.length) {
+			const error = response?.errors[0];
+			if (displayToast) displayToast("error", error.message);
+		}
+		return response;
+	});
+});
+
 export const client = new ApolloClient({
 	cache,
-	link: authLink.concat(
-		createUploadLink({
-			uri: API_URL,
-		}),
+	link: concat(
+		responseInterceptor,
+		authLink.concat(
+			createUploadLink({
+				uri: API_URL,
+			}),
+		),
 	),
 	credentials: "same-origin",
 });

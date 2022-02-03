@@ -4,6 +4,8 @@
 // 		`https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${text}&key=${key}&sessiontoken=${token}&components=country:au`,
 
 import { GOOGLE_MAP_KEY } from "@env";
+
+import { Config } from "../Texter";
 import { GeoLocation, Place } from "./AutoPlaces/interface";
 
 type GoogleAPIStatus = "OK" | "ZERO_RESULTS" | "INVALID_REQUEST" | "OVER_QUERY_LIMIT" | "REQUEST_DENIED" | "UNKNOWN_ERROR";
@@ -45,4 +47,19 @@ export const IsJsonString = (str) => {
 		return false;
 	}
 	return true;
+};
+
+export const getNameConfig = (fullName: string): Record<string, Config> => {
+	if (fullName) {
+		const words = fullName.split(" ");
+		const lastName = words.length > 1 ? words.pop() : "";
+
+		return {
+			[lastName as string]: {
+				variant: "light",
+			},
+		};
+	}
+
+	return {};
 };

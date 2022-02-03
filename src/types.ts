@@ -1,4 +1,5 @@
 import { SignInForm, UpdateProfileForm } from "./form.interface";
+import { RootStackScreens } from "./navigation/types";
 import { EventCategories } from "./utils/preconfig";
 
 export type Dimensions = {
@@ -22,4 +23,12 @@ export type Filter<T> = {
 	query: T;
 } & Pagination;
 
-export type DateFormats = "dddd" | "dddd DD MMM" | "HH:mm A";
+export type DateFormats = "dddd" | "dddd DD MMM" | "HH:mm A" | "DD MMM, YYYY";
+
+export type SettingsItem = {
+	icon: any;
+	title: string;
+	description: string;
+	navigation?: keyof RootStackScreens;
+	isLogout?: boolean;
+};

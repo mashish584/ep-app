@@ -1,14 +1,11 @@
 import React, { useState } from "react";
 
 import BottomSheet from "../BottomSheet";
-import { BottomSheetProps } from "../BottomSheet/types";
 import TextInput from "../Form/TextInput";
 import { Box } from "../../utils/theme";
 
 import BottomSheetTheme from "./BottomSheetTheme";
-import { ModalFooter, ModalHeader } from ".";
-
-type ModalProps = Pick<BottomSheetProps, "visible" | "onDismiss">;
+import { ModalFooter, ModalHeader, ModalProps } from ".";
 
 interface PasswordConfirmation extends ModalProps {
 	onConfirm: (password: string, onSuccess: () => void) => void;

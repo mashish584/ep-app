@@ -1,5 +1,5 @@
-import React from "react";
-import { Dimensions, Image, ScrollView, TouchableOpacity, View, StyleSheet } from "react-native";
+import React, { useMemo, useState } from "react";
+import { Dimensions, Image, ScrollView, TouchableOpacity, View, StyleSheet, ImageSourcePropType } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faAngleRight, faCamera } from "@fortawesome/free-solid-svg-icons";
 import { useMutation } from "@apollo/client";
@@ -7,10 +7,12 @@ import { useMutation } from "@apollo/client";
 import Button from "../components/Button";
 import Texter from "../components/Texter";
 import Theme from "../components/Theme";
+import Logout from "../components/Modals/Logout";
+import { getNameConfig } from "../components/Maps/util";
 
-import { SetttingsMenu } from "../utils/preconfig";
+import { defaultAvatar, SetttingsMenu } from "../utils/preconfig";
 import theme, { Box, pallette, Text } from "../utils/theme";
-import { openGallery } from "../utils/media";
+import { generateRNFile, openGallery } from "../utils/media";
 import { generateBoxShadowStyle } from "../utils";
 import { BottomStackScreens, RootStackScreens, StackNavigationProps } from "../navigation/types";
 import { ProfileUpdateResponse, ProfileUploadVariables } from "../config/request.types";
@@ -20,7 +22,9 @@ import { useAuth } from "../utils/store";
 const SCREEN_WIDTH = Dimensions.get("screen").width;
 
 const Profile: React.FC<StackNavigationProps<BottomStackScreens & RootStackScreens, "Settings">> = ({ navigation }) => {
-	const [userInfo, updateUserInfo] = useAuth((store) => [store.user, store.setUser]);
+	const [userInfo, updateUserInfo, removeToken] = useAuth((store) => [store.user, store.setUser, store.removeToken]);
+	const [showLogoutModal, setShowLogoutModal] = useState(false);
+	const [selectedProfileImage, setSelectedProfileImage] = useState<ImageSourcePropType | null>(null);
 
 	const [onProfileUpload] = useMutation<ProfileUpdateResponse, ProfileUploadVariables>(PROFILE_UPLOAD_MUTATION, {
 		onCompleted: (data) => {
@@ -33,14 +37,16 @@ const Profile: React.FC<StackNavigationProps<BottomStackScreens & RootStackScree
 		},
 	});
 
-	console.log({ userInfo });
-
 	const onGalleryOpen = async () => {
 		const response = await openGallery({ cropping: true });
 		if (response?.length) {
-			onProfileUpload({ variables: { profile: response[0] } });
+			setSelectedProfileImage(response[0]);
+			const file = generateRNFile(response[0].uri, response[0]?.name);
+			onProfileUpload({ variables: { profile: file } });
 		}
 	};
+
+	const getConfig = useMemo(() => getNameConfig(userInfo.fullname), [userInfo.fullname]);
 
 	return (
 		<Theme avoidTopNotch={true} avoidHomBar={true}>
@@ -48,37 +54,42 @@ const Profile: React.FC<StackNavigationProps<BottomStackScreens & RootStackScree
 				<View style={styles.layer} />
 				<Box alignItems="center">
 					<Box width={150} height={150} mb="l" backgroundColor="placeholder" style={{ ...styles.imageShadow, borderRadius: 75 }}>
-						<Image source={{ uri: "https://unsplash.it/300/300" }} style={{ width: "100%", height: "100%", borderRadius: 75 }} resizeMode="cover" />
+						<Image
+							source={selectedProfileImage ? selectedProfileImage : { uri: userInfo?.profile || defaultAvatar }}
+							style={{ width: "100%", height: "100%", borderRadius: 75 }}
+							resizeMode="cover"
+						/>
 						<TouchableOpacity onPress={onGalleryOpen} style={styles.camera}>
 							<FontAwesomeIcon icon={faCamera} size={12} color={theme.colors.secondary} />
 						</TouchableOpacity>
 					</Box>
-					<Texter
-						variant="bold"
-						style={{ fontSize: 29, color: pallette.rgb.black(0.86) }}
-						config={{
-							DOE: {
-								variant: "light",
-							},
-						}}>
-						JOHN DOE
-					</Texter>
+					{userInfo?.fullname && (
+						<Texter variant="bold" style={{ fontSize: 29, color: pallette.rgb.black(0.86) }} config={getConfig}>
+							{userInfo?.fullname}
+						</Texter>
+					)}
 					<Text variant="bold" marginVertical="xs" fontSize={theme.fontSize.sm} style={{ color: pallette.rgb.black(0.76) }}>
-						john@example.com
+						{userInfo?.email}
 					</Text>
-					<Text
-						variant="light"
-						marginVertical="s"
-						paddingHorizontal="xl"
-						fontSize={theme.fontSize.xs}
-						style={{ color: pallette.rgb.black(0.6), textAlign: "center" }}>
-						Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae laudantium voluptatem commodi placeat. Repellendus, cum odio voluptas
-						voluptatem commodi unde?
-					</Text>
+					{userInfo?.bio && (
+						<Text
+							variant="light"
+							marginVertical="s"
+							paddingHorizontal="xl"
+							fontSize={theme.fontSize.xs}
+							style={{ color: pallette.rgb.black(0.6), textAlign: "center" }}>
+							{userInfo?.bio}
+						</Text>
+					)}
 					<Button
 						variant="primary"
 						label="Edit Profile"
-						containerStyle={{ width: 120, minHeight: 32, borderRadius: 50 }}
+						containerStyle={{
+							width: 120,
+							minHeight: 32,
+							borderRadius: 50,
+							marginTop: userInfo?.bio !== null ? theme.spacing.none : theme.spacing.s,
+						}}
 						textStyle={{ fontSize: theme.fontSize.md }}
 						onPress={() => navigation.navigate("ProfileUpdate")}
 					/>
@@ -87,7 +98,19 @@ const Profile: React.FC<StackNavigationProps<BottomStackScreens & RootStackScree
 					{SetttingsMenu.map((menu, index) => {
 						const Icon = menu.icon;
 						return (
-							<TouchableOpacity key={index} activeOpacity={0.8}>
+							<TouchableOpacity
+								onPress={() => {
+									if (menu.isLogout) {
+										setShowLogoutModal(true);
+										return;
+									}
+
+									if (menu.navigation) {
+										navigation.push(menu.navigation);
+									}
+								}}
+								key={index}
+								activeOpacity={0.8}>
 								<Box
 									flexDirection="row"
 									paddingHorizontal="m"
@@ -117,6 +140,16 @@ const Profile: React.FC<StackNavigationProps<BottomStackScreens & RootStackScree
 					})}
 				</Box>
 			</ScrollView>
+			<Logout
+				visible={showLogoutModal}
+				onDismiss={() => {
+					setShowLogoutModal(false);
+				}}
+				onLogout={() => {
+					removeToken();
+					navigation.navigate("AuthScreen");
+				}}
+			/>
 		</Theme>
 	);
 };

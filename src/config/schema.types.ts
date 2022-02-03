@@ -15,7 +15,7 @@ export interface MediaInfo {
 }
 
 export interface UserInfo {
-	id: number;
+	id: string;
 	username: string;
 	fullname: string;
 	bio: string;
@@ -38,6 +38,18 @@ export interface EventInfo {
 	price: string;
 	medias: MediaInfo[];
 	owner: UserInfo;
+	createdAt: string;
+	updatedAt: string;
+}
+
+export interface TransactionInfo {
+	id: string;
+	event: EventInfo;
+	user: UserInfo;
+	amount: number;
+	receipt: string;
+	status: string;
+	paymentId: string;
 	createdAt: string;
 	updatedAt: string;
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { Alert, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faHome, faSearch, faBell, faUser, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
@@ -7,9 +7,32 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import theme, { Box, pallette } from "../utils/theme";
 import { generateBoxShadowStyle } from "../utils";
+import { BottomStackScreens, RootStackScreens, StackNavigationProps } from "../navigation/types";
+import { useAuth } from "../utils/store";
 
-const BottomTab = (props: BottomTabBarProps) => {
+type Screens = keyof RootStackScreens | keyof BottomStackScreens;
+
+const BottomTab: React.FC<StackNavigationProps<RootStackScreens, "BottomStack"> & BottomTabBarProps> = (props) => {
+	const userId = useAuth((store) => store.user?.id);
 	const { bottom } = useSafeAreaInsets();
+	const { index } = props.state;
+
+	const onNavigate = (route: Screens) => {
+		if (!userId && route === "Settings") {
+			Alert.alert("EP", "Please login to continue.", [
+				{
+					text: "Login now",
+					onPress: () => props.navigation.navigate("AuthScreen"),
+				},
+				{
+					text: "Cancel",
+				},
+			]);
+			return;
+		}
+
+		props.navigation.navigate(route);
+	};
 
 	return (
 		<Box style={styles.container}>
@@ -21,22 +44,22 @@ const BottomTab = (props: BottomTabBarProps) => {
 				justifyContent="space-around"
 				style={{ marginBottom: bottom }}>
 				<Box flexDirection="row" flex={0.5} justifyContent="space-around">
-					<TouchableOpacity style={styles.tab}>
-						<FontAwesomeIcon icon={faHome} color={theme.colors.darkGray} size={20} />
+					<TouchableOpacity style={styles.tab} onPress={() => onNavigate("Home")}>
+						<FontAwesomeIcon icon={faHome} color={index === 0 ? theme.colors.primary : theme.colors.darkGray} size={20} />
 					</TouchableOpacity>
-					<TouchableOpacity style={styles.tab}>
-						<FontAwesomeIcon icon={faSearch} color={theme.colors.darkGray} size={20} />
+					<TouchableOpacity style={styles.tab} onPress={() => onNavigate("Search")}>
+						<FontAwesomeIcon icon={faSearch} color={index === 1 ? theme.colors.primary : theme.colors.darkGray} size={20} />
 					</TouchableOpacity>
 				</Box>
 				<TouchableOpacity style={styles.add}>
 					<FontAwesomeIcon icon={faPlus} color="#FFFFFF" />
 				</TouchableOpacity>
 				<Box flexDirection="row" flex={0.5} justifyContent="space-around">
-					<TouchableOpacity style={styles.tab}>
-						<FontAwesomeIcon icon={faBell} color={theme.colors.darkGray} size={20} />
+					<TouchableOpacity style={styles.tab} onPress={() => onNavigate("Notifications")}>
+						<FontAwesomeIcon icon={faBell} color={index === 2 ? theme.colors.primary : theme.colors.darkGray} size={20} />
 					</TouchableOpacity>
-					<TouchableOpacity style={styles.tab}>
-						<FontAwesomeIcon icon={faUser} color={theme.colors.darkGray} size={20} />
+					<TouchableOpacity style={styles.tab} onPress={() => onNavigate("Settings")}>
+						<FontAwesomeIcon icon={faUser} color={index === 3 ? theme.colors.primary : theme.colors.darkGray} size={20} />
 					</TouchableOpacity>
 				</Box>
 			</Box>
