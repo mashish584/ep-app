@@ -2,6 +2,7 @@ import { useMutation } from "@apollo/client";
 import { useStripe } from "@stripe/stripe-react-native";
 import { BOOK_EVENT, CONFIRM_BOOK_EVENT } from "../config/mutations";
 import { BookEventRequestVariables, BookEventResponse, ConfirmBookingRequestVariable, ConfirmBookingResponse } from "../config/request.types";
+import { displayToast } from "../context/UIContext";
 import { useAuth } from "../utils/store";
 
 export const usePayment = () => {
@@ -9,7 +10,9 @@ export const usePayment = () => {
 	const { initPaymentSheet, presentPaymentSheet } = useStripe();
 
 	const [confirmBooking] = useMutation<ConfirmBookingResponse, ConfirmBookingRequestVariable>(CONFIRM_BOOK_EVENT, {
-		onCompleted: (response) => {},
+		onCompleted: (response) => {
+			if (displayToast) displayToast("success", "Your booking is successfully done.");
+		},
 		onError: (err) => {
 			console.log({ err });
 		},
