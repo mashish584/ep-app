@@ -77,7 +77,7 @@ export type FetchAttendeesResponse = {
  */
 
 export type BookEventRequestVariables = {
-	event: string;
+	eventId: string;
 };
 
 export type BookEventResponse = {

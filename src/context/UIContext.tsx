@@ -44,7 +44,7 @@ export const UIProvider: React.FC = ({ children }) => {
 			return;
 		}
 
-		await fetchPaymentSheetParam({ variables: { event: eventId } });
+		await fetchPaymentSheetParam({ variables: { eventId } });
 	};
 
 	const showToast = (type: "error" | "success", message) => {

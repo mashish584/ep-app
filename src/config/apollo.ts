@@ -94,6 +94,7 @@ const authLink = setContext(async (_, { headers }) => {
 
 const responseInterceptor = new ApolloLink((operation, forward) => {
 	return forward(operation).map((response) => {
+		console.log({ operation, response });
 		if (response.errors?.length) {
 			const error = response?.errors[0];
 			if (displayToast) displayToast("error", error.message);
