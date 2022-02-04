@@ -16,6 +16,7 @@ import { EventCategories } from "../utils/preconfig";
 import theme, { Box, Text } from "../utils/theme";
 import { ScreenNavigationProp } from "../navigation/types";
 import { UIContext, UIContextInterface } from "../context/UIContext";
+import EmptyList from "../components/EmptyList";
 
 interface UpcomingEventsList {
 	category: EventCategory;
@@ -69,13 +70,7 @@ const UpcomingEventsList: React.FC<UpcomingEventsList> = ({ categoryEventCount, 
 						/>
 					);
 				}}
-				ListEmptyComponent={
-					!loading ? (
-						<Text variant="metaText16" textAlign="center" marginTop="l" style={{ width: "100%" }}>
-							No Upcoming Events
-						</Text>
-					) : null
-				}
+				ListEmptyComponent={!loading ? <EmptyList message="No upcoming events." /> : null}
 			/>
 			<Text variant="title" marginLeft="l" marginTop="l" fontSize={theme.fontSize.normal}>
 				Explore By Categories
