@@ -38,7 +38,6 @@ const TransactionsList: React.FC<StackNavigationProps<RootStackScreens, "Transac
 	const { data, fetchMore, refetch, loading } = useQuery<FetchTransactionsResponse, FetchTransactionsVariables>(FETCH_TRANSACTIONS, {
 		variables: { query: JSON.stringify({ [transactionFilter.current.key]: userId }), ...transactionFilter.current.pagination },
 		notifyOnNetworkStatusChange: true,
-		fetchPolicy: "no-cache",
 		onCompleted: () => setTabDataLoading(false),
 		onError: () => setTabDataLoading(false),
 	});

@@ -51,6 +51,20 @@ export type FetchEventResponse = {
 	};
 };
 
+export type FetchUserEventsResponse = {
+	userEvents: {
+		count: number;
+		events: EventInfo[];
+	};
+};
+
+export type FetchUserBookedEventsResponse = {
+	userBookedEvents: {
+		count: number;
+		events: EventInfo[];
+	};
+};
+
 export type FetchEventDetailRequestVariables = {
 	slug: string;
 };

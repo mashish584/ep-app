@@ -18,6 +18,7 @@ export const SetttingsMenu: SettingsItem[] = [
 		icon: Building,
 		title: "Events",
 		description: "Check all the events you've created.",
+		navigation: "MyEventsList",
 	},
 	{
 		icon: Power,

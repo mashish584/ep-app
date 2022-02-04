@@ -9,7 +9,7 @@ import { EventCardSkelton, CategoriesSkelton } from "../components/Skelton";
 
 import { FETCH_EVENTS, FETCH_UPCOMING_EVENTS } from "../config/query";
 import { EventInfo } from "../config/schema.types";
-import { EventQuery, FetchEventRequestVariables, FetchEventResponse } from "../config/request.types";
+import { EventQuery, FetchEventRequestVariables, FetchEventResponse, FetchUserBookedEventsResponse } from "../config/request.types";
 import { EventCategory, Filter } from "../types";
 
 import { EventCategories } from "../utils/preconfig";
@@ -17,6 +17,7 @@ import theme, { Box, Text } from "../utils/theme";
 import { ScreenNavigationProp } from "../navigation/types";
 import { UIContext, UIContextInterface } from "../context/UIContext";
 import EmptyList from "../components/EmptyList";
+import { useAuth } from "../utils/store";
 
 interface UpcomingEventsList {
 	category: EventCategory;
@@ -28,19 +29,40 @@ interface UpcomingEventsList {
 }
 
 const UpcomingEventsList: React.FC<UpcomingEventsList> = ({ categoryEventCount, ...props }) => {
+	const userId = useAuth((store) => store.user?.id);
 	const navigation = useNavigation<ScreenNavigationProp>();
 
-	const { data, loading } = useQuery<FetchEventResponse, FetchEventRequestVariables>(FETCH_UPCOMING_EVENTS, {
-		variables: { query: JSON.stringify({ upcoming: true }) },
-		fetchPolicy: "no-cache",
+	const pagination = useRef({
+		skip: 0,
+		take: 10,
 	});
+
+	const { data, loading, fetchMore } = useQuery<FetchUserBookedEventsResponse, FetchEventRequestVariables>(FETCH_UPCOMING_EVENTS, {
+		variables: { query: JSON.stringify({ user: userId }), ...pagination.current },
+	});
+
+	const fetchMoreEvents = () => {
+		//return if fetched all events
+		if (data?.userBookedEvents.count === data?.userBookedEvents.events.length) return;
+
+		let { skip } = pagination.current;
+		skip += 10;
+		pagination.current.skip = skip;
+
+		fetchMore<FetchUserBookedEventsResponse, FetchEventRequestVariables>({
+			variables: {
+				query: JSON.stringify({ user: userId }),
+				...pagination.current,
+			},
+		});
+	};
 
 	return (
 		<Box paddingVertical="l">
 			<Text variant="title" marginLeft="l" fontSize={theme.fontSize.normal}>
 				Upcoming Events
 			</Text>
-			{loading && !Boolean(data?.events.events.length) && (
+			{loading && !Boolean(data?.userBookedEvents.events.length) && (
 				<ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
 					{new Array(5).fill(1).map((_, index) => {
 						return <EventCardSkelton isFullWidth={false} key={`half_card_${index}`} />;
@@ -48,11 +70,13 @@ const UpcomingEventsList: React.FC<UpcomingEventsList> = ({ categoryEventCount, 
 				</ScrollView>
 			)}
 			<FlatList
-				data={data?.events.events || []}
+				data={data?.userBookedEvents?.events || []}
 				keyExtractor={(item) => item.id}
 				horizontal={true}
 				showsHorizontalScrollIndicator={false}
 				contentContainerStyle={styles.FlatList}
+				onEndReached={fetchMoreEvents}
+				onEndReachedThreshold={0.5}
 				renderItem={({ item, index }) => {
 					return (
 						<EventCard

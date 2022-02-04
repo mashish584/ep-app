@@ -93,6 +93,7 @@ const authLink = setContext(async (_, { headers }) => {
 });
 
 const responseInterceptor = new ApolloLink((operation, forward) => {
+	console.log({ request: operation });
 	return forward(operation).map((response) => {
 		console.log({ operation, response });
 		if (response.errors?.length) {

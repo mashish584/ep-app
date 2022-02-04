@@ -11,6 +11,7 @@ import Profile from "../screens/Profile";
 import EditProfile from "../screens/EditProfile";
 import AttendeesList from "../screens/AttendeesList";
 import TransactionsList from "../screens/TransactionsList";
+import MyEventsList from "../screens/MyEventsList";
 
 import TabBar from "../components/BottomTab";
 
@@ -47,6 +48,7 @@ const RootStackSCreen = () => {
 			<RootStack.Screen name="ProfileUpdate" component={EditProfile} options={{ headerShown: false }} />
 			<RootStack.Screen name="AttendeesList" component={AttendeesList} options={{ headerShown: false }} />
 			<RootStack.Screen name="TransactionsList" component={TransactionsList} options={{ headerShown: false }} />
+			<RootStack.Screen name="MyEventsList" component={MyEventsList} options={{ headerShown: false }} />
 		</RootStack.Navigator>
 	);
 };
