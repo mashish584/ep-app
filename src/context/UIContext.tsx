@@ -18,7 +18,7 @@ export interface UIContextInterface {
 }
 
 export const UIContext = React.createContext<UIContextInterface>({} as UIContextInterface);
-export let displayToast: ((type: "error" | "success", message) => void) | null = null;
+export let displayToast: ((type: "error" | "success", message: string, title?: string) => void) | null = null;
 
 export const UIProvider: React.FC = ({ children }) => {
 	const { top } = useSafeAreaInsets();
@@ -47,10 +47,10 @@ export const UIProvider: React.FC = ({ children }) => {
 		await fetchPaymentSheetParam({ variables: { eventId } });
 	};
 
-	const showToast = (type: "error" | "success", message) => {
+	const showToast = (type: "error" | "success", message, title) => {
 		Toast.show({
 			type: type,
-			text1: type === "error" ? "Error" : "Success",
+			text1: title ? title : type === "error" ? "Error" : "Success",
 			text2: message,
 			topOffset: top,
 		});

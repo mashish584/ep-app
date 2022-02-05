@@ -1,8 +1,10 @@
 import { ApolloClient, ApolloLink, concat, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { createUploadLink } from "apollo-upload-client";
+import { onError } from "@apollo/client/link/error";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "@env";
+
 import { displayToast } from "../context/UIContext";
 
 const cache = new InMemoryCache({
@@ -93,10 +95,18 @@ const authLink = setContext(async (_, { headers }) => {
 	};
 });
 
+const errrorLink = onError((error) => {
+	if (error?.networkError) {
+		console.log({ networkError: error?.networkError });
+		if (displayToast) displayToast("error", error.networkError?.message, error.networkError?.name);
+	}
+});
+
 const responseInterceptor = new ApolloLink((operation, forward) => {
 	// console.log(`Operation Name => ${operation.operationName}`, { request: operation });
+
 	return forward(operation).map((response) => {
-		// console.log({ operation, response });
+		console.log({ operation, response });
 		if (response.errors?.length) {
 			const error = response?.errors[0];
 			if (displayToast) displayToast("error", error.message);
@@ -110,9 +120,11 @@ export const client = new ApolloClient({
 	link: concat(
 		responseInterceptor,
 		authLink.concat(
-			createUploadLink({
-				uri: API_URL,
-			}),
+			errrorLink.concat(
+				createUploadLink({
+					uri: API_URL,
+				}),
+			),
 		),
 	),
 	credentials: "same-origin",

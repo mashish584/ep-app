@@ -1,10 +1,20 @@
 import * as yup from "yup";
 
-import { SignInForm, UpdateProfileForm } from "../form.interface";
+import { SignInForm, SignUpForm, UpdateProfileForm } from "../form.interface";
 
 export const validateAuthForm = (values: SignInForm) => {
 	const schema: yup.SchemaOf<SignInForm> = yup.object().shape({
 		email: yup.string().trim().required("Email address is required.").email("Email address is not valid.").label("email"),
+		password: yup.string().trim().required("Password is required.").label("password"),
+	});
+
+	return schema.validate(values, { abortEarly: false });
+};
+
+export const validateSignupForm = (values: SignInForm) => {
+	const schema: yup.SchemaOf<SignUpForm> = yup.object().shape({
+		email: yup.string().trim().required("Email address is required.").email("Email address is not valid.").label("email"),
+		username: yup.string().trim().required("Username is required."),
 		password: yup.string().trim().required("Password is required.").label("password"),
 	});
 

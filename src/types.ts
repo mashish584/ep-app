@@ -1,4 +1,4 @@
-import { SignInForm, UpdateProfileForm } from "./form.interface";
+import { SignInForm, SignUpForm, UpdateProfileForm } from "./form.interface";
 import { RootStackScreens } from "./navigation/types";
 import { EventCategories } from "./utils/preconfig";
 
@@ -8,6 +8,7 @@ export type Dimensions = {
 };
 
 export type AuthInlineError = Record<keyof SignInForm, string>;
+export type SignupInlineError = Record<keyof SignUpForm, string>;
 export type ProfileInlineError = Record<keyof UpdateProfileForm, string>;
 
 export type EventCategory = typeof EventCategories[number];

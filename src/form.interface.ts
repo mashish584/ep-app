@@ -3,6 +3,10 @@ export interface SignInForm {
 	password: string;
 }
 
+export interface SignUpForm extends SignInForm {
+	username: string;
+}
+
 export interface UpdateProfileForm {
 	username: string;
 	fullname: string;

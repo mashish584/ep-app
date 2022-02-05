@@ -14,6 +14,7 @@ import TransactionsList from "../screens/TransactionsList";
 import MyEventsList from "../screens/MyEventsList";
 import NotificationsList from "../screens/NotificationsList";
 import Search from "../screens/Search";
+import SignUp from "../screens/SignUp";
 
 import TabBar from "../components/BottomTab";
 
@@ -48,6 +49,7 @@ const RootStackSCreen = () => {
 	return (
 		<RootStack.Navigator initialRouteName="Onboarding">
 			<RootStack.Screen name="AuthScreen" component={Auth} options={defaultOptions} />
+			<RootStack.Screen name="SignupScreen" component={SignUp} options={defaultOptions} />
 			<RootStack.Screen name="Onboarding" component={Onboarding} options={defaultOptions} />
 			<RootStack.Screen name="BottomStack" component={BottamTabScreen} options={defaultOptions} />
 			<RootStack.Screen name="EventDetail" component={EventDetail} options={defaultOptions} />

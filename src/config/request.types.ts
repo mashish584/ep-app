@@ -16,8 +16,20 @@ export type UserLoginResponse = {
 	};
 };
 
+export type UserSignupVariables = {
+	email: string;
+	username: string;
+	password: string;
+};
+
+export type UserSignupResponse = {
+	createUser: {
+		message: string;
+	};
+};
+
 /*=================================
- * ------ Profiel Mutations ------ *
+ * ------ Profile Mutations ------ *
 =================================*/
 
 export type ProfileUpdateVariables = UpdateProfileForm;

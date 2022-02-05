@@ -22,6 +22,14 @@ export const SIGNIN_MUTATION = gql`
 	}
 `;
 
+export const SIGNUP_MUTATION = gql`
+	mutation createUser($email: String!, $username: String!, $password: String!) {
+		createUser(data: { email: $email, username: $username, password: $password }) {
+			message
+		}
+	}
+`;
+
 export const PROFILE_UPDATE_MUTATION = gql`
 	mutation updateProfile($username: String, $fullname: String, $email: String, $password: String, $bio: String, $location: String) {
 		updateProfile(data: { username: $username, fullname: $fullname, email: $email, password: $password, bio: $bio, location: $location }) {
