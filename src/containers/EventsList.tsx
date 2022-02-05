@@ -1,140 +1,25 @@
 import React, { useContext, useRef, useState } from "react";
-import { Dimensions, FlatList, ScrollView, StyleSheet } from "react-native";
+import { Dimensions, FlatList, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useQuery } from "@apollo/client";
 
-import Category from "../components/Category";
 import { EventCard } from "../components/Cards/";
-import { EventCardSkelton, CategoriesSkelton } from "../components/Skelton";
+import { EventListHeader } from "../components/Header";
 
-import { FETCH_EVENTS, FETCH_UPCOMING_EVENTS } from "../config/query";
-import { EventInfo } from "../config/schema.types";
-import { EventQuery, FetchEventRequestVariables, FetchEventResponse, FetchUserBookedEventsResponse } from "../config/request.types";
+import { FETCH_EVENTS } from "../config/query";
 import { EventCategory, Filter } from "../types";
+import { EventQuery, FetchEventRequestVariables, FetchEventResponse } from "../config/request.types";
 
-import { EventCategories } from "../utils/preconfig";
-import theme, { Box, Text } from "../utils/theme";
+import theme from "../utils/theme";
+import { useAuth } from "../utils/store";
 import { ScreenNavigationProp } from "../navigation/types";
 import { UIContext, UIContextInterface } from "../context/UIContext";
-import EmptyList from "../components/EmptyList";
-import { useAuth } from "../utils/store";
 
-interface UpcomingEventsList {
-	category: EventCategory;
-	categoryEventCount: number | null;
-	events: EventInfo[];
-	isLoading: boolean;
-	onCategoryChange: (category: EventCategory) => void;
-	onEventJoin: (eventId: string) => void;
-}
-
-const UpcomingEventsList: React.FC<UpcomingEventsList> = ({ categoryEventCount, ...props }) => {
-	const userId = useAuth((store) => store.user?.id);
-	const navigation = useNavigation<ScreenNavigationProp>();
-
-	const pagination = useRef({
-		skip: 0,
-		take: 10,
-	});
-
-	const { data, loading, fetchMore } = useQuery<FetchUserBookedEventsResponse, FetchEventRequestVariables>(FETCH_UPCOMING_EVENTS, {
-		variables: { query: JSON.stringify({ user: userId }), ...pagination.current },
-	});
-
-	const fetchMoreEvents = () => {
-		//return if fetched all events
-		if (data?.userBookedEvents.count === data?.userBookedEvents.events.length) return;
-
-		let { skip } = pagination.current;
-		skip += 10;
-		pagination.current.skip = skip;
-
-		fetchMore<FetchUserBookedEventsResponse, FetchEventRequestVariables>({
-			variables: {
-				query: JSON.stringify({ user: userId }),
-				...pagination.current,
-			},
-		});
-	};
-
-	return (
-		<Box paddingVertical="l">
-			<Text variant="title" marginLeft="l" fontSize={theme.fontSize.normal}>
-				Upcoming Events
-			</Text>
-			{loading && !Boolean(data?.userBookedEvents.events.length) && (
-				<ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-					{new Array(5).fill(1).map((_, index) => {
-						return <EventCardSkelton isFullWidth={false} key={`half_card_${index}`} />;
-					})}
-				</ScrollView>
-			)}
-			<FlatList
-				data={data?.userBookedEvents?.events || []}
-				keyExtractor={(item) => item.id}
-				horizontal={true}
-				showsHorizontalScrollIndicator={false}
-				contentContainerStyle={styles.FlatList}
-				onEndReached={fetchMoreEvents}
-				onEndReachedThreshold={0.5}
-				renderItem={({ item, index }) => {
-					return (
-						<EventCard
-							key={index}
-							eventInfo={{ ...item, thumbnail: item.medias[0].link }}
-							width={240}
-							height={170}
-							containerStyle={{ marginLeft: index === 0 ? theme.spacing.l : 0 }}
-							onJoin={() => props.onEventJoin(item.id)}
-							onPress={() => {
-								navigation.push("EventDetail", {
-									slug: item.title,
-								});
-							}}
-						/>
-					);
-				}}
-				ListEmptyComponent={!loading ? <EmptyList message="No upcoming events." /> : null}
-			/>
-			<Text variant="title" marginLeft="l" marginTop="l" fontSize={theme.fontSize.normal}>
-				Explore By Categories
-			</Text>
-			{EventCategories.length > 0 && (
-				<ScrollView horizontal={true} style={{ marginTop: theme.spacing.l, marginBottom: theme.spacing.m }} showsHorizontalScrollIndicator={false}>
-					{EventCategories.map((category, index) =>
-						!props.isLoading ? (
-							<Category
-								key={index}
-								name={category}
-								selected={props.category === category}
-								mr={"m"}
-								ml={index === 0 ? "l" : "none"}
-								onPress={props.onCategoryChange}
-							/>
-						) : (
-							<CategoriesSkelton key={`${category}_${index}`} ml={index === 0 ? "l" : "none"} />
-						),
-					)}
-				</ScrollView>
-			)}
-
-			{props.isLoading && categoryEventCount === 0 && (
-				<ScrollView showsVerticalScrollIndicator={false}>
-					{new Array(5).fill(1).map((_, index) => {
-						return <EventCardSkelton isFullWidth={true} key={`full_card_${index}`} />;
-					})}
-				</ScrollView>
-			)}
-			{categoryEventCount === 0 && !props.isLoading && (
-				<Text variant="metaText16" textAlign="center" marginTop="l">
-					No Events
-				</Text>
-			)}
-		</Box>
-	);
-};
+import UpcomingEventsList from "./UpcomingEventList";
 
 const EventsList = () => {
+	const userId = useAuth((store) => store.user.id);
+
 	const navigation = useNavigation<ScreenNavigationProp>();
 	const { onEventJoin } = useContext<UIContextInterface>(UIContext);
 
@@ -181,42 +66,50 @@ const EventsList = () => {
 	};
 
 	return (
-		<FlatList
-			data={data?.events.events}
-			keyExtractor={(item, index) => item.id}
-			contentContainerStyle={styles.FlatList}
-			showsVerticalScrollIndicator={false}
-			onEndReached={fetchMoreEvents}
-			onEndReachedThreshold={0.5}
-			ListHeaderComponent={
-				<UpcomingEventsList
-					category={category}
-					categoryEventCount={data?.events.count || 0}
-					isLoading={loading}
-					events={[]}
-					onCategoryChange={onCategoryUpdate}
-					onEventJoin={onEventJoin}
-				/>
-			}
-			renderItem={({ item, index }) => {
-				return (
-					<EventCard
-						variant="full"
-						eventInfo={{ ...item, thumbnail: item.medias[0].link }}
-						width={Dimensions.get("screen").width - theme.spacing.l * 2}
-						containerStyle={{ marginBottom: theme.spacing.l, marginLeft: theme.spacing.l }}
-						height={250}
-						onJoin={() => onEventJoin(item.id)}
-						onPress={() => {
-							navigation.push("EventDetail", {
-								slug: item.title,
-							});
-						}}
-						key={index}
-					/>
-				);
-			}}
-		/>
+		<>
+			{!userId && (
+				<EventListHeader category={category} categoryEventCount={data?.events.count || 0} isLoading={loading} onCategoryChange={onCategoryUpdate} />
+			)}
+			<FlatList
+				data={data?.events.events}
+				keyExtractor={(item, index) => item.id}
+				contentContainerStyle={styles.FlatList}
+				showsVerticalScrollIndicator={false}
+				onEndReached={fetchMoreEvents}
+				onEndReachedThreshold={0.5}
+				ListHeaderComponent={
+					userId ? (
+						<>
+							<UpcomingEventsList onEventJoin={onEventJoin} />
+							<EventListHeader
+								category={category}
+								categoryEventCount={data?.events.count || 0}
+								isLoading={loading}
+								onCategoryChange={onCategoryUpdate}
+							/>
+						</>
+					) : null
+				}
+				renderItem={({ item, index }) => {
+					return (
+						<EventCard
+							variant="full"
+							eventInfo={{ ...item, thumbnail: item.medias[0].link }}
+							width={Dimensions.get("screen").width - theme.spacing.l * 2}
+							containerStyle={{ marginBottom: theme.spacing.l, marginLeft: theme.spacing.l }}
+							height={250}
+							onJoin={() => onEventJoin(item.id)}
+							onPress={() => {
+								navigation.push("EventDetail", {
+									slug: item.title,
+								});
+							}}
+							key={index}
+						/>
+					);
+				}}
+			/>
+		</>
 	);
 };
 

@@ -15,6 +15,8 @@ export type RootStackScreens = {
 	AttendeesList: any;
 	TransactionsList: any;
 	MyEventsList: any;
+	Search: any;
+	NotificationsList: any;
 };
 
 export type BottomStackScreens = {

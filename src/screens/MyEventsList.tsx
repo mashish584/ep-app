@@ -1,16 +1,16 @@
-import { useQuery } from "@apollo/client";
 import React, { useRef } from "react";
-import { Dimensions } from "react-native";
-import { FlatList } from "react-native-gesture-handler";
+import { Dimensions, FlatList } from "react-native";
+import { useQuery } from "@apollo/client";
 
 import { EventCard } from "../components/Cards";
 import EmptyList from "../components/EmptyList";
-import Header from "../components/Header";
+import { Header } from "../components/Header";
 import Theme from "../components/Theme";
 
 import { FETCH_USER_EVENTS } from "../config/query";
 import { FetchEventRequestVariables, FetchUserEventsResponse } from "../config/request.types";
 import { RootStackScreens, StackNavigationProps } from "../navigation/types";
+
 import { useAuth } from "../utils/store";
 import theme from "../utils/theme";
 

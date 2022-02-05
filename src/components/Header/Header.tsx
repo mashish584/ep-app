@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import theme, { Box, pallette, Text } from "../utils/theme";
+import theme, { Box, pallette, Text } from "../../utils/theme";
 
 interface Header {
 	onBack?: () => void;

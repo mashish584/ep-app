@@ -4,13 +4,13 @@ import { useMutation } from "@apollo/client";
 import { Formik } from "formik";
 
 import Button from "../components/Button";
-import TextInput from "../components/Form/TextInput";
-import Header from "../components/Header";
-import AutoPlaces from "../components/Maps/AutoPlaces/AutoPlaces";
-import { AddressInfo } from "../components/Maps/AutoPlaces/interface";
-import { PasswordConfirmation } from "../components/Modals";
-import Curve from "../components/SVG/Curve";
 import Theme from "../components/Theme";
+import Curve from "../components/SVG/Curve";
+import { Header } from "../components/Header";
+import { PasswordConfirmation } from "../components/Modals";
+import { AddressInfo } from "../components/Maps/AutoPlaces/interface";
+import TextInput from "../components/Form/TextInput";
+import AutoPlaces from "../components/Maps/AutoPlaces/AutoPlaces";
 
 import { UIContext } from "../context/UIContext";
 

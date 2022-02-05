@@ -2,17 +2,17 @@ import React, { useRef, useState } from "react";
 import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import { useQuery } from "@apollo/client";
 
-import TransactionCard from "../components/Cards/TransactionCard";
-import Header from "../components/Header";
 import Theme from "../components/Theme";
-import { FETCH_TRANSACTIONS } from "../config/query";
-import { FetchTransactionsResponse, FetchTransactionsVariables } from "../config/request.types";
-
-import { RootStackScreens, StackNavigationProps } from "../navigation/types";
-import { useAuth } from "../utils/store";
-import theme, { Box, pallette, Text } from "../utils/theme";
 import EmptyList from "../components/EmptyList";
 import CardSkelton from "../components/Skelton/CardSkelton";
+import TransactionCard from "../components/Cards/TransactionCard";
+
+import { FETCH_TRANSACTIONS } from "../config/query";
+import { FetchTransactionsResponse, FetchTransactionsVariables } from "../config/request.types";
+import { RootStackScreens, StackNavigationProps } from "../navigation/types";
+
+import { useAuth } from "../utils/store";
+import theme, { Box, pallette, Text } from "../utils/theme";
 
 // eslint-disable-next-line no-unused-vars
 enum QUERY {

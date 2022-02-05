@@ -1,9 +1,9 @@
-import { useQuery } from "@apollo/client";
 import React, { useRef } from "react";
 import { FlatList } from "react-native";
+import { useQuery } from "@apollo/client";
 
 import UserCard from "../components/Cards/UserCard";
-import Header from "../components/Header";
+import { Header } from "../components/Header";
 import Theme from "../components/Theme";
 import { FETCH_ATTENDEES } from "../config/query";
 import { FetchAttendeesRequestVariables, FetchAttendeesResponse } from "../config/request.types";

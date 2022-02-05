@@ -9,7 +9,7 @@ import TextIcon from "../components/TextIcon";
 import UserChips from "../components/UserChips";
 import HostInfo from "../components/HostInfo";
 import Button from "../components/Button";
-import Header from "../components/Header";
+import { Header } from "../components/Header";
 
 import theme, { Box, fonts, Text } from "../utils/theme";
 import { RootStackScreens, StackNavigationProps } from "../navigation/types";

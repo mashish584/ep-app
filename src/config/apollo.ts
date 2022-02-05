@@ -67,6 +67,7 @@ const cache = new InMemoryCache({
 			},
 		},
 	},
+	addTypename: false,
 });
 
 const getToken = async () => {
@@ -93,7 +94,7 @@ const authLink = setContext(async (_, { headers }) => {
 });
 
 const responseInterceptor = new ApolloLink((operation, forward) => {
-	console.log({ request: operation });
+	console.log(`Operation Name => ${operation.operationName}`, { request: operation });
 	return forward(operation).map((response) => {
 		console.log({ operation, response });
 		if (response.errors?.length) {
