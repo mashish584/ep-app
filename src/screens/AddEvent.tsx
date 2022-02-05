@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { ScrollView } from "react-native";
+import { Image, ScrollView, TouchableOpacity } from "react-native";
 import { Formik } from "formik";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -16,6 +16,8 @@ import Button from "../components/Button";
 
 import theme, { Box, Text } from "../utils/theme";
 import { EventCategories } from "../utils/preconfig";
+import { openGallery } from "../utils/media";
+import { validateEventForm } from "../utils/validation";
 import { RootStackScreens, StackNavigationProps } from "../navigation/types";
 
 import { AddEventForm } from "../form.interface";
@@ -36,7 +38,46 @@ const AddEvent: React.FC<StackNavigationProps<RootStackScreens, "AddEvent">> = (
 	const addressInfo = useRef<AddressInfo | null>(null);
 	const initialFormValues: AddEventForm = useRef({ ...initalValues }).current;
 
-	const [errors] = useState<AddEventInlineError | null>(null);
+	const [errors, setErrors] = useState<AddEventInlineError | null>(null);
+	const [isPaidEvent, setIsPaidEvent] = useState(false);
+
+	const handleCategoryUpdate = (selectedCategories, category, setFieldValue) => {
+		let categories = [...selectedCategories];
+		const categoryIndex = categories.indexOf(category);
+
+		if (categoryIndex === -1) {
+			categories.push(EventCategories[category]);
+		} else {
+			categories.splice(categoryIndex, 1);
+		}
+
+		setFieldValue("categories", categories);
+	};
+
+	const handleImageUpload = async (setFieldValue) => {
+		const response = await openGallery({ maxFiles: 4, multiple: true });
+		if (response?.length) {
+			setFieldValue("uploadFiles", response);
+		}
+	};
+
+	const handleEventAdd = async (values: AddEventForm) => {
+		try {
+			const data = { ...values };
+			await validateEventForm(data);
+		} catch (errors: any) {
+			if (errors?.inner) {
+				const err = {} as AddEventInlineError;
+				errors.inner.forEach(({ path, message }) => {
+					err[path] = message;
+				});
+
+				if (Object.keys(err).length) {
+					setErrors(err);
+				}
+			}
+		}
+	};
 
 	return (
 		<Theme avoidTopNotch={true}>
@@ -44,7 +85,7 @@ const AddEvent: React.FC<StackNavigationProps<RootStackScreens, "AddEvent">> = (
 				<Curve />
 			</Box>
 			<Header headerTitle="Edit Profile" position="relative" onBack={() => navigation.goBack()} />
-			<Formik initialValues={initialFormValues} onSubmit={() => {}}>
+			<Formik initialValues={initialFormValues} onSubmit={handleEventAdd}>
 				{({ values, handleChange, handleSubmit, setFieldValue }) => {
 					return (
 						<>
@@ -73,13 +114,28 @@ const AddEvent: React.FC<StackNavigationProps<RootStackScreens, "AddEvent">> = (
 									</Text>
 									{EventCategories.length > 0 && (
 										<ScrollView horizontal={true} style={{ paddingVertical: theme.spacing.s }} showsHorizontalScrollIndicator={false}>
-											{EventCategories.map((category, index) => (
-												<Category key={index} name={category} selected={false} ml={index === 0 ? "l" : "none"} mr={"xs"} onPress={() => {}} />
-											))}
+											{EventCategories.map((category, index) => {
+												return (
+													<Category
+														key={index}
+														name={category}
+														selected={false}
+														ml={index === 0 ? "l" : "none"}
+														mr={"xs"}
+														onPress={(category) => handleCategoryUpdate(values.categories, category, setFieldValue)}
+													/>
+												);
+											})}
 										</ScrollView>
 									)}
+									{errors?.categories && (
+										<Text variant="metaText12" color="primary" marginTop="xs" ml="l">
+											{errors?.categories}
+										</Text>
+									)}
 								</Box>
-								<Box marginHorizontal="l" marginBottom="xl">
+
+								<Box marginHorizontal="l">
 									<TextInput
 										type="textarea"
 										label="Bio"
@@ -87,28 +143,58 @@ const AddEvent: React.FC<StackNavigationProps<RootStackScreens, "AddEvent">> = (
 										errorMessage={errors?.description}
 										value={values.description}
 									/>
-									<Box marginTop="s" minHeight={100}>
-										<Text variant="light" fontSize={theme.fontSize.sm} mb="xs">
-											Upload Images
+								</Box>
+								<Box marginTop="s" minHeight={100}>
+									<Text variant="light" marginLeft="l" fontSize={theme.fontSize.sm} mb="xs">
+										Upload Images
+									</Text>
+									<ScrollView horizontal showsVerticalScrollIndicator={false}>
+										<TouchableOpacity onPress={() => handleImageUpload(setFieldValue)}>
+											<Box
+												width={70}
+												height={70}
+												borderWidth={1}
+												ml="l"
+												alignItems="center"
+												justifyContent="center"
+												borderRadius="s"
+												borderColor="gray">
+												<FontAwesomeIcon icon={faPlus} color={theme.colors.gray} />
+											</Box>
+										</TouchableOpacity>
+										{values.uploadFiles.map((file) => {
+											return (
+												<Box width={70} height={70} backgroundColor="gray" borderRadius="s" overflow="hidden" ml="s">
+													<Image source={file} style={{ width: "100%", height: "100%" }} />
+												</Box>
+											);
+										})}
+									</ScrollView>
+									{errors?.uploadFiles && (
+										<Text variant="metaText12" color="primary" marginTop="xs" marginLeft="l">
+											{errors?.uploadFiles}
 										</Text>
-										<Box width={70} height={70} borderWidth={1} alignItems="center" justifyContent="center" borderRadius="s" borderColor="gray">
-											<FontAwesomeIcon icon={faPlus} color={theme.colors.gray} />
+									)}
+								</Box>
+								<Box marginHorizontal="l" style={{ marginBottom: theme.spacing.l * 2 }}>
+									<Box marginTop="s" flexDirection="row" justifyContent="space-between">
+										<Box flexDirection="row" alignItems="center">
+											<Text variant="light" fontSize={theme.fontSize.sm} mr="xl">
+												Is paid event ?
+											</Text>
+											<Switch isSwitchOn={isPaidEvent} onChange={() => setIsPaidEvent((value) => !value)} />
 										</Box>
 									</Box>
-									<TextInput
-										type="number"
-										label="Price"
-										onChangeText={handleChange("categories")}
-										errorMessage={errors?.categories}
-										value={""}
-										keyboardType="number-pad"
-									/>
-									<Box marginTop="s" flexDirection="row" alignItems="center">
-										<Text variant="light" fontSize={theme.fontSize.sm} mr="xl">
-											Paid
-										</Text>
-										<Switch isSwitchOn={false} onChange={() => {}} />
-									</Box>
+									{isPaidEvent && (
+										<TextInput
+											type="number"
+											label=""
+											onChangeText={handleChange("categories")}
+											value={values?.price?.toString()}
+											keyboardType="number-pad"
+											errorMessage={errors?.price}
+										/>
+									)}
 								</Box>
 							</ScrollView>
 							<Box marginHorizontal="l">
