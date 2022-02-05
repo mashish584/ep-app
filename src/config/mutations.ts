@@ -64,6 +64,24 @@ export const PROFILE_UPLOAD_MUTATION = gql`
 	}
 `;
 
+export const ADD_EVENT_MUTATION = gql`
+	mutation createEvent($title: String!, $description: String!, $eventTimestamp: String!, $category: [String]!, $location: String!, $price: Float!) {
+		createEvent(
+			data: { title: $title, description: $description, eventTimestamp: $eventTimestamp, category: $category, location: $location, price: $price }
+		) {
+			id
+		}
+	}
+`;
+
+export const UPLOAD_MEDIA_MUTATION = gql`
+	mutation uploadEventMedia($file: Upload!, $event: Int!) {
+		uploadEventMedia(file: $file, eventId: $event) {
+			id
+		}
+	}
+`;
+
 export const BOOK_EVENT = gql`
 	mutation bookEvent($eventId: String!) {
 		bookEvent(event: $eventId) {

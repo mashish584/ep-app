@@ -85,6 +85,36 @@ export type FetchEventDetailResponse = {
 	eventDetail: EventInfo;
 };
 
+export type AddEventRequestVariables = {
+	title: string;
+	description: string;
+	eventTimestamp: string;
+	category: string;
+	location: string;
+	price: string;
+};
+
+export type AddEventResponse = {
+	createEvent: {
+		id;
+	};
+};
+
+export type UploadEventMediaRequestVariables = {
+	file: any;
+	event: number;
+};
+
+export type UploadEventMediasResponse = {
+	uploadEventMedia: {
+		id;
+	};
+};
+
+/**
+ * Users Query
+ */
+
 export type FetchAttendeesRequestVariables = {
 	query?: string;
 	skip?: number;
