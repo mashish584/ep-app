@@ -55,7 +55,7 @@ const TextInput = ({ errorMessage, type, style, ...props }: TextInput) => {
 	);
 };
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
 	textInputContainer: {
 		backgroundColor: pallette.rgb.gray(0.1),
 		borderColor: pallette.rgb.gray(0.7),

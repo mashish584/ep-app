@@ -22,6 +22,7 @@ import { RootStackScreens, StackNavigationProps } from "../navigation/types";
 
 import { AddEventForm } from "../form.interface";
 import { AddEventInlineError } from "../types";
+import DateInput from "../components/Form/DateInput";
 
 const initalValues = {
 	title: "",
@@ -136,6 +137,8 @@ const AddEvent: React.FC<StackNavigationProps<RootStackScreens, "AddEvent">> = (
 								</Box>
 
 								<Box marginHorizontal="l">
+									<DateInput type="date" label="Event Date" value={values.eventDate} onChange={() => {}} />
+									<DateInput type="date" label="Event Time" value={values.eventDate} onChange={() => {}} />
 									<TextInput
 										type="textarea"
 										label="Bio"
