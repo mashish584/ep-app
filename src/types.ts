@@ -1,4 +1,4 @@
-import { SignInForm, UpdateProfileForm } from "./form.interface";
+import { AddEventForm, SignInForm, SignUpForm, UpdateProfileForm } from "./form.interface";
 import { RootStackScreens } from "./navigation/types";
 import { EventCategories } from "./utils/preconfig";
 
@@ -8,7 +8,9 @@ export type Dimensions = {
 };
 
 export type AuthInlineError = Record<keyof SignInForm, string>;
+export type SignupInlineError = Record<keyof SignUpForm, string>;
 export type ProfileInlineError = Record<keyof UpdateProfileForm, string>;
+export type AddEventInlineError = Record<keyof AddEventForm, string>;
 
 export type EventCategory = typeof EventCategories[number];
 
@@ -31,4 +33,12 @@ export type SettingsItem = {
 	description: string;
 	navigation?: keyof RootStackScreens;
 	isLogout?: boolean;
+};
+
+export type FileType = {
+	filename: string;
+	width: number;
+	height: number;
+	base64: string;
+	file: any;
 };

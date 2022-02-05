@@ -2,13 +2,15 @@ import React, { useRef, useState } from "react";
 import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import { useQuery } from "@apollo/client";
 
-import TransactionCard from "../components/Cards/TransactionCard";
-import Header from "../components/Header";
 import Theme from "../components/Theme";
+import EmptyList from "../components/EmptyList";
+import CardSkelton from "../components/Skelton/CardSkelton";
+import TransactionCard from "../components/Cards/TransactionCard";
+
 import { FETCH_TRANSACTIONS } from "../config/query";
 import { FetchTransactionsResponse, FetchTransactionsVariables } from "../config/request.types";
-
 import { RootStackScreens, StackNavigationProps } from "../navigation/types";
+
 import { useAuth } from "../utils/store";
 import theme, { Box, pallette, Text } from "../utils/theme";
 
@@ -23,6 +25,7 @@ enum QUERY {
 const TransactionsList: React.FC<StackNavigationProps<RootStackScreens, "TransactionsList">> = ({ navigation }) => {
 	const userId = useAuth((store) => store.user.id);
 	const [activeTab, setActiveTab] = useState(0);
+	const [isTabDataLoading, setTabDataLoading] = useState(false);
 
 	const transactionFilter = useRef({
 		key: QUERY.PAYEE,
@@ -32,8 +35,11 @@ const TransactionsList: React.FC<StackNavigationProps<RootStackScreens, "Transac
 		},
 	});
 
-	const { data, fetchMore, refetch } = useQuery<FetchTransactionsResponse, FetchTransactionsVariables>(FETCH_TRANSACTIONS, {
+	const { data, fetchMore, refetch, loading } = useQuery<FetchTransactionsResponse, FetchTransactionsVariables>(FETCH_TRANSACTIONS, {
 		variables: { query: JSON.stringify({ [transactionFilter.current.key]: userId }), ...transactionFilter.current.pagination },
+		notifyOnNetworkStatusChange: true,
+		onCompleted: () => setTabDataLoading(false),
+		onError: () => setTabDataLoading(false),
 	});
 
 	const fetchMoreTransactions = () => {
@@ -58,6 +64,7 @@ const TransactionsList: React.FC<StackNavigationProps<RootStackScreens, "Transac
 						transactionFilter.current.key = QUERY.PAYEE;
 						transactionFilter.current.pagination.skip = 0;
 						transactionFilter.current.pagination.take = 10;
+						setTabDataLoading(true);
 						refetch({ query: JSON.stringify({ [transactionFilter.current.key]: userId }), ...transactionFilter.current.pagination });
 						setActiveTab(0);
 					}}
@@ -71,6 +78,7 @@ const TransactionsList: React.FC<StackNavigationProps<RootStackScreens, "Transac
 						transactionFilter.current.key = QUERY.RECEIVER;
 						transactionFilter.current.pagination.skip = 0;
 						transactionFilter.current.pagination.take = 10;
+						setTabDataLoading(true);
 						refetch({ query: JSON.stringify({ [transactionFilter.current.key]: userId }), ...transactionFilter.current.pagination });
 						setActiveTab(1);
 					}}
@@ -80,17 +88,27 @@ const TransactionsList: React.FC<StackNavigationProps<RootStackScreens, "Transac
 					</Text>
 				</TouchableOpacity>
 			</Box>
-			<FlatList
-				data={data?.fetchTransactions.transactions}
-				keyExtractor={(item, index) => `${item.id}_${index}`}
-				contentContainerStyle={{ padding: theme.spacing.l, flexGrow: 1 }}
-				renderItem={({ item, index }) => (
-					<TransactionCard key={index} profile={item.event.owner.profile} title={item.event.title} date={item.createdAt} amount={item.amount} />
-				)}
-				showsVerticalScrollIndicator={false}
-				onEndReached={fetchMoreTransactions}
-				onEndReachedThreshold={0.5}
-			/>
+			{(loading || isTabDataLoading) && (
+				<Box paddingHorizontal="l">
+					{new Array(10).fill(1).map((_, index) => {
+						return <CardSkelton key={index} />;
+					})}
+				</Box>
+			)}
+			{!loading && !isTabDataLoading && (
+				<FlatList
+					data={data?.fetchTransactions.transactions}
+					keyExtractor={(item, index) => `${item.id}_${index}`}
+					contentContainerStyle={{ padding: theme.spacing.l, flexGrow: 1 }}
+					renderItem={({ item, index }) => (
+						<TransactionCard key={index} profile={item.event.owner.profile} title={item.event.title} date={item.createdAt} amount={item.amount} />
+					)}
+					ListEmptyComponent={<EmptyList message="No transactions found." />}
+					showsVerticalScrollIndicator={false}
+					onEndReached={fetchMoreTransactions}
+					onEndReachedThreshold={0.5}
+				/>
+			)}
 		</Theme>
 	);
 };

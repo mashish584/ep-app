@@ -5,11 +5,33 @@ import { gql } from "@apollo/client";
  ==========================*/
 
 export const FETCH_UPCOMING_EVENTS = gql`
-	query upcomingEvents($query: String!) {
-		events(query: $query) {
+	query userBookedEvents($query: String!, $skip: Int!, $take: Int!) {
+		userBookedEvents(query: $query, skip: $skip, take: $take) {
 			events {
 				id
 				title
+				eventTimestamp
+				price
+				owner {
+					username
+					email
+				}
+				medias {
+					link
+					thumbnail
+				}
+			}
+		}
+	}
+`;
+
+export const FETCH_USER_EVENTS = gql`
+	query userEvents($query: String!, $skip: Int!, $take: Int!) {
+		userEvents(query: $query, skip: $skip, take: $take) {
+			events {
+				id
+				title
+				description
 				eventTimestamp
 				price
 				owner {

@@ -51,7 +51,7 @@ const BottomTab: React.FC<StackNavigationProps<RootStackScreens, "BottomStack"> 
 						<FontAwesomeIcon icon={faSearch} color={index === 1 ? theme.colors.primary : theme.colors.darkGray} size={20} />
 					</TouchableOpacity>
 				</Box>
-				<TouchableOpacity style={styles.add}>
+				<TouchableOpacity onPress={() => onNavigate("AddEvent")} style={styles.add}>
 					<FontAwesomeIcon icon={faPlus} color="#FFFFFF" />
 				</TouchableOpacity>
 				<Box flexDirection="row" flex={0.5} justifyContent="space-around">

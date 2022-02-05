@@ -5,11 +5,9 @@ import { Formik } from "formik";
 
 import Button from "../components/Button";
 import TextInput from "../components/Form/TextInput";
-import Theme from "../components/Theme";
-import Curve from "../components/SVG/Curve";
 
 import { validateAuthForm } from "../utils/validation";
-import { Box, Text, theme } from "../utils/theme";
+import { Box, Text } from "../utils/theme";
 
 import { AuthInlineError } from "../types";
 import { SignInForm } from "../form.interface";
@@ -18,6 +16,8 @@ import { RootStackScreens, StackNavigationProps } from "../navigation/types";
 import { SIGNIN_MUTATION } from "../config/mutations";
 import { UserLoginResponse, UserLoginVariables } from "../config/request.types";
 import { useAuth } from "../utils/store";
+import AuthLayout from "../components/AuthLayout";
+import Texter from "../components/Texter";
 
 const initalValues = {
 	email: "",
@@ -63,43 +63,44 @@ const Auth: React.FC<StackNavigationProps<RootStackScreens, "AuthScreen">> = ({ 
 	};
 
 	return (
-		<Theme viewContainerStyle={{ justifyContent: "center", alignItems: "center" }}>
-			<Box position="absolute" bottom={0}>
-				<Curve />
+		<AuthLayout greeting="WELCOME" title="Sign in to continue!">
+			<Formik initialValues={intialFormValues} onSubmit={onSubmit}>
+				{({ handleChange, handleSubmit }) => {
+					return (
+						<>
+							<Box marginVertical="l">
+								<TextInput type="input" label="Email" onChangeText={handleChange("email")} errorMessage={errors?.email} />
+								<TextInput type="password" label="Password" onChangeText={handleChange("password")} errorMessage={errors?.password} />
+								<TouchableOpacity>
+									<Text variant="light" marginTop="s" style={{ alignSelf: "flex-end" }}>
+										Forgot password?
+									</Text>
+								</TouchableOpacity>
+							</Box>
+							<Button
+								variant="primary"
+								label="Sign In"
+								disabled={loading}
+								loading={loading}
+								containerStyle={{ width: "100%", minHeight: 50 }}
+								onPress={handleSubmit}
+							/>
+						</>
+					);
+				}}
+			</Formik>
+			<Box marginTop="l" alignItems="center">
+				<Texter
+					config={{
+						Signup: {
+							color: "primary",
+							onPress: () => navigation.navigate("SignupScreen"),
+						},
+					}}>
+					Don't have an account? Signup
+				</Texter>
 			</Box>
-			<Box paddingHorizontal="l" flex={0.5} width={"100%"}>
-				<Box>
-					<Text variant="title">WELCOME</Text>
-					<Text variant="bold" fontSize={theme.fontSize.normal} color="darkGray" marginTop="xs">
-						Sign in to continue!
-					</Text>
-				</Box>
-				<Formik initialValues={intialFormValues} onSubmit={onSubmit}>
-					{({ handleChange, handleSubmit }) => {
-						return (
-							<>
-								<Box marginVertical="l">
-									<TextInput type="input" label="Email" onChangeText={handleChange("email")} errorMessage={errors?.email} />
-									<TextInput type="password" label="Password" onChangeText={handleChange("password")} errorMessage={errors?.password} />
-									<TouchableOpacity>
-										<Text variant="light" marginTop="s" style={{ alignSelf: "flex-end" }}>
-											Forgot password?
-										</Text>
-									</TouchableOpacity>
-								</Box>
-								<Button
-									variant="primary"
-									label="Sign In"
-									disabled={loading}
-									containerStyle={{ width: "100%", minHeight: 50 }}
-									onPress={handleSubmit}
-								/>
-							</>
-						);
-					}}
-				</Formik>
-			</Box>
-		</Theme>
+		</AuthLayout>
 	);
 };
 

@@ -11,6 +11,7 @@ export type Config = {
 	color?: colorType;
 	variant?: variantType;
 	style?: TextStyle;
+	onPress?: () => void;
 };
 
 interface Texter {

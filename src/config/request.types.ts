@@ -16,8 +16,20 @@ export type UserLoginResponse = {
 	};
 };
 
+export type UserSignupVariables = {
+	email: string;
+	username: string;
+	password: string;
+};
+
+export type UserSignupResponse = {
+	createUser: {
+		message: string;
+	};
+};
+
 /*=================================
- * ------ Profiel Mutations ------ *
+ * ------ Profile Mutations ------ *
 =================================*/
 
 export type ProfileUpdateVariables = UpdateProfileForm;
@@ -51,6 +63,20 @@ export type FetchEventResponse = {
 	};
 };
 
+export type FetchUserEventsResponse = {
+	userEvents: {
+		count: number;
+		events: EventInfo[];
+	};
+};
+
+export type FetchUserBookedEventsResponse = {
+	userBookedEvents: {
+		count: number;
+		events: EventInfo[];
+	};
+};
+
 export type FetchEventDetailRequestVariables = {
 	slug: string;
 };
@@ -58,6 +84,36 @@ export type FetchEventDetailRequestVariables = {
 export type FetchEventDetailResponse = {
 	eventDetail: EventInfo;
 };
+
+export type AddEventRequestVariables = {
+	title: string;
+	description: string;
+	eventTimestamp: string;
+	category: string;
+	location: string;
+	price: string;
+};
+
+export type AddEventResponse = {
+	createEvent: {
+		id;
+	};
+};
+
+export type UploadEventMediaRequestVariables = {
+	file: any;
+	event: number;
+};
+
+export type UploadEventMediasResponse = {
+	uploadEventMedia: {
+		id;
+	};
+};
+
+/**
+ * Users Query
+ */
 
 export type FetchAttendeesRequestVariables = {
 	query?: string;

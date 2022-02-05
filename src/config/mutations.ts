@@ -22,6 +22,14 @@ export const SIGNIN_MUTATION = gql`
 	}
 `;
 
+export const SIGNUP_MUTATION = gql`
+	mutation createUser($email: String!, $username: String!, $password: String!) {
+		createUser(data: { email: $email, username: $username, password: $password }) {
+			message
+		}
+	}
+`;
+
 export const PROFILE_UPDATE_MUTATION = gql`
 	mutation updateProfile($username: String, $fullname: String, $email: String, $password: String, $bio: String, $location: String) {
 		updateProfile(data: { username: $username, fullname: $fullname, email: $email, password: $password, bio: $bio, location: $location }) {
@@ -52,6 +60,24 @@ export const PROFILE_UPLOAD_MUTATION = gql`
 			}
 			isActive
 			stripe_customer_id
+		}
+	}
+`;
+
+export const ADD_EVENT_MUTATION = gql`
+	mutation createEvent($title: String!, $description: String!, $eventTimestamp: String!, $category: [String]!, $location: String!, $price: Float!) {
+		createEvent(
+			data: { title: $title, description: $description, eventTimestamp: $eventTimestamp, category: $category, location: $location, price: $price }
+		) {
+			id
+		}
+	}
+`;
+
+export const UPLOAD_MEDIA_MUTATION = gql`
+	mutation uploadEventMedia($file: Upload!, $event: Int!) {
+		uploadEventMedia(file: $file, eventId: $event) {
+			id
 		}
 	}
 `;
