@@ -6,7 +6,7 @@ import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
 import theme, { Box, fonts, pallette, Text } from "../../utils/theme";
 
 interface TextInput extends TextInputProps {
-	type: "input" | "password" | "textarea";
+	type: "input" | "password" | "textarea" | "number";
 	errorMessage?: string;
 	label?: string;
 }

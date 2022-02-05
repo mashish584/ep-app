@@ -15,6 +15,7 @@ import MyEventsList from "../screens/MyEventsList";
 import NotificationsList from "../screens/NotificationsList";
 import Search from "../screens/Search";
 import SignUp from "../screens/SignUp";
+import AddEvent from "../screens/AddEvent";
 
 import TabBar from "../components/BottomTab";
 
@@ -59,6 +60,7 @@ const RootStackSCreen = () => {
 			<RootStack.Screen name="MyEventsList" component={MyEventsList} options={defaultOptions} />
 			<RootStack.Screen name="Search" component={Search} options={defaultOptions} />
 			<RootStack.Screen name="NotificationsList" component={NotificationsList} options={defaultOptions} />
+			<RootStack.Screen name="AddEvent" component={AddEvent} options={defaultOptions} />
 		</RootStack.Navigator>
 	);
 };

@@ -18,6 +18,7 @@ export type RootStackScreens = {
 	MyEventsList: any;
 	Search: any;
 	NotificationsList: any;
+	AddEvent: any;
 };
 
 export type BottomStackScreens = {
