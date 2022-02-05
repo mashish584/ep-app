@@ -5,8 +5,9 @@ import Theme from "../components/Theme";
 import EventsList from "../containers/EventsList";
 
 import { BottomStackScreens, StackNavigationProps } from "../navigation/types";
-import { useAuth } from "../utils/store";
 
+import { defaultAvatar } from "../utils/preconfig";
+import { useAuth } from "../utils/store";
 import { Box } from "../utils/theme";
 
 const Home: React.FC<StackNavigationProps<BottomStackScreens, "Home">> = ({ navigation }) => {
@@ -15,7 +16,11 @@ const Home: React.FC<StackNavigationProps<BottomStackScreens, "Home">> = ({ navi
 	return (
 		<Theme avoidHomBar={true}>
 			<Box justifyContent="flex-end" paddingHorizontal="l" alignItems="flex-end">
-				<Avatar name={userInfo?.fullname || userInfo?.username} profile={userInfo?.profile} onPress={() => navigation.navigate("Settings")} />
+				<Avatar
+					name={userInfo?.fullname || userInfo?.username}
+					profile={userInfo?.profile || defaultAvatar}
+					onPress={() => navigation.navigate("Settings")}
+				/>
 			</Box>
 			<EventsList />
 		</Theme>
