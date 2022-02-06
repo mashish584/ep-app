@@ -32,3 +32,5 @@ export const generateBoxShadowStyle = (
 export const formatTimeStamp = (timestamp, format: DateFormats) => {
 	return dayjs(timestamp).format(format);
 };
+
+export const formatToIso = (timestamp, format: DateFormats) => dayjs(timestamp, format).toISOString();

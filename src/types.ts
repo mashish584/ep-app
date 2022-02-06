@@ -25,7 +25,7 @@ export type Filter<T> = {
 	query: T;
 } & Pagination;
 
-export type DateFormats = "dddd" | "dddd DD MMM" | "HH:mm A" | "DD MMM, YYYY";
+export type DateFormats = "dddd" | "dddd DD MMM" | "HH:mm A" | "DD MMM, YYYY" | "YYYY-MM-DD" | "HH:mm" | "YYYY-MM-DD HH:mm";
 
 export type SettingsItem = {
 	icon: any;
@@ -36,9 +36,15 @@ export type SettingsItem = {
 };
 
 export type FileType = {
-	filename: string;
-	width: number;
+	data: string;
+	fileName: string;
+	fileSize: number;
 	height: number;
-	base64: string;
-	file: any;
+	name: string;
+	path: string;
+	type: string;
+	uri: string;
+	width: number;
+	link?: string;
+	id?: string;
 };

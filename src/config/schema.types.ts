@@ -32,6 +32,7 @@ export interface EventInfo {
 	title: string;
 	description: string;
 	category: string[];
+	transactions: any[];
 	location: LocationInfo;
 	eventTimestamp: string;
 	isActive: boolean;
