@@ -91,7 +91,7 @@ export type AddEventRequestVariables = {
 	eventTimestamp: string;
 	category: string;
 	location: string;
-	price: string;
+	price: number;
 };
 
 export type AddEventResponse = {
