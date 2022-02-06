@@ -33,6 +33,7 @@ const EventDetail: React.FC<StackNavigationProps<RootStackScreens, "EventDetail"
 
 	const eventDetail = data?.eventDetail;
 	const thumbnail = eventDetail?.medias[0]?.link;
+	const timestamp = eventDetail?.eventTimestamp ? new Date(parseInt(eventDetail?.eventTimestamp)) : new Date();
 
 	if (loading) return null;
 
@@ -53,8 +54,8 @@ const EventDetail: React.FC<StackNavigationProps<RootStackScreens, "EventDetail"
 						{eventDetail?.title}
 					</Text>
 					<Box marginVertical="s" flexDirection="row">
-						<TextIcon icon={faCalendar} text={formatTimeStamp(eventDetail?.eventTimestamp, "dddd DD MMM")} />
-						<TextIcon icon={faClock} text={formatTimeStamp(eventDetail?.eventTimestamp, "HH:mm A")} />
+						<TextIcon icon={faCalendar} text={formatTimeStamp(timestamp, "dddd DD MMM")} />
+						<TextIcon icon={faClock} text={formatTimeStamp(timestamp, "HH:mm A")} />
 					</Box>
 					<TextIcon icon={faMapMarker} text="2972 Westheimer Rd. Santa Ana, Illinois 85486" />
 					<Box flexDirection="row" justifyContent="space-between" minHeight={30} marginTop="xl" alignItems="center">

@@ -1,9 +1,9 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Image, ScrollView, TouchableOpacity } from "react-native";
 import { Formik } from "formik";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 
 import { Header } from "../components/Header";
 import Curve from "../components/SVG/Curve";
@@ -27,8 +27,16 @@ import { AddEventForm } from "../form.interface";
 import { AddEventInlineError } from "../types";
 
 import { ADD_EVENT_MUTATION, UPLOAD_MEDIA_MUTATION } from "../config/mutations";
-import { AddEventRequestVariables, AddEventResponse, UploadEventMediaRequestVariables, UploadEventMediasResponse } from "../config/request.types";
+import {
+	AddEventRequestVariables,
+	AddEventResponse,
+	FetchEventDetailRequestVariables,
+	FetchEventDetailResponse,
+	UploadEventMediaRequestVariables,
+	UploadEventMediasResponse,
+} from "../config/request.types";
 import { displayToast } from "../context/UIContext";
+import { FETCH_EVENT_DETAIL } from "../config/query";
 
 const initalValues = {
 	title: "",
@@ -41,9 +49,11 @@ const initalValues = {
 	uploadFiles: [],
 };
 
-const AddEvent: React.FC<StackNavigationProps<RootStackScreens, "AddEvent">> = ({ navigation }) => {
+const AddEvent: React.FC<StackNavigationProps<RootStackScreens, "AddEvent">> = ({ navigation, route }) => {
+	const eventSlug = route.params?.slug;
 	const addressInfo = useRef<AddressInfo | null>(null);
 	const initialFormValues: AddEventForm = useRef({ ...initalValues }).current;
+	const setFormValues = useRef<((values: React.SetStateAction<AddEventForm>, shouldValidate?: boolean | undefined) => void) | null>(null);
 
 	const [errors, setErrors] = useState<AddEventInlineError | null>(null);
 	const [isPaidEvent, setIsPaidEvent] = useState(false);
@@ -51,6 +61,7 @@ const AddEvent: React.FC<StackNavigationProps<RootStackScreens, "AddEvent">> = (
 
 	const [addEvent] = useMutation<AddEventResponse, AddEventRequestVariables>(ADD_EVENT_MUTATION);
 	const [addEventMedia] = useMutation<UploadEventMediasResponse, UploadEventMediaRequestVariables>(UPLOAD_MEDIA_MUTATION);
+	const [fetchEventDetail] = useLazyQuery<FetchEventDetailResponse, FetchEventDetailRequestVariables>(FETCH_EVENT_DETAIL);
 
 	const handleCategoryUpdate = (selectedCategories, category, setFieldValue) => {
 		let categories = [...selectedCategories];
@@ -126,14 +137,42 @@ const AddEvent: React.FC<StackNavigationProps<RootStackScreens, "AddEvent">> = (
 		setFieldValue(key, timestamp);
 	};
 
+	useEffect(() => {
+		if (eventSlug) {
+			(async () => {
+				const response = await fetchEventDetail({ variables: { slug: eventSlug } });
+				console.log({ response });
+				const eventDetail: any = { ...response.data?.eventDetail };
+				if (eventDetail) {
+					const timestamp = eventDetail?.eventTimestamp ? new Date(parseInt(eventDetail?.eventTimestamp)) : "";
+					const [eventDate, eventTime] = [timestamp, timestamp];
+					const location = eventDetail?.location?.address;
+					const uploadFiles = eventDetail?.medias;
+					const categories = eventDetail?.category;
+
+					//delete unnecessary keys
+					for (let key in eventDetail) {
+						if (!Object.keys(initialFormValues).includes(key)) {
+							delete eventDetail[key];
+						}
+					}
+
+					const data = { ...eventDetail, eventDate, eventTime, location, uploadFiles, categories };
+					if (setFormValues.current) setFormValues.current(data);
+				}
+			})();
+		}
+	}, [eventSlug]);
+
 	return (
 		<Theme avoidTopNotch={true}>
 			<Box position="absolute" bottom={0}>
 				<Curve />
 			</Box>
-			<Header headerTitle="Edit Profile" position="relative" onBack={() => navigation.goBack()} />
+			<Header headerTitle="Add Event" position="relative" onBack={() => navigation.goBack()} />
 			<Formik initialValues={initialFormValues} onSubmit={handleEventAdd}>
-				{({ values, handleChange, handleSubmit, setFieldValue }) => {
+				{({ values, handleChange, handleSubmit, setFieldValue, setValues }) => {
+					setFormValues.current = setValues;
 					return (
 						<>
 							<ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
@@ -225,9 +264,10 @@ const AddEvent: React.FC<StackNavigationProps<RootStackScreens, "AddEvent">> = (
 											</Box>
 										</TouchableOpacity>
 										{values.uploadFiles.map((file) => {
+											const source = file.link ? { uri: file.link } : file;
 											return (
 												<Box width={70} height={70} backgroundColor="gray" borderRadius="s" overflow="hidden" ml="s">
-													<Image source={file} style={{ width: "100%", height: "100%" }} />
+													<Image source={source} style={{ width: "100%", height: "100%" }} />
 												</Box>
 											);
 										})}

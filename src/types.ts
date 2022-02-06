@@ -45,4 +45,6 @@ export type FileType = {
 	type: string;
 	uri: string;
 	width: number;
+	link?: string;
+	id?: string;
 };
