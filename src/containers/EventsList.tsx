@@ -100,7 +100,7 @@ const EventsList = () => {
 							height={250}
 							onJoin={() => onEventJoin(item.id)}
 							onPress={() => {
-								navigation.push("AddEvent", {
+								navigation.push("EventDetail", {
 									slug: item.title,
 								});
 							}}
