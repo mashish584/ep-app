@@ -76,10 +76,16 @@ const AddEvent: React.FC<StackNavigationProps<RootStackScreens, "AddEvent">> = (
 		setFieldValue("categories", categories);
 	};
 
-	const handleImageUpload = async (setFieldValue) => {
-		const response = await openGallery({ maxFiles: 4, multiple: true });
+	const handleImageUpload = async (values, setFieldValue) => {
+		if (values.length === 4) {
+			if (displayToast) displayToast("error", "Max 4 imanges can be uploaded.");
+			return;
+		}
+
+		const response = await openGallery({ maxFiles: 4 - values.length, multiple: true });
 		if (response?.length) {
-			setFieldValue("uploadFiles", response);
+			const files = [...values, ...response];
+			setFieldValue("uploadFiles", files);
 		}
 	};
 
@@ -249,8 +255,11 @@ const AddEvent: React.FC<StackNavigationProps<RootStackScreens, "AddEvent">> = (
 									<Text variant="light" marginLeft="l" fontSize={theme.fontSize.sm} mb="xs">
 										Upload Images
 									</Text>
-									<ScrollView horizontal showsVerticalScrollIndicator={false}>
-										<TouchableOpacity onPress={() => handleImageUpload(setFieldValue)}>
+									<ScrollView
+										horizontal
+										showsHorizontalScrollIndicator={false}
+										contentContainerStyle={{ flexGrow: 1, paddingRight: theme.spacing.l, marginTop: theme.spacing.xs }}>
+										<TouchableOpacity onPress={() => handleImageUpload(values.uploadFiles, setFieldValue)}>
 											<Box
 												width={70}
 												height={70}
