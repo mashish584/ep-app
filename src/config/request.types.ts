@@ -89,7 +89,7 @@ export type AddEventRequestVariables = {
 	title: string;
 	description: string;
 	eventTimestamp: string;
-	category: string;
+	category: string[];
 	location: string;
 	price: number;
 };

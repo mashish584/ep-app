@@ -75,7 +75,7 @@ const AddEvent: React.FC<StackNavigationProps<RootStackScreens, "AddEvent">> = (
 	const handleEventAdd = async (values: AddEventForm) => {
 		try {
 			const data = { ...values };
-			await validateEventForm(data);
+			await validateEventForm(data, isPaidEvent);
 
 			if (addressInfo.current) {
 				data.location = JSON.stringify(addressInfo.current);
@@ -90,7 +90,7 @@ const AddEvent: React.FC<StackNavigationProps<RootStackScreens, "AddEvent">> = (
 					description: data.description,
 					location: data.location,
 					eventTimestamp: eventTimestamp,
-					category: JSON.stringify(data.categories),
+					category: data.categories,
 					price: parseFloat(Number(data.price).toFixed(2)),
 				},
 			});
@@ -251,7 +251,7 @@ const AddEvent: React.FC<StackNavigationProps<RootStackScreens, "AddEvent">> = (
 										<TextInput
 											type="number"
 											label=""
-											onChangeText={handleChange("categories")}
+											onChangeText={handleChange("price")}
 											value={values?.price?.toString()}
 											keyboardType="number-pad"
 											errorMessage={errors?.price}

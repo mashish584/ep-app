@@ -45,7 +45,7 @@ export const validateEventForm = (values: AddEventForm, isPrice = false) => {
 	const extraValidations = {};
 
 	if (isPrice) {
-		extraValidations["price"] = yup.number().required("Price is required.");
+		extraValidations["price"] = yup.number().required("Price is required.").min(1, "Event value should be greater than 0.");
 	}
 
 	const schema: yup.SchemaOf<ValidationEventForm> = yup.object().shape({
