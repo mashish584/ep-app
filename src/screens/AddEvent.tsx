@@ -91,7 +91,7 @@ const AddEvent: React.FC<StackNavigationProps<RootStackScreens, "AddEvent">> = (
 					location: data.location,
 					eventTimestamp: eventTimestamp,
 					category: data.categories,
-					price: parseFloat(Number(data.price).toFixed(2)),
+					price: Number(data.price).toFixed(2),
 				},
 			});
 

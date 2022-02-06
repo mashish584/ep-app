@@ -65,7 +65,7 @@ export const PROFILE_UPLOAD_MUTATION = gql`
 `;
 
 export const ADD_EVENT_MUTATION = gql`
-	mutation createEvent($title: String!, $description: String!, $eventTimestamp: String!, $category: [String]!, $location: String!, $price: Float!) {
+	mutation createEvent($title: String!, $description: String!, $eventTimestamp: String!, $category: [String]!, $location: String!, $price: String!) {
 		createEvent(
 			data: { title: $title, description: $description, eventTimestamp: $eventTimestamp, category: $category, location: $location, price: $price }
 		) {
